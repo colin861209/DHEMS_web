@@ -38,10 +38,14 @@ for($y=0; $y<96; $y++)
 for($y=0; $y<96; $y++)
     $load_model[$y] = floatval($load_power_sum[$y]); 
 
+$total_load_power_sum = 0;
 for($y=0; $y<96; $y++)
     $total_load_power_sum += $cost_array[array_search("total_load_power", $cost_name, true)][$y]; 
     
+for ($i=0; $i < count($load_status_array[array_search("Psell", $variable_name, true)]); $i++) {
 
+    $oppsite_sell_array[$i] = $load_status_array[array_search("Psell", $variable_name, true)][$i] * (-1);
+}
 $data_array = [
 
     "total_load_power_sum"=>$total_load_power_sum,
@@ -55,7 +59,7 @@ $data_array = [
     "limit_capability"=>$limit_capability,
     "simulate_solar"=>$simulate_solar,
     "FC_power"=>$load_status_array[array_search("Pfc", $variable_name, true)],
-    "sell_power"=>$load_status_array[array_search("Psell", $variable_name, true)],
+    "sell_power"=>$oppsite_sell_array,
     "battery_power"=>$load_status_array[array_search("Pess", $variable_name, true)],
     "SOC_value"=>$load_status_array[array_search("SOC", $variable_name, true)],
     "grid_power"=>$load_status_array[array_search("Pgrid", $variable_name, true)],
