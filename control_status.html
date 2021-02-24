@@ -40,13 +40,13 @@
 					<div class="navbar-collapse collapse">							
 						<div class="menu">
 							<ul class="nav nav-tabs" role="tablist">
-								<li role="presentation"><a href="index.html" >可中斷VS市電</a></li>
-								<li role="presentation"><a href="twoLoadVsGrid.html">可中斷+不可中斷VS市電</a></li>
-								<li role="presentation"><a href="threeLoadVsGrid.html">三種負載VS市電</a></li>
+								<li role="presentation"><a href="index.html">所有家庭負載</a></li>
+							<!-- <li role="presentation"><a href="twoLoadVsGrid.html">社區負載監控</a></li>
+							<li role="presentation"><a href="threeLoadVsGrid.html">三種負載VS市電</a></li>
 								<li role="presentation"><a href="threeLoadVsGridAndSolar.html">三種負載VS市電+太陽能</a></li>
-								<li role="presentation"><a href="threeLoadVsGridAndSolarAndBattery.html">三種負載VS市電+太陽能+電池</a></li>
-								<li role="presentation"><a href="loadFix.html">負載模型版本</a></li>
-								<li role="presentation"><a href="control_status.html"class="active">排程結果</a></li>
+								<li role="presentation"><a href="threeLoadVsGridAndSolarAndBattery.html">三種負載VS市電+太陽能+電池</a></li> -->
+								<li role="presentation"><a href="loadFix.html">社區負載監控</a></li>
+								<li role="presentation"><a href="control_status.html" class="active">排程結果</a></li>
 								<!-- <li role="presentation"><a href="set_data.html">參數設定</a></li>
 								<li role="presentation"><a href="solar_data.html">太陽資訊</a></li>			
 								<li role="presentation"><a href="electricity_price.html">電價資訊</a></li>	 -->
@@ -69,34 +69,24 @@
 	<h3 class="text-center" style="font-weight:bold;">最佳化線性規劃排程結果</h3>
 	<hr>
 	<!-- homework 3 -->
-	<table class="table table-bordered">
-            <thead >             
-             <tr class="well">
-                <th style="text-align: center; color:black">使用總負載</th>
-                <th style="text-align: center; color:black">負載花費(表燈電價)</th>
-				<th style="text-align: center; color:black">負載花費(三段式電價)</th>
-				<th style="text-align: center; color:black">購買市電</th>
-				<th style="text-align: center; color:black">燃料電池花費</th>
-				<th style="text-align: center; color:black">氫氣消耗</th>
-             </tr>
-            </thead>
-            <tbody>
-              <tr class="alert alert-danger" style="text-align: center">
-                <td><h3><span id="totalLoadsPower"></span>(kWh)</h3></td>
-                <td><h3><span id="taipowerLoadsCost"></span>(NTD)</h3></td>
-                <td><h3><span id="threeLevelLoadsCost"></span>(NTD)</h3></td>
-				<td><h3><span id="realBuyGrid"></span>(NTD)</h3></td>
-				<td><h3><span id="min_FC_cost"></span>(NTD)</h3></td>
-                <td><h3><span id="consumption"></span>(g)</h3></td>
-			  </tr>
-			</tbody>
+	<table class="table table-bordered" id="Price0.08_table">
 	</table>
-
 	<div class="col-md-12 col-sm-12 col-xs-12">
-		<div id="priceVsLoad" style="min-width: 310px; height: 420px; margin: 0 auto"></div>
-		<div id="SOCVsLoad" style="min-width: 310px; height: 420px; margin: 0 auto"></div>
-		<div id="real_status" style="min-width: 310px; height: 420px; margin: 0 auto"></div>
-        <div id="containers"></div>  
+		<div id="FCPrice0.08" style="min-width: 310px; height: 420px; margin: 0 auto"></div>
+		<div id="SOC0.08" style="min-width: 310px; height: 420px; margin: 0 auto"></div>
+
+	<table class="table table-bordered" id="Price0.1_table">
+	</table>
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div id="FCPrice0.1" style="min-width: 310px; height: 420px; margin: 0 auto"></div>
+		<div id="SOC0.1" style="min-width: 310px; height: 420px; margin: 0 auto"></div>
+
+	<table class="table table-bordered" id="Price0.12_table">
+	</table>
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		<div id="FCPrice0.12" style="min-width: 310px; height: 420px; margin: 0 auto"></div>
+		<div id="SOC0.12" style="min-width: 310px; height: 420px; margin: 0 auto"></div>
+        <!-- <div id="containers"></div>   -->
     </div> 
 
 
