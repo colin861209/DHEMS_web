@@ -2,48 +2,66 @@
 
 $conn = new mysqli('140.124.42.70','root','fuzzy314','DHEMS','6666');
 
-// function sqlFetchRow key value
+// note by Colin Wang in 2021/2/27
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////                                                                                  //////
+//////  function sqlFetchRow : Get value by row                                         //////
+//////  case : oneValue             return a value with 'string' type                   //////
+//////  case : aRow                 return an array with 'string' type                  //////
+//////  case : controlStatusResult  return multi-dimensional array with 'float' type    //////
+//////     controlStatusResult is a fixed case for getting each rows A0 ~ A95 data      //////
+//////     can also be used in the same structure tables like 'cost', 'real_status'     //////
+//////                                                                                  //////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////                                                                                  //////
+//////  function sqlFetchAssoc : Get value by column                                    //////
+//////  'key' is an array, should put data which is/are same as the column name(s)      //////
+//////  if 'key' only have one data ex: array("{column_name1}"),                        //////
+//////   return one dimensional array                                                   //////
+//////  if 'key' have more than one data ex: array("{column_name1}", "{column_name2}")  //////
+//////   return multi-dimensional array                                                 //////
+//////                                                                                  //////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 $oneValue = "oneValue";
 $aRow = "aRow";
 $controlStatusResult = "controlStatusResult";
 
-// create new key above if function changed
 function sqlFetchRow ($conn, $sql, $key) {
 
     switch ($key) {
         case "oneValue":
-            // no convert data type, is a string
-            $result=mysqli_query($conn,$sql);
+            $result = mysqli_query($conn, $sql);
             $row = mysqli_fetch_row($result);
             $value = $row[0];
-            return $value;
             mysqli_free_result($result);
+            return $value;
             break;
 
         case "aRow":
-            // no convert data type, is a string
-            $result=mysqli_query($conn,$sql);
-            while($row = mysqli_fetch_row($result)){
+            $result = mysqli_query($conn, $sql);
+            while ($row = mysqli_fetch_row($result)) {
                 $array = $row;
             }
-            return $array;
             mysqli_free_result($result);
+            return $array;
             break;
         
-        // get A0 ~ A95 multi-array
         case "controlStatusResult":
-            // convert data type to float
-            $k=0;
-            $result=mysqli_query($conn,$sql);
-            while($row=mysqli_fetch_array($result,MYSQLI_NUM)){
+            $k = 0;
+            $result = mysqli_query($conn, $sql);
+            while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
 
-                for($i=1;$i<97;$i++)
-                { $array[$k][] = floatval($row[$i]); }
-                $k++ ;
-
+                for($i = 1; $i < 97; $i++) {
+                    
+                    $array[$k][] = floatval($row[$i]);
+                }
+                $k++;
             }
-            return $array;
             mysqli_free_result($result);
+            return $array;
             break;
 
         default:
@@ -53,29 +71,28 @@ function sqlFetchRow ($conn, $sql, $key) {
 
 function sqlFetchAssoc($conn, $sql, $key) {
 
-    $result=mysqli_query($conn,$sql);
-    $count=mysqli_num_rows($result);
-    if(count($key) == 1){
-        for($i=0;$i<$count;$i++){
+    $result = mysqli_query($conn, $sql);
+    $count = mysqli_num_rows($result);
+    if (count($key) == 1) {
+
+        for($i = 0; $i < $count; $i++) {
 
             $row = mysqli_fetch_assoc($result);
             $array[$i] = $row[$key[0]];
-
         }
-        // return one dimensional array
     } 
-    elseif(count($key) > 1) {
-        for($i=0;$i<$count;$i++){
+    elseif (count($key) > 1) {
+
+        for($i = 0; $i < $count; $i++) {
             
             $row = mysqli_fetch_assoc($result);
-            for($k=0; $k<count($key); $k++) 
-            { $array[$k][$i] = $row[$key[$k]]; }
-            
+            for($k = 0; $k < count($key); $k++) {
+                
+                $array[$k][$i] = $row[$key[$k]];
+            }
         }
-        // return two dimensional array
     }
-    
-    return $array;
     mysqli_free_result($result);
+    return $array;
 }
 ?>
