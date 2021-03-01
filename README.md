@@ -8,6 +8,15 @@
 * [web link ](http://140.124.42.70:3332/how/DHEMS_web/loadFix.html)  (should use school network or connect school VPN)
   * file path : SSH =>  `140.124.42.70:3332 /var/www/html/how/DHEMS_web/`
   
+---
+### 2021/02/27
+
++ Commit Link [4dd075b](https://github.com/colin861209/DHEMS_web/commit/4dd075bf710873c4b325f7c8ce930ba8448cad20)
+
+* fetch_mysql.php `doc`
+
+---
+
 ### index.html
 
 * Show `each household's load deployment` and `total load consumption`
