@@ -72,11 +72,11 @@ $data_array = [
     "eight_SOC_value"=>$FCPrice_pointZeroEight_array[array_search("SOC", $variable_name, true)],
     "eight_grid_power"=>$FCPrice_pointZeroEight_array[array_search("Pgrid", $variable_name, true)],
     // 0.1
-    "one_FC_power"=>$FCPrice_pointZeroEight_array[array_search("Pfc", $variable_name, true)],
+    "one_FC_power"=>$FCPrice_pointOne_array[array_search("Pfc", $variable_name, true)],
     "one_sell_power"=>$FCPrice_pointOne_sell,
-    "one_battery_power"=>$FCPrice_pointZeroEight_array[array_search("Pess", $variable_name, true)],
-    "one_SOC_value"=>$FCPrice_pointZeroEight_array[array_search("SOC", $variable_name, true)],
-    "one_grid_power"=>$FCPrice_pointZeroEight_array[array_search("Pgrid", $variable_name, true)],
+    "one_battery_power"=>$FCPrice_pointOne_array[array_search("Pess", $variable_name, true)],
+    "one_SOC_value"=>$FCPrice_pointOne_array[array_search("SOC", $variable_name, true)],
+    "one_grid_power"=>$FCPrice_pointOne_array[array_search("Pgrid", $variable_name, true)],
     // 0.12
     "oneTwo_FC_power"=>$FCPrice_pointOneTwo_array[array_search("Pfc", $variable_name, true)],
     "oneTwo_sell_power"=>$FCPrice_pointOneTwo_sell,
