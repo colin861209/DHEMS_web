@@ -4,6 +4,7 @@ require 'fetch_mysql.php';
 $electric_price_array = sqlFetchAssoc($conn, "SELECT `price_value` FROM `price` ", array("price_value"));
 $solor_fake = sqlFetchAssoc($conn, "SELECT `value` FROM `solar_day` ", array("value"));
 $load_power_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `totalLoad_model` ", array("totalLoad"));
+$uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_uncontrollable_load` ", array("totalLoad"));
 
 // table info
 $taipower_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'LoadSpend(taipowerPrice)' ", $oneValue);
@@ -35,8 +36,12 @@ for($y=0; $y<24; $y++) {
 for($y=0; $y<96; $y++)
     $simulate_solar[$y] = floatval($solor_fake[$y]);
     
-for($y=0; $y<96; $y++)
-    $load_model[$y] = floatval($load_power_sum[$y]); 
+for($y=0; $y<96; $y++) {
+ 
+    $load_model[$y] = floatval($load_power_sum[$y]) + floatval($uncontrollable_load_sum[$y]); 
+    $load_model_seperate[0][$y] = floatval($load_power_sum[$y]);
+    $load_model_seperate[1][$y] = floatval($uncontrollable_load_sum[$y]);
+}
 
 $total_load_power_sum = 0;
 for($y=0; $y<96; $y++)
@@ -66,6 +71,7 @@ $data_array = [
     "simulate_timeblock"=>intval($simulate_timeblock),
     "load_model"=>$load_model,
     "load_status_array"=>$load_status_array,
+    "load_model_seperate"=>$load_model_seperate
     
 ];
 

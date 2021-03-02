@@ -26,6 +26,7 @@ function get_backEnd_data() {
                 ourData = response;
                 household_num = 0;
                 householdsLoadSum(ourData);
+                uncontrollable_loadSum(ourData);
                 muti_divs(ourData);
                 run_household_eachLoad(ourData, 0)
                 autoRun(ourData, household_num)
@@ -296,7 +297,7 @@ function show_each_load(chart_info, chart_series_type, chart_series_name, chart_
 function householdsLoadSum(data) {
     //parse to get all json data
 
-    var chart_info = ["households_loadsSum", "Households' Loads Consuption", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_info = ["households_loadsSum", "Households' Loads Comsuption", " ", "time", "price(TWD)", "power(kW)"];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -306,6 +307,25 @@ function householdsLoadSum(data) {
     set_series_function(0, "line", data.electric_price, "price", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     // set_series_function(0, "line", data.limit_capability, "limit-power", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(1, "column", data.load_power_sum, "household_", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+
+    /*Show chart*/
+    show_chart(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
+
+}
+
+function uncontrollable_loadSum(data) {
+    //parse to get all json data
+
+    var chart_info = ["uncontrollable_loadSum", "Households' Uncontrllable Loads", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
+
+    set_series_function(0, "line", data.electric_price, "price", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    // set_series_function(0, "line", data.limit_capability, "limit-power", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(1, "column", data.uncontrollable_load, "household_", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     /*Show chart*/
     show_chart(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);

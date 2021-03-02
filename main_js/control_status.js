@@ -31,8 +31,8 @@ function tableInfo(ourData) {
     const unitArray = [powerUnit, moneyUnit, moneyUnit, moneyUnit, moneyUnit, moneyUnit, hydrogenUnit];
     const name = ["使用總負載", "負載花費(表燈電價)", "負載花費(三段式電價)", "購買市電", "賣電回饋", "燃料電池花費", "氫氣消耗"];
     const data_ponitZeroEight = [705.2, 4438.39209, 664.396301, 541.415344, 166.673996, 145.120056, 1813.792603];
-    const data_ponitOne = [705.2, 4438.39209, 664.396301, 580.569092, 93.268204, 61.099018, 610.99018];
-    const data_ponitOneTwo = [705.2, 4438.39209, 664.396301, 577.577942, 18.035212, 0, 0];
+    const data_ponitOne = [705.2, 4438.39209, 664.396301, 587.484131, 99.516205, 61.248016, 612.416016];
+    const data_ponitOneTwo = [705.2, 4438.39209, 664.390259, 561.81073, 7.26496, 0, 0];
 
     // 0.08
     var tr_head = document.createElement('tr');
@@ -431,6 +431,7 @@ function pointZeroEight_SOC(ABC) {
     set_series_function(0, "spline", data.simulate_solar, "pwr-solar", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "spline", data.eight_FC_power, "pwr-FC", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.eight_grid_power, "pwr-buy", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "areaspline", data.eight_sell_power, "pwr-sell", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[1],"load-2",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[2],"load-3",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
 
@@ -456,6 +457,7 @@ function pointOne_SOC(ABC) {
     set_series_function(0, "spline", data.simulate_solar, "pwr-solar", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "spline", data.one_FC_power, "pwr-FC", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.one_grid_power, "pwr-buy", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "areaspline", data.one_sell_power, "pwr-sell", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[1],"load-2",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[2],"load-3",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
 
@@ -481,6 +483,7 @@ function pointOneTwo_SOC(ABC) {
     set_series_function(0, "spline", data.simulate_solar, "pwr-solar", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "spline", data.oneTwo_FC_power, "pwr-FC", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.oneTwo_grid_power, "pwr-buy", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "areaspline", data.oneTwo_sell_power, "pwr-sell", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[1],"load-2",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[2],"load-3",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
 

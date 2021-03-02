@@ -5,6 +5,7 @@ $electric_price_array = sqlFetchAssoc($conn, "SELECT `price_value` FROM `price` 
 
 $load_list_array = sqlFetchAssoc($conn, "SELECT household1_startEndOperationTime, household2_startEndOperationTime, household3_startEndOperationTime, household4_startEndOperationTime, household5_startEndOperationTime, power1, power2, power3, block1, block2, block3, number, equip_name FROM load_list", array("household1_startEndOperationTime","household2_startEndOperationTime", "household3_startEndOperationTime","household4_startEndOperationTime","household5_startEndOperationTime", "power1", "power2", "power3", "block1", "block2", "block3", "number", "equip_name"));
 
+$uncontrollable_load = sqlFetchAssoc($conn, "SELECT `household1`, `household2`, `household3`, `household4`, `household5` FROM LHEMS_uncontrollable_load", array("household1", "household2", "household3", "household4", "household5"));
 # base parameter
 $app_counts = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'app_counts' ", $oneValue);
 $interrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'interrupt_num' ", $oneValue);
@@ -22,7 +23,13 @@ mysqli_close($conn);
 for($y=0;$y<96;$y++)
 { $limit_capability[$y] = floatval($limit_power); }
 
+for ($j=0; $j < count($uncontrollable_load); $j++) { 
+    
+    for ($i=0; $i < 96; $i++) { 
 
+        $uncontrollable_load[$j][$i] = floatval($uncontrollable_load[$j][$i]);
+    }
+}
 // electric_price_array
 for($y=0; $y<24; $y++){
 
@@ -89,6 +96,7 @@ $data_array = [
     "equip_name"=>$equip_name,
     "optimize_result"=>$optimize_result,
     "load_power_sum"=>$load_power_sum,
+    "uncontrollable_load"=>$uncontrollable_load,
     "load_power"=>$load_power
 ];
     
