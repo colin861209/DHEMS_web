@@ -16,7 +16,13 @@
 * fetch_mysql.php `doc`
 
 ---
+### 2021/03/02
 
++ Commit link [9e4a696](https://github.com/colin861209/DHEMS_web/commit/9e4a696060b4d9690d4daa88a13c32e667f74428)
+
+* Uncontrollable load
+
+---
 ### index.html
 
 * Show `each household's load deployment` and `total load consumption`
