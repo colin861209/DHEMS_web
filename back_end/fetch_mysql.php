@@ -1,6 +1,6 @@
 <?php
 
-$conn = new mysqli('localhost','root','fuzzy314','DHEMS', '3306');
+$conn = new mysqli('140.124.42.65','root','fuzzy314','DHEMS', '3306');
 
 if ($conn -> connect_errno) {
 
@@ -8,6 +8,7 @@ if ($conn -> connect_errno) {
     exit();
 }
 error_reporting(E_ALL & ~E_NOTICE);
+
 // note by Colin Wang in 2021/2/27
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
