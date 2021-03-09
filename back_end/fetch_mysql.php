@@ -1,7 +1,13 @@
 <?php
 
-$conn = new mysqli('140.124.42.70','root','fuzzy314','DHEMS','6666');
+$conn = new mysqli('localhost','root','fuzzy314','DHEMS', '3306');
 
+if ($conn -> connect_errno) {
+
+    echo "Failed to connect MySQL: ". mysqli_connect_error();
+    exit();
+}
+error_reporting(E_ALL & ~E_NOTICE);
 // note by Colin Wang in 2021/2/27
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
