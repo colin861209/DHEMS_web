@@ -1,41 +1,28 @@
 <?php
-require 'fetch_mysql.php';
-
-$electric_price_array = sqlFetchAssoc($conn, "SELECT `price_value` FROM `price` ", array("price_value"));
+require 'commonSQL_data.php';
 
 $load_list_array = sqlFetchAssoc($conn, "SELECT household1_startEndOperationTime, household2_startEndOperationTime, household3_startEndOperationTime, household4_startEndOperationTime, household5_startEndOperationTime, power1, power2, power3, block1, block2, block3, number, equip_name FROM load_list", array("household1_startEndOperationTime", "household2_startEndOperationTime", "household3_startEndOperationTime", "household4_startEndOperationTime", "household5_startEndOperationTime", "power1", "power2", "power3", "block1", "block2", "block3", "number", "equip_name"));
 
 $uncontrollable_load = sqlFetchAssoc($conn, "SELECT `household1`, `household2`, `household3`, `household4`, `household5` FROM LHEMS_uncontrollable_load", array("household1", "household2", "household3", "household4", "household5"));
+
 # base parameter
 $app_counts = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'app_counts' ", $oneValue);
 $interrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'interrupt_num' ", $oneValue);
 $uninterrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'uninterrupt_num' ", $oneValue);
 $household_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'householdAmount' ", $oneValue);
-$limit_power = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Pgridmax' ", $oneValue);
 $variable_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'variable_num' ", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
 
-$optimize_result = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` ", $controlStatusResult);
-
 $household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `LHEMS_control_status` ", array("household_id"));
+$optimize_result = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` ", $controlStatusResult);
 mysqli_close($conn);
 
-for ($y = 0; $y < 96; $y++) {
-    $limit_capability[$y] = floatval($limit_power);
-}
 
 for ($j = 0; $j < count($uncontrollable_load); $j++) {
 
-    for ($i = 0; $i < 96; $i++) {
+    for ($i = 0; $i < $time_block; $i++) {
 
         $uncontrollable_load[$j][$i] = floatval($uncontrollable_load[$j][$i]);
-    }
-}
-// electric_price_array
-for ($y = 0; $y < 24; $y++) {
-
-    for ($i = 0; $i < 4; $i++) {
-        $electric_price[4 * $y + $i] = floatval($electric_price_array[$y]);
     }
 }
 
@@ -63,7 +50,7 @@ for ($i = 0; $i < $household_num; $i++) {
 
     for ($u = 0; $u < $app_counts; $u++) {
 
-        for ($y = 0; $y < 96; $y++) {
+        for ($y = 0; $y < $time_block; $y++) {
 
             if ($u < $interrupt_num + $uninterrupt_num)
                 $load_power[$i][$u][] = $power1[$u] * $optimize_result[$u + $i * $variable_num][$y];

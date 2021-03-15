@@ -102,4 +102,3 @@ function sqlFetchAssoc($conn, $sql, $key) {
     mysqli_free_result($result);
     return $array;
 }
-?>
