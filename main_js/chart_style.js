@@ -210,5 +210,3 @@ function set_each_load_function(multi, series_type, DATA, ID, stack_class, yAxis
     }
 
 }
-
-export {show_chart_with_redDashLine, set_series_function, show_chart_with_pinkArea, set_each_load_function};

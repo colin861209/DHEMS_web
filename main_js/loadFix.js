@@ -1,5 +1,3 @@
-import {show_chart_with_redDashLine, set_series_function} from './chart_style.js'
-
 //get time block
 var dt = new Date();
 var now_t = Math.floor(dt.getHours() * 4 + dt.getMinutes() / 15);
