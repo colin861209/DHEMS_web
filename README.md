@@ -23,6 +23,22 @@
 * Uncontrollable load
 
 ---
+### 2021/04/14
+
++ Commit link [b1574b9](https://github.com/colin861209/DHEMS_web/commit/b1574b90fb9eb947e7561e42c1dce07ede0c4726)
+
+* CEMS flag & String value replacement
+
+	1. GHEMS_flag
+	2. LHEMS_flag
+	3. dr_mode
+	4. uncontrollable_load_flag
+	
+ * Object `energyType`
+	
+
+
+---
 ### index.html
 
 * Show `each household's load deployment` and `total load consumption`
