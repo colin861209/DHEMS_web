@@ -210,3 +210,20 @@ function set_each_load_function(multi, series_type, DATA, ID, stack_class, yAxis
     }
 
 }
+
+var energyType = {
+
+    Pgrid_flag_name: "Pgrid",
+    Pess_flag_name: "Pess",
+    Psell_flag_name: "Psell",
+    Pfc_flag_name: "Pfc",
+
+    Pgrid_chart_name: "pwr-buy",
+    Pess_chart_name: "pwr-battery",
+    Psolar_chart_name: "pwr-solar",
+    Psell_chart_name: "pwr-sell",
+    Pload_chart_name: "pwr-load",
+    Pfc_chart_name: "pwr-FC",
+    SOC_chart_name: "SOC",
+    electrice_chart_name: "price",
+}

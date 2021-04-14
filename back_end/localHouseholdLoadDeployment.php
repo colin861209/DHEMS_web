@@ -48,9 +48,9 @@ for ($i = 0; $i < $app_counts; $i++) {
 
 for ($i = 0; $i < $household_num; $i++) {
 
-    for ($u = 0; $u < $app_counts; $u++) {
-
-        for ($y = 0; $y < $time_block; $y++) {
+    for ($y = 0; $y < $time_block; $y++) {
+        
+        for ($u = 0; $u < $app_counts; $u++) {
 
             if ($u < $interrupt_num + $uninterrupt_num)
                 $load_power[$i][$u][] = $power1[$u] * $optimize_result[$u + $i * $variable_num][$y];
@@ -60,6 +60,9 @@ for ($i = 0; $i < $household_num; $i++) {
 
             $load_power_sum[$i][$y] += $load_power[$i][$u][$y];
         }
+        
+        if ($uncontrollable_load_flag == 1)
+            $load_power_sum[$i][$y] += $uncontrollable_load[$i][$y];
     }
 }
 
@@ -98,7 +101,8 @@ $data_array = [
     "load_power" => $load_power,
     "grid_power" => $grid_power,
     "battery_power" => $battery_power,
-    "SOC" => $SOC
+    "SOC" => $SOC,
+    "LHEMS_flag" => $LHEMS_flag
 ];
 
 echo json_encode($data_array);

@@ -53,7 +53,8 @@ $data_array = [
     "simulate_timeblock" => intval($simulate_timeblock),
     "load_model" => $load_model,
     "load_status_array" => $load_status_array,
-    "load_model_seperate" => $load_model_seperate
+    "load_model_seperate" => $load_model_seperate,
+    "GHEMS_flag" => $GHEMS_flag
 
 ];
 
