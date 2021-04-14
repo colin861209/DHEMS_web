@@ -10,7 +10,7 @@ $app_counts = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `par
 $interrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'interrupt_num' ", $oneValue);
 $uninterrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'uninterrupt_num' ", $oneValue);
 $household_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'householdAmount' ", $oneValue);
-$variable_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'variable_num' ", $oneValue);
+$variable_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'local_variable_num' ", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
 
 $household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `LHEMS_control_status` ", array("household_id"));
@@ -63,9 +63,20 @@ for ($i = 0; $i < $household_num; $i++) {
     }
 }
 
+for ($i = 0; $i < $household_num; $i++) {
+
+    for ($y = 0; $y < $time_block; $y++) {
+
+        $grid_power[$i][] = $optimize_result[$i * $variable_num + $app_counts][$y];
+        $battery_power[$i][] = $optimize_result[$i * $variable_num + $app_counts + 1][$y];
+        $SOC[$i][] = $optimize_result[$i * $variable_num + $app_counts + 4][$y];
+    }
+}
+
+
 $data_array = [
 
-    "simulate_timeblock" => $simulate_timeblock,
+    "simulate_timeblock" => floatval($simulate_timeblock),
     "electric_price" => $electric_price,
     "limit_capability" => $limit_capability,
     "app_counts" => intval($app_counts),
@@ -84,7 +95,10 @@ $data_array = [
     "optimize_result" => $optimize_result,
     "load_power_sum" => $load_power_sum,
     "uncontrollable_load" => $uncontrollable_load,
-    "load_power" => $load_power
+    "load_power" => $load_power,
+    "grid_power" => $grid_power,
+    "battery_power" => $battery_power,
+    "SOC" => $SOC
 ];
 
 echo json_encode($data_array);

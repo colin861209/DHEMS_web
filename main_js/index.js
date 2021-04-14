@@ -28,6 +28,8 @@ function get_backEnd_data() {
                 householdsLoadSum(ourData);
                 uncontrollable_loadSum(ourData);
                 muti_divs(ourData);
+                each_household_status(ourData, 0)
+                each_household_status_SOC(ourData, household_num)
                 run_household_eachLoad(ourData, 0)
                 autoRun(ourData, household_num)
             }
@@ -53,6 +55,8 @@ function choose_singleHousehold(element) {
 
     $('input[type="checkbox"]').prop("checked", false);
     clearInterval(function_run);
+    each_household_status(ourData, element.id - 1)
+    each_household_status_SOC(ourData, element.id - 1)
     run_household_eachLoad(ourData, element.id - 1);
 
 }
@@ -66,6 +70,8 @@ function autoRun(ourData, household_num) {
             household_num = 0
         else
             household_num++
+        each_household_status(ourData, household_num)
+        each_household_status_SOC(ourData, household_num)
         run_household_eachLoad(ourData, household_num)
 
     }, 7000);
@@ -79,6 +85,42 @@ function run_household_eachLoad(ourData, household_num) {
     for (i = 0; i < ourData.app_counts; i++) {
         each_load(ourData, i, household_num)
     }
+}
+
+function each_household_status(data, household_id) {
+
+    var chart_info = ["each_household_status", "Household " + (household_id + 1) + " Status", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
+
+    set_series_function(0, "line", data.electric_price, "price", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "column", data.load_power_sum[household_id], "household_" + (household_id + 1), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "areaspline", data.grid_power[household_id], "pwr-buy", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "spline", data.battery_power[household_id], "pwr-battery", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+
+    /*Show chart*/
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
+}
+
+function each_household_status_SOC(data, household_id) {
+
+    var chart_info = ["each_household_status_SOC", "", " ", "time", "SOC", "power(kW)"];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
+
+    set_series_function(0, "spline", data.SOC[household_id], "SOC", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "column", data.load_power_sum[household_id], "household_" + (household_id + 1), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "areaspline", data.grid_power[household_id], "pwr-buy", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "spline", data.battery_power[household_id], "pwr-battery", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+
+    /*Show chart*/
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
 }
 
 function householdsLoadSum(data) {

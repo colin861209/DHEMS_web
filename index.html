@@ -50,8 +50,8 @@
 							<li role="presentation"><a href="threeLoadVsGrid.html">三種負載VS市電</a></li>
 								<li role="presentation"><a href="threeLoadVsGridAndSolar.html">三種負載VS市電+太陽能</a></li>
 								<li role="presentation"><a href="threeLoadVsGridAndSolarAndBattery.html">三種負載VS市電+太陽能+電池</a></li> -->
-								<li role="presentation"><a href="loadFix.html">社區負載監控</a></li>
-								<li role="presentation"><a href="control_status.html">燃料電池電價對比</a></li>
+							<li role="presentation"><a href="loadFix.html">社區負載監控</a></li>
+							<li role="presentation"><a href="control_status.html">燃料電池電價對比</a></li>
 							<!-- <li role="presentation"><a href="control_switch.html">家電控制</a></li>
 								<li role="presentation"><a href="set_data.html">參數設定</a></li>
 								<li role="presentation"><a href="solar_data.html">太陽資訊</a></li>			
@@ -111,8 +111,18 @@
 	<button type="button" class="hosuehold" id="3" onclick="choose_singleHousehold(this)">住戶3</button>
 	<button type="button" class="hosuehold" id="4" onclick="choose_singleHousehold(this)">住戶4</button>
 	<button type="button" class="hosuehold" id="5" onclick="choose_singleHousehold(this)">住戶5</button>
+	
 	<h3 id="household_id" style="font-weight:bold; "></h3>
+	<div id="each_household_status"></div>
+	<div id="each_household_status_SOC"></div>
 	<div id="containers"></div>
+
+	<button type="button" class="hosuehold" id="1" onclick="choose_singleHousehold(this)">住戶1</button>
+	<button type="button" class="hosuehold" id="2" onclick="choose_singleHousehold(this)">住戶2</button>
+	<button type="button" class="hosuehold" id="3" onclick="choose_singleHousehold(this)">住戶3</button>
+	<button type="button" class="hosuehold" id="4" onclick="choose_singleHousehold(this)">住戶4</button>
+	<button type="button" class="hosuehold" id="5" onclick="choose_singleHousehold(this)">住戶5</button>
+</div>
 </div>
 
 

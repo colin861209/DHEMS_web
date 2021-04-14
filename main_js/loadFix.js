@@ -86,7 +86,7 @@ function priceVsLoad(ABC) {
     set_series_function(0, "spline", data.battery_power, "pwr-battery", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "spline", data.simulate_solar, "pwr-solar", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.grid_power, "pwr-buy", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    set_series_function(0, "spline", data.FC_power, "pwr-FC", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    // set_series_function(0, "spline", data.FC_power, "pwr-FC", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.sell_power, "pwr-sell", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[1],"load-2",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[2],"load-3",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
@@ -112,7 +112,7 @@ function SOCVsLoad(ABC) {
     set_series_function(0, "spline", data.battery_power, "pwr-battery", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "spline", data.simulate_solar, "pwr-solar", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.grid_power, "pwr-buy", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    set_series_function(0, "spline", data.FC_power, "pwr-FC", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    // set_series_function(0, "spline", data.FC_power, "pwr-FC", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.sell_power, "pwr-sell", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[1],"load-2",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
     // set_series_function(0,"spline",data.load_power[2],"load-3",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);

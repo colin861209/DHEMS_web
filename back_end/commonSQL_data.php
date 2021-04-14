@@ -7,7 +7,6 @@ $simulate_solar = sqlFetchAssoc($conn, "SELECT `value` FROM `solar_day` ", array
 $limit_power = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Pgridmax' ", $oneValue);
 $time_block = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'time_block' ", $oneValue);
 
-// mysqli_close($conn);
 
 $hourToStamp = 4;
 
