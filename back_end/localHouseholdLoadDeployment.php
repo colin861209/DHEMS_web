@@ -60,9 +60,6 @@ for ($i = 0; $i < $household_num; $i++) {
 
             $load_power_sum[$i][$y] += $load_power[$i][$u][$y];
         }
-        
-        if ($uncontrollable_load_flag == 1)
-            $load_power_sum[$i][$y] += $uncontrollable_load[$i][$y];
     }
 }
 
