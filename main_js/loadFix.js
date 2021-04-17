@@ -27,6 +27,7 @@ function get_backEnd_data() {
                 GHEMS_flag = ourData.GHEMS_flag;
                 console.log(ourData);
                 tableInfo(ourData);
+                progessbar(ourData);
                 priceVsLoad(ourData);
                 SOCVsLoad(ourData)
                 loadModel(ourData)
@@ -75,6 +76,19 @@ function tableInfo(ourData) {
 
         console.log("Function: " + tableInfo.name + " Wrong length in table 'name' & 'data'")
     }
+}
+
+function progessbar(ourData) {
+
+    var finish_rate = ourData.simulate_timeblock / 96 * 100;
+    document.getElementById('percent_print').innerHTML = "進度 : " + ourData.simulate_timeblock +" / 96" ;
+    document.getElementById("percent_width").style.width = finish_rate + "%";
+    if (finish_rate < 20) { document.getElementById("percent_width").style.backgroundColor = "red"; }
+    if (finish_rate >= 20 && finish_rate < 40) { document.getElementById("percent_width").style.backgroundColor = "orange"; }
+    if (finish_rate >= 40 && finish_rate < 60) { document.getElementById("percent_width").style.backgroundColor = "yellow"; }
+    if (finish_rate >= 60 && finish_rate < 80) { document.getElementById("percent_width").style.backgroundColor = "green"; }
+    if (finish_rate >= 80 && finish_rate < 99) { document.getElementById("percent_width").style.backgroundColor = "#4F4FFF"; }
+    if (finish_rate == 100) { document.getElementById("percent_width").style.backgroundColor = "blue"; }
 }
 
 function priceVsLoad(ABC) {

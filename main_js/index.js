@@ -33,6 +33,7 @@ function get_backEnd_data() {
                 each_household_status(ourData, 0)
                 each_household_status_SOC(ourData, household_num)
                 run_household_eachLoad(ourData, 0)
+                progessbar(ourData);
                 autoRun(ourData, household_num)
             }
         });
@@ -75,7 +76,7 @@ function autoRun(ourData, household_num) {
         each_household_status(ourData, household_num)
         each_household_status_SOC(ourData, household_num)
         run_household_eachLoad(ourData, household_num)
-
+        progessbar(ourData);
     }, 7000);
 
 }
@@ -87,6 +88,19 @@ function run_household_eachLoad(ourData, household_num) {
     for (i = 0; i < ourData.app_counts; i++) {
         each_load(ourData, i, household_num)
     }
+}
+
+function progessbar(ourData) {
+
+    var finish_rate = ourData.simulate_timeblock / 96 * 100;
+    document.getElementById('percent_print').innerHTML = "進度 : " + ourData.simulate_timeblock + " / 96";
+    document.getElementById("percent_width").style.width = finish_rate + "%";
+    if (finish_rate < 20) { document.getElementById("percent_width").style.backgroundColor = "red"; }
+    if (finish_rate >= 20 && finish_rate < 40) { document.getElementById("percent_width").style.backgroundColor = "orange"; }
+    if (finish_rate >= 40 && finish_rate < 60) { document.getElementById("percent_width").style.backgroundColor = "yellow"; }
+    if (finish_rate >= 60 && finish_rate < 80) { document.getElementById("percent_width").style.backgroundColor = "green"; }
+    if (finish_rate >= 80 && finish_rate < 99) { document.getElementById("percent_width").style.backgroundColor = "#4F4FFF"; }
+    if (finish_rate == 100) { document.getElementById("percent_width").style.backgroundColor = "blue"; }
 }
 
 function each_household_status(data, household_id) {
