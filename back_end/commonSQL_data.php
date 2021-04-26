@@ -11,18 +11,11 @@ $time_block = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `par
 $dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
 $uncontrollable_load_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'uncontrollable_load_flag' ", $oneValue);
 
-$hourToStamp = 4;
-
 for ($y = 0; $y < $time_block; $y++) {
 
     $limit_capability[$y] = floatval($limit_power);
     $simulate_solar[$y] = floatval($simulate_solar[$y]);
-}
-
-for ($y = 0; $y < $time_block / $hourToStamp; $y++) {
-
-    for ($i = 0; $i < $hourToStamp; $i++)
-        $electric_price[4 * $y + $i] = floatval($electric_price_tmp[$y]);
+    $electric_price[$y] = floatval($electric_price_tmp[$y]);
 }
 
 ?>
