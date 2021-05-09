@@ -35,6 +35,26 @@
 	4. uncontrollable_load_flag
 	
  * Object `energyType`
+ 
+---
+### 2021/05/09
+
++ Commit link [5e8fbe1](https://github.com/colin861209/DHEMS_web/commit/5e8fbe199a186d59400b1c17248b42cf36bf85ae)
++ Commit link [/e023c6](https://github.com/colin861209/DHEMS_web/commit/e023c6630a1531bebff71a4e71081a257488481f)
+
+* Flag table Create
+
+	* Html: Create `Flag table` and `modify button` struct
+		1. index.html
+		2. loadFix.html
+	* Js: 
+		1. flag_modify.js: Display `flag table` and `modify button`
+		2. index.js: Call function from backend
+		3. loadFix.js: Call function from backend
+		4. chart_style: Create Object
+	* php:
+		1. send_newFlag.php: Modify `LHEMS` & `GHEMS` flag table when change flag from web page
+		2. commonSQL_data.php: Modify SQL statement
 	
 
 
