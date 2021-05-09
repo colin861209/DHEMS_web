@@ -31,6 +31,7 @@ function get_backEnd_data() {
                 priceVsLoad(ourData);
                 SOCVsLoad(ourData)
                 loadModel(ourData)
+                flag_table(GHEMS_flag)
             }
         });
 }
@@ -42,8 +43,8 @@ function tableInfo(ourData) {
     const hydrogenUnit = "(g)";
     var tableData = {
 
-        name : ["使用總負載", "負載花費(表燈電價)", "負載花費(三段式電價)", "購買市電", "賣電回饋", "燃料電池花費", "氫氣消耗"],
-         value : [
+        name: ["使用總負載", "負載花費(表燈電價)", "負載花費(三段式電價)", "購買市電", "賣電回饋", "燃料電池花費", "氫氣消耗"],
+        value: [
             ourData.total_load_power_sum + powerUnit,
             ourData.taipower_loads_cost + moneyUnit,
             ourData.three_level_loads_cost + moneyUnit,
@@ -53,7 +54,7 @@ function tableInfo(ourData) {
             ourData.consumption + hydrogenUnit
         ]
     }
-    
+
     if (tableData.name.length == tableData.value.length) {
 
         for (let nameNum = 0; nameNum < tableData.name.length; nameNum++) {
@@ -81,7 +82,7 @@ function tableInfo(ourData) {
 function progessbar(ourData) {
 
     var finish_rate = ourData.simulate_timeblock / 96 * 100;
-    document.getElementById('percent_print').innerHTML = "進度 : " + ourData.simulate_timeblock +" / 96" ;
+    document.getElementById('percent_print').innerHTML = "進度 : " + ourData.simulate_timeblock + " / 96";
     document.getElementById("percent_width").style.width = finish_rate + "%";
     if (finish_rate < 20) { document.getElementById("percent_width").style.backgroundColor = "red"; }
     if (finish_rate >= 20 && finish_rate < 40) { document.getElementById("percent_width").style.backgroundColor = "orange"; }
@@ -104,13 +105,13 @@ function priceVsLoad(ABC) {
 
     set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "column", data.load_model, energyType.Pload_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    
+
     if (GHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && GHEMS_flag[1][GHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1)
         set_series_function(0, "spline", data.battery_power, energyType.Pess_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    
+
     set_series_function(0, "spline", data.simulate_solar, energyType.Psolar_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.grid_power, energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    
+
     if (GHEMS_flag[0].indexOf(energyType.Pfc_flag_name) !== -1 && GHEMS_flag[1][GHEMS_flag[0].findIndex(flag => flag === energyType.Pfc_flag_name)] == 1)
         set_series_function(0, "spline", data.FC_power, energyType.Pfc_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
@@ -138,13 +139,13 @@ function SOCVsLoad(ABC) {
 
     set_series_function(0, "spline", data.SOC_value, energyType.SOC_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "column", data.load_model, energyType.Pload_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    
+
     if (GHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && GHEMS_flag[1][GHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1)
         set_series_function(0, "spline", data.battery_power, energyType.Pess_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    
+
     set_series_function(0, "spline", data.simulate_solar, energyType.Psolar_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.grid_power, energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    
+
     if (GHEMS_flag[0].indexOf(energyType.Pfc_flag_name) !== -1 && GHEMS_flag[1][GHEMS_flag[0].findIndex(flag => flag === energyType.Pfc_flag_name)] == 1)
         set_series_function(0, "spline", data.FC_power, energyType.Pfc_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     if (GHEMS_flag[0].indexOf(energyType.Psell_flag_name) !== -1 && GHEMS_flag[1][GHEMS_flag[0].findIndex(flag => flag === energyType.Psell_flag_name)] == 1)

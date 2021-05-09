@@ -35,6 +35,7 @@ function get_backEnd_data() {
                 run_household_eachLoad(ourData, 0)
                 progessbar(ourData);
                 autoRun(ourData, household_num)
+                flag_table(LHEMS_flag)
             }
         });
 }

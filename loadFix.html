@@ -65,6 +65,21 @@
 			</div>		
 		</div>	
 	</div>
+	<div>
+		<caption><h3 id = "flag_table" class="text-center" style="font-weight: bold;">旗標設定</h3></caption>
+		<table id = "flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
+			<thead>
+				<tr class = "well" id="flag_thead">
+				</tr>
+			</thead>
+			<tbody id="flag_tbody">
+			</tbody>
+		</table>
+	</div>
+	<div class="container">
+		<button id="btn_flagModify" name="GHEMS" onclick="sendNewFlag(this)" color="black" style="background-color: red; display: none;">修改</button>
+	</div>
+	<hr>
 	<h3 class="text-center" style="font-weight:bold;">最佳化線性規劃排程結果</h3>
 	<hr>
 	<div class="text-center" id="percent_print" style="color:black;font-weight:bold;"></div>
@@ -151,6 +166,7 @@
 	<script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://highcharts.github.io/export-csv/export-csv.js"></script>
+	<script src="main_js/flag_modify.js"></script>
 	<script src="main_js/chart_style.js"></script>
     <script src="main_js/loadFix.js"></script>
 	

@@ -213,9 +213,14 @@ function set_each_load_function(multi, series_type, DATA, ID, stack_class, yAxis
 
 var energyType = {
 
+    interrupt_flag_name: "interrupt",
+    uninterrupt_flag_name: "uninterrupt",
+    varying_flag_name: "varying",
     Pgrid_flag_name: "Pgrid",
+    mu_grid_flag_name: "mu_grid",
     Pess_flag_name: "Pess",
     Psell_flag_name: "Psell",
+    SOC_change_flag_name: "SOC_change",
     Pfc_flag_name: "Pfc",
 
     Pgrid_chart_name: "pwr-buy",

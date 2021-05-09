@@ -3,8 +3,8 @@ require 'fetch_mysql.php';
 
 $electric_price_tmp = sqlFetchAssoc($conn, "SELECT `price_value` FROM `price` ", array("price_value"));
 $simulate_solar = sqlFetchAssoc($conn, "SELECT `value` FROM `solar_day` ", array("value"));
-$GHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `GHEMS_flag` WHERE `variable_name` LIKE 'P%' and `flag` IS NOT NULL", array("variable_name", "flag"));
-$LHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `LHEMS_flag` WHERE `variable_name` LIKE 'P%' and `flag` IS NOT NULL", array("variable_name", "flag"));
+$GHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `GHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "flag"));
+$LHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `LHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "flag"));
 
 $limit_power = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Pgridmax' ", $oneValue);
 $time_block = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'time_block' ", $oneValue);
