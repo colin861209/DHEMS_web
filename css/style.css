@@ -1187,3 +1187,9 @@ a.scrollup:hover{
   border-radius: 20px;
   
 } 
+
+.gauge {
+  width: 350px;
+   height: 350px;
+    margin: auto;
+  }

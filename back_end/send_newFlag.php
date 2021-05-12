@@ -12,15 +12,13 @@ $newFlag = $_POST['phpReceive'];
 for ($i=0; $i < count($newFlag['name']); $i++) { 
     
     updateSQL($conn, $newFlag['table'], "flag", $newFlag['flag'][$i], "variable_name", $newFlag['name'][$i]);
-    
-    // $verifySQL = "SELECT `flag` FROM `" .$newFlag['table'] ."` WHERE `flag` IS NOT NULL";
-    $flag = sqlFetchAssoc($conn, "SELECT `flag` FROM `" .$newFlag['table'] ."` WHERE `flag` IS NOT NULL", array("flag"));
-
-    if ($flag == $newFlag['flag'])
-        $status = "success";
-    else
-        $status = "something went wrong";
 }
+
+$flag = sqlFetchAssoc($conn, "SELECT `flag` FROM `" .$newFlag['table'] ."` WHERE `flag` IS NOT NULL", array("flag"));
+if ($flag == $newFlag['flag'])
+    $status = "success";
+else
+    $status = "something went wrong";
 
 echo json_encode(array("status" => $status));
 
