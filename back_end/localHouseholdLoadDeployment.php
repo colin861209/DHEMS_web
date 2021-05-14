@@ -99,7 +99,8 @@ $data_array = [
     "grid_power" => $grid_power,
     "battery_power" => $battery_power,
     "SOC" => $SOC,
-    "LHEMS_flag" => $LHEMS_flag
+    "LHEMS_flag" => $LHEMS_flag,
+    "uncontrollable_load_flag" => $uncontrollable_load_flag
 ];
 
 echo json_encode($data_array);

@@ -130,28 +130,32 @@ function each_household_status(data, household_id) {
 }
 
 function each_household_status_SOC(data, household_id) {
-
-    var chart_info = ["each_household_status_SOC", "", " ", "time", "SOC", "power(kW)"];
-    var chart_series_type = [];
-    var chart_series_name = [];
-    var chart_series_data = [];
-    var chart_series_stack = [];
-    var chart_series_yAxis = [];
-
-    var load_power_sum_with_UCLoad = [];
-    for (let index = 0; index < data.load_power_sum[household_id].length; index++) {
-        load_power_sum_with_UCLoad[index] = data.load_power_sum[household_id][index] + data.uncontrollable_load[household_id][index];
-    }
-
-    set_series_function(0, "spline", data.SOC[household_id], energyType.SOC_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    set_series_function(0, "column", load_power_sum_with_UCLoad, "household_" + (household_id + 1), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    set_series_function(0, "areaspline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     
-    if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1)
-        set_series_function(0, "spline", data.battery_power[household_id], energyType.Pess_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1) {
 
-    /*Show chart*/
-    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
+        var chart_info = ["each_household_status_SOC", "", " ", "time", "SOC", "power(kW)"];
+        var chart_series_type = [];
+        var chart_series_name = [];
+        var chart_series_data = [];
+        var chart_series_stack = [];
+        var chart_series_yAxis = [];
+
+        var load_power_sum_with_UCLoad = [];
+        for (let index = 0; index < data.load_power_sum[household_id].length; index++) {
+            load_power_sum_with_UCLoad[index] = data.load_power_sum[household_id][index] + data.uncontrollable_load[household_id][index];
+        }
+
+        set_series_function(0, "spline", data.SOC[household_id], energyType.SOC_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+        set_series_function(0, "column", load_power_sum_with_UCLoad, "household_" + (household_id + 1), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+        set_series_function(0, "areaspline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+
+        /*Show chart*/
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
+    }
+    else {
+
+        document.getElementById('each_household_status_SOC').style.display = "none";
+    }
 }
 
 function householdsLoadSum(data) {
@@ -174,22 +178,27 @@ function householdsLoadSum(data) {
 }
 
 function uncontrollable_loadSum(data) {
-    //parse to get all json data
 
-    var chart_info = ["uncontrollable_loadSum", "Households' Uncontrllable Loads", " ", "time", "price(TWD)", "power(kW)"];
-    var chart_series_type = [];
-    var chart_series_name = [];
-    var chart_series_data = [];
-    var chart_series_stack = [];
-    var chart_series_yAxis = [];
+    if (data.uncontrollable_flag) {
 
-    set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    // set_series_function(0, "line", data.limit_capability, "limit-power", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    set_series_function(1, "column", data.uncontrollable_load, "household_", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+        var chart_info = ["uncontrollable_loadSum", "Households' Uncontrllable Loads", " ", "time", "price(TWD)", "power(kW)"];
+        var chart_series_type = [];
+        var chart_series_name = [];
+        var chart_series_data = [];
+        var chart_series_stack = [];
+        var chart_series_yAxis = [];
+        
+        set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+        // set_series_function(0, "line", data.limit_capability, "limit-power", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+        set_series_function(1, "column", data.uncontrollable_load, "household_", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+        
+        /*Show chart*/
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
+    }
+    else {
 
-    /*Show chart*/
-    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
-
+        document.getElementById('uncontrollable_loadSum').style.display = "none";
+    }
 }
 
 function each_load(data, num, household_num) {
