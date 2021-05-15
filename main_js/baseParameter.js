@@ -172,7 +172,7 @@ function gauge(data, fullInfo) {
         
         id: save_target.modify_target[5] + "_gauge",
         value: baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])],
-        min: 1,
+        min: 0,
         max: 2,
         decimals: 0,
         symbol: '',
