@@ -60,6 +60,7 @@
 ### 2021/05/09
 
 + Commit link [2db7e01](https://github.com/colin861209/DHEMS_web/commit/2db7e01a3bc81e9becdec4a898ebdbb1d88a6601)
++ Commit link [b9a5064](https://github.com/colin861209/DHEMS_web/commit/b9a5064295e71885fc1411f78b3d723b1de7add2)
 + Tutorial about [sweetalert2](https://sweetalert2.github.io)
 
 + Button to change diff databases & alert style
@@ -68,8 +69,9 @@
 		1. baseParameter: Button of change DB
 
 	* Js: insert text after 'breadcrumb' in `baseParameter, index, loadFix .js`
-		1. baseParameter:  function: change databases
+		1. baseParameter:  function: change databases, `modify_target` add `simulate_price`
 		2. baseParameter, baseParameter_modify, flag_modify: Use `sweetalert2`
+		3. baseParameter_modify: Change size of `modify_target` input element
 
 	* PHP: Echo `database_name` in most php files
 		1. database_name: Receive DB name from button or session, otherwise default `DHEMS`
