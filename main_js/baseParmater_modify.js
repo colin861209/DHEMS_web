@@ -31,7 +31,7 @@ function flag_table(baseParameter, save_target) {
                     input.setAttribute("type", "text");
                     input.setAttribute("id", baseParameter[0][typeNum]);
                     input.setAttribute("style", "text-align: center; background-color: #ABFFFF;");
-                    input.setAttribute("size", "5");
+                    input.setAttribute("size", "15");
                     input.setAttribute("value", baseParameter[dataNum][typeNum]);
                     input.setAttribute("onchange", "flag_change()");
                     td.appendChild(input);
