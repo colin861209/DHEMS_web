@@ -6,7 +6,7 @@
   * [Mathematical Formula Link (hackmd)](https://hackmd.io/pvujnbJeQf6bXQqIibQXXQ)
   
 * [web link ](http://140.124.42.70:3332/how/DHEMS_web/loadFix.html)  (should use school network or connect school VPN)
-  * file path : SSH =>  `140.124.42.70:3332 /var/www/html/how/DHEMS_web/`
+  * file path : SSH =>  `140.124.42.65 /var/www/html/how/DHEMS_web/`
   
 ---
 ### 2021/02/27
@@ -55,10 +55,31 @@
 	* php:
 		1. send_newFlag.php: Modify `LHEMS` & `GHEMS` flag table when change flag from web page
 		2. commonSQL_data.php: Modify SQL statement
-	
-
 
 ---
+### 2021/05/09
+
++ Commit link [2db7e01](https://github.com/colin861209/DHEMS_web/commit/2db7e01a3bc81e9becdec4a898ebdbb1d88a6601)
++ Tutorial about [sweetalert2](https://sweetalert2.github.io)
+
++ Button to change diff databases & alert style
+
+	* Html: import script `sweetalert2` & basic info in id 'breadcrumb'
+		1. baseParameter: Button of change DB
+
+	* Js: insert text after 'breadcrumb' in `baseParameter, index, loadFix .js`
+		1. baseParameter:  function: change databases
+		2. baseParameter, baseParameter_modify, flag_modify: Use `sweetalert2`
+
+	* PHP: Echo `database_name` in most php files
+		1. database_name: Receive DB name from button or session, otherwise default `DHEMS`
+		2. fetch_mysql: require `database_name.php`. Change DB name in `$conn`
+		3. commonSQL_data: Receive `electric price` by `$target_price` from DB `table BaseParameter`
+
+	* css: breadcrumb, class 'database' button
+
+---
+
 ### index.html
 
 * Show `each household's load deployment` and `total load consumption`
