@@ -80,8 +80,19 @@ function sendNewParameter() {
                 console.log(response)
                 if (response.status == "success") {
                     
-                    alert("旗 標 修 改 完 成")
-                    location.reload("/baseParameter.html");
+                    // alert("旗 標 修 改 完 成")
+                    // location.reload("/baseParameter.html");
+                    Swal.fire({
+                        icon: 'success',
+                        title: '旗標修改完成',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> OK!',
+                    })
+                    .then(() => {
+                            location.reload("")
+                        }
+                    );
                 }
             }
         });

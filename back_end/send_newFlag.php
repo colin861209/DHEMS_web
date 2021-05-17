@@ -5,6 +5,7 @@ function updateSQL($conn, $table, $target_col, $target_value, $condition_col, $c
 
     $sql = "UPDATE `$table` SET `$target_col` = '$target_value' WHERE `$condition_col` = '$condition_value'";    
     mysqli_query($conn, $sql);
+    
 }
 
 $newFlag = $_POST['phpReceive'];
@@ -20,7 +21,10 @@ if ($flag == $newFlag['flag'])
 else
     $status = "something went wrong";
 
-echo json_encode(array("status" => $status));
+echo json_encode(array(
+    "status" => $status,
+    "database_name" => $database_name
+));
 
 mysqli_close($conn);
 ?>

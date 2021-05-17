@@ -91,8 +91,19 @@ function sendNewFlag(element) {
                 console.log(response)
                 if (response.status == "success") {
                     
-                    alert("旗 標 修 改 完 成")
-                    location.reload("/loadFix.html")
+                    // alert("旗 標 修 改 完 成")
+                    // location.reload("/loadFix.html")
+                    Swal.fire({
+                        icon: 'success',
+                        title: '修改連線資料庫',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> OK!',
+                    })
+                    .then(() => {
+                            location.reload("")
+                        }
+                    );
                 }
             }
         });

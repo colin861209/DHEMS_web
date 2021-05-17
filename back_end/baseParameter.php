@@ -6,8 +6,8 @@ mysqli_close($conn);
 
 $data_array = [
 
-    "baseParameter" => $baseParameter
-
+    "baseParameter" => $baseParameter,
+    "database_name" => $database_name
 ];
 
 echo json_encode($data_array);

@@ -1,3 +1,5 @@
+var now_database_name = '';
+
 window.onload = function () {
 
     get_backEnd_data();
@@ -21,12 +23,69 @@ function get_backEnd_data() {
 
                 response = JSON.parse(response);
                 console.log(response);
+                now_database_name = response.database_name;
                 tableInfo = removeParameter(response, save_target);
+                insertText_after_breadcrumb(now_database_name, tableInfo[1][tableInfo[0].indexOf("simulate_weather")], tableInfo[1][tableInfo[0].indexOf("ini_SOC")])
                 flag_table(tableInfo, save_target);
                 console.log(tableInfo);
                 gauge(tableInfo, response);
             }
         });
+}
+
+function change_databases(element) {
+
+    var target_database_name;
+    switch (parseInt(element.value)) {
+        case 0:
+            target_database_name = 'DHEMS';
+            break;
+        case 1:
+            target_database_name = 'DHEMS_dr'+element.value;
+            break;
+        case 2:
+            target_database_name = 'DHEMS_dr'+element.value;
+            break;
+        default:
+            console.log("Wrong database name")
+            break;
+    }
+
+    if (now_database_name != target_database_name) {
+
+        $.ajax
+        ({
+            type: "POST",
+            url: "back_end/baseParameter.php",
+            data: { phpReceive_database_name: target_database_name },
+            success: function (response) {
+                
+                response = JSON.parse(response);
+                if (response.database_name == target_database_name) {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: '修改連線資料庫',
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> OK!',
+                    })
+                    .then(() => {
+                            location.reload("")
+                        }
+                    );
+                }
+            }
+        });
+    }
+    else {
+
+        Swal.fire({
+            icon: 'warning',
+            title: '選到相同資料庫...',
+            text: '現在讀取資料庫: '+ now_database_name,
+        });
+    }
 }
 
 function removeParameter(data, save_target) {

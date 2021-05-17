@@ -27,6 +27,7 @@ function get_backEnd_data() {
                 ourData = response;
                 LHEMS_flag = ourData.LHEMS_flag;
                 household_num = 0;
+                insertText_after_breadcrumb(response.database_name, null, null)
                 householdsLoadSum(ourData);
                 uncontrollable_loadSum(ourData);
                 muti_divs(ourData);

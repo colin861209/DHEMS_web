@@ -1,6 +1,7 @@
 <?php
+require 'databases_name.php';
 
-$conn = new mysqli('140.124.42.65','root','fuzzy314','DHEMS', '3306');
+$conn = new mysqli('140.124.42.65','root','fuzzy314', $_SESSION['database'], '3306');
 mysqli_set_charset($conn, 'utf8');
 
 if ($conn -> connect_errno) {

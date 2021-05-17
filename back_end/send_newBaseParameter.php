@@ -21,7 +21,10 @@ for ($i=0; $i < count($newParameter['name']); $i++) {
         $status = "something went wrong";
 }
 
-echo json_encode(array("status" => $status));
+echo json_encode(array(
+    "status" => $status,
+    "database_name" => $database_name
+));
 
 mysqli_close($conn);
 ?>

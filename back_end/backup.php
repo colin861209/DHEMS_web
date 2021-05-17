@@ -54,8 +54,8 @@ $data_array = [
     "load_model" => $load_model,
     "load_status_array" => $load_status_array,
     "load_model_seperate" => $load_model_seperate,
-    "GHEMS_flag" => $GHEMS_flag
-
+    "GHEMS_flag" => $GHEMS_flag,
+    "database_name" => $database_name
 ];
 
 echo json_encode($data_array);

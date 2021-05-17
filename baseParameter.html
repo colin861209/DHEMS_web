@@ -67,7 +67,11 @@
         </div>
     </div>
 </div>
-
+<div class="col-md-12 col-sm-12 col-xs-12 text-center" style="padding: 20px; font-weight: bold;">
+    <button type="button" class="database" value="0" onclick="change_databases(this)">資料庫(無需量反應)</button>
+    <button type="button" class="database" value="1" onclick="change_databases(this)">資料庫(需量反應1)</button>
+    <button type="button" class="database" value="2" onclick="change_databases(this)">資料庫(需量反應2)</button>
+</div>
 <div class="feature">
     <div class="container">
         <div class="text-center">
@@ -166,11 +170,12 @@
 <script src="js/functions.js"></script>
 <script src="js/justgage.js"></script>
 <script src="js/raphael-2.1.4.min.js"></script>
-
+<script src="js/sweetalert2.all.min.js"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://highcharts.github.io/export-csv/export-csv.js"></script>
 <script src="main_js/baseParmater_modify.js"></script>
+<script src="main_js/chart_style.js"></script>
 <script src="main_js/baseParameter.js"></script>
 
 </body>

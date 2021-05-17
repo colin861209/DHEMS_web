@@ -26,6 +26,7 @@ function get_backEnd_data() {
                 ourData = response;
                 GHEMS_flag = ourData.GHEMS_flag;
                 console.log(ourData);
+                insertText_after_breadcrumb(response.database_name, null, null);
                 tableInfo(ourData);
                 progessbar(ourData);
                 priceVsLoad(ourData);

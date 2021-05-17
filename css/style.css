@@ -80,9 +80,14 @@ a:hover {
 }
 
 .breadcrumb li {
-   text-transform:uppercase;
-   margin-top:125px;
-   font-weight:600;
+  text-transform: capitalize;
+  margin-top:125px;
+  font-weight:600;
+}
+
+.breadcrumb li a {
+  
+  text-transform:uppercase;
 }
 
 /*===========================
@@ -1164,7 +1169,7 @@ a.scrollup:hover{
 	color:#1BBD36;
 }
 
-.hosuehold {
+.hosuehold, .database {
 
   color: black;
   padding: 12px 20px;

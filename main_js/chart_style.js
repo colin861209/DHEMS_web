@@ -211,6 +211,19 @@ function set_each_load_function(multi, series_type, DATA, ID, stack_class, yAxis
 
 }
 
+function insertText_after_breadcrumb(database, weather, initSOC) {
+    
+    var insert_target = document.getElementById('breadcrumb').getElementsByTagName('li')[1];
+    if (database != null)
+        insert_target.innerHTML += " (DB: " + database;
+    if (weather != null)
+        insert_target.innerHTML += ", weather: " + weather;
+    if (initSOC != null)
+        insert_target.innerHTML += ", initSOC: " + initSOC;
+    if (database != null)
+        insert_target.innerHTML += ")";
+}
+
 var energyType = {
 
     interrupt_flag_name: "interrupt",

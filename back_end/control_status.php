@@ -69,7 +69,7 @@ $data_array = [
     "oneTwo_SOC_value" => $FCPrice_pointOneTwo_array[array_search("SOC", $variable_name, true)],
     "oneTwo_grid_power" => $FCPrice_pointOneTwo_array[array_search("Pgrid", $variable_name, true)],
     "load_model" => $load_model,
-
+    "database_name" => $database_name
     // "simulate_timeblock"=>intval($simulate_timeblock),
 
 ];
