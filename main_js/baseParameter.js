@@ -46,6 +46,9 @@ function change_databases(element) {
         case 2:
             target_database_name = 'DHEMS_dr'+element.value;
             break;
+        case 50:
+            target_database_name = 'DHEMS_fiftyHousehold';
+            break;
         default:
             console.log("Wrong database name")
             break;

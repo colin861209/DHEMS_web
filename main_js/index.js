@@ -27,6 +27,7 @@ function get_backEnd_data() {
                 ourData = response;
                 LHEMS_flag = ourData.LHEMS_flag;
                 household_num = 0;
+                hide_household_button(ourData.database_name == "DHEMS_fiftyHousehold");
                 insertText_after_breadcrumb(response.database_name, null, null)
                 householdsLoadSum(ourData);
                 uncontrollable_loadSum(ourData);
@@ -56,13 +57,13 @@ $(document).ready(function () {
     });
 });
 
-function choose_singleHousehold(element) {
+function choose_singleHousehold(household_id) {
 
     $('input[type="checkbox"]').prop("checked", false);
     clearInterval(function_run);
-    each_household_status(ourData, element.id - 1)
-    each_household_status_SOC(ourData, element.id - 1)
-    run_household_eachLoad(ourData, element.id - 1);
+    each_household_status(ourData, household_id - 1)
+    each_household_status_SOC(ourData, household_id - 1)
+    run_household_eachLoad(ourData, household_id - 1);
 
 }
 
@@ -127,7 +128,7 @@ function each_household_status(data, household_id) {
         set_series_function(0, "spline", data.battery_power[household_id], energyType.Pess_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     /*Show chart*/
-    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
 }
 
 function each_household_status_SOC(data, household_id) {
@@ -151,7 +152,7 @@ function each_household_status_SOC(data, household_id) {
         set_series_function(0, "areaspline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
         /*Show chart*/
-        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
     }
     else {
 
@@ -174,7 +175,7 @@ function householdsLoadSum(data) {
     set_series_function(1, "column", data.load_power_sum, "household_", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     /*Show chart*/
-    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
 
 }
 
@@ -194,7 +195,7 @@ function uncontrollable_loadSum(data) {
         set_series_function(1, "column", data.uncontrollable_load, "household_", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
         
         /*Show chart*/
-        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock);
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
     }
     else {
 
@@ -238,4 +239,38 @@ function muti_divs(data) {
     // console.log(htmlElements);
     var container = document.getElementById("containers");
     container.innerHTML = htmlElements;
+}
+
+function hide_household_button(condition) {
+
+    if (condition) {
+
+        button_household_group = document.getElementsByClassName('button_household_group');
+        for (let index = 0; index < button_household_group.length; index++)
+            button_household_group[index].style.display = 'none';
+        document.getElementById('button_household_range').style.display = 'block';
+    }
+}
+
+function choose_singleHousehold_by_rangeBar() {
+
+    Swal.fire({
+        title: 'Choose number of household',
+        confirmButtonText: 'GO <i class="fa fa-arrow-right"></i>',
+        icon: 'question',
+        input: 'range',
+        inputLabel: '1 ~ '+ ourData.household_num,
+        inputAttributes: {
+          min: 1,
+          max: ourData.household_num,
+          step: 1
+        },
+        inputValue: 1,
+        didOpen:() => {
+
+            Swal.getConfirmButton().addEventListener('click', () => {
+                choose_singleHousehold(Swal.getInput().value)
+            })
+        }
+    })
 }

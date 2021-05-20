@@ -1195,6 +1195,11 @@ a.scrollup:hover{
 
 .gauge {
   width: 350px;
-   height: 350px;
-    margin: auto;
-  }
+  height: 350px;
+  margin: auto;
+}
+
+.swal2-input-label, .swal2-range {
+
+  color: black
+}
