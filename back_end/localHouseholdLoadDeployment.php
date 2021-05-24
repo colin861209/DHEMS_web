@@ -1,9 +1,43 @@
 <?php
 require 'commonSQL_data.php';
 
-$load_list_array = sqlFetchAssoc($conn, "SELECT household1_startEndOperationTime, household2_startEndOperationTime, household3_startEndOperationTime, household4_startEndOperationTime, household5_startEndOperationTime, power1, power2, power3, block1, block2, block3, number, equip_name FROM load_list", array("household1_startEndOperationTime", "household2_startEndOperationTime", "household3_startEndOperationTime", "household4_startEndOperationTime", "household5_startEndOperationTime", "power1", "power2", "power3", "block1", "block2", "block3", "number", "equip_name"));
+if ($database_name == "DHEMS_fiftyHousehold") {
 
-$uncontrollable_load = sqlFetchAssoc($conn, "SELECT `household1`, `household2`, `household3`, `household4`, `household5` FROM LHEMS_uncontrollable_load", array("household1", "household2", "household3", "household4", "household5"));
+    $load_list_array = sqlFetchAssoc($conn, "SELECT 
+    `household1_startEndOperationTime`, `household2_startEndOperationTime`, `household3_startEndOperationTime`, `household4_startEndOperationTime`, `household5_startEndOperationTime`, `household6_startEndOperationTime`, `household7_startEndOperationTime`, `household8_startEndOperationTime`, `household9_startEndOperationTime`, `household10_startEndOperationTime`,
+    `household11_startEndOperationTime`, `household12_startEndOperationTime`, `household13_startEndOperationTime`, `household14_startEndOperationTime`, `household15_startEndOperationTime`, `household16_startEndOperationTime`, `household17_startEndOperationTime`, `household18_startEndOperationTime`, `household19_startEndOperationTime`, `household20_startEndOperationTime`, 
+    `household21_startEndOperationTime`, `household22_startEndOperationTime`, `household23_startEndOperationTime`, `household24_startEndOperationTime`, `household25_startEndOperationTime`, `household26_startEndOperationTime`, `household27_startEndOperationTime`, `household28_startEndOperationTime`, `household29_startEndOperationTime`, `household30_startEndOperationTime`, 
+    `household31_startEndOperationTime`, `household32_startEndOperationTime`, `household33_startEndOperationTime`, `household34_startEndOperationTime`, `household35_startEndOperationTime`, `household36_startEndOperationTime`, `household37_startEndOperationTime`, `household38_startEndOperationTime`, `household39_startEndOperationTime`, `household40_startEndOperationTime`, 
+    `household41_startEndOperationTime`, `household42_startEndOperationTime`, `household43_startEndOperationTime`, `household44_startEndOperationTime`, `household45_startEndOperationTime`, `household46_startEndOperationTime`, `household47_startEndOperationTime`, `household48_startEndOperationTime`, `household49_startEndOperationTime`, `household50_startEndOperationTime`, 
+    `power1`, `power2`, `power3`, `number`, `equip_name` 
+    FROM load_list", array(
+        "household1_startEndOperationTime", "household2_startEndOperationTime", "household3_startEndOperationTime", "household4_startEndOperationTime", "household5_startEndOperationTime", "household6_startEndOperationTime", "household7_startEndOperationTime", "household8_startEndOperationTime", "household9_startEndOperationTime", "household10_startEndOperationTime",
+        "household11_startEndOperationTime", "household12_startEndOperationTime", "household13_startEndOperationTime", "household14_startEndOperationTime", "household15_startEndOperationTime", "household16_startEndOperationTime", "household17_startEndOperationTime",  "household18_startEndOperationTime", "household19_startEndOperationTime", "household20_startEndOperationTime",
+        "household21_startEndOperationTime", "household22_startEndOperationTime", "household23_startEndOperationTime", "household24_startEndOperationTime", "household25_startEndOperationTime", "household26_startEndOperationTime", "household27_startEndOperationTime", "household28_startEndOperationTime", "household29_startEndOperationTime", "household30_startEndOperationTime",
+        "household31_startEndOperationTime", "household32_startEndOperationTime", "household33_startEndOperationTime", "household34_startEndOperationTime", "household35_startEndOperationTime", "household36_startEndOperationTime", "household37_startEndOperationTime", "household38_startEndOperationTime", "household39_startEndOperationTime", "household40_startEndOperationTime",
+        "household41_startEndOperationTime", "household42_startEndOperationTime", "household43_startEndOperationTime", "household44_startEndOperationTime", "household45_startEndOperationTime", "household46_startEndOperationTime", "household47_startEndOperationTime", "household48_startEndOperationTime", "household49_startEndOperationTime", "household50_startEndOperationTime", 
+        "power1", "power2", "power3", "number", "equip_name"
+    ));
+        
+    $uncontrollable_load = sqlFetchAssoc($conn, "SELECT 
+    `household1`, `household2`, `household3`, `household4`, `household5`, `household6`, `household7`, `household8`, `household9`, `household10`,
+    `household11`, `household12`, `household13`, `household14`, `household15`, `household16`, `household17`, `household18`, `household19`, `household20`,
+    `household21`, `household22`, `household23`, `household24`, `household25`, `household26`, `household27`, `household28`, `household29`, `household30`,
+    `household31`, `household32`, `household33`, `household34`, `household35`, `household36`, `household37`, `household38`, `household39`, `household40`,
+    `household41`, `household42`, `household43`, `household44`, `household45`, `household46`, `household47`, `household48`, `household49`, `household50` 
+    FROM LHEMS_uncontrollable_load", array(
+        "household1", "household2", "household3", "household4", "household5", "household6", "household7", "household8", "household9", "household10", 
+        "household11", "household12", "household13", "household14", "household15", "household16", "household17", "household18", "household19", "household20", 
+        "household21", "household22", "household23", "household24", "household25", "household26", "household27", "household28", "household29", "household30", 
+        "household31", "household32", "household33", "household34", "household35", "household36", "household37", "household38", "household39", "household40", 
+        "household41", "household42", "household43", "household44", "household45", "household46", "household47", "household48", "household49", "household50" 
+    ));
+}
+else {
+
+    $load_list_array = sqlFetchAssoc($conn, "SELECT household1_startEndOperationTime, household2_startEndOperationTime, household3_startEndOperationTime, household4_startEndOperationTime, household5_startEndOperationTime, power1, power2, power3, number, equip_name FROM load_list", array("household1_startEndOperationTime", "household2_startEndOperationTime", "household3_startEndOperationTime", "household4_startEndOperationTime", "household5_startEndOperationTime", "power1", "power2", "power3", "number", "equip_name"));
+    $uncontrollable_load = sqlFetchAssoc($conn, "SELECT `household1`, `household2`, `household3`, `household4`, `household5` FROM LHEMS_uncontrollable_load", array("household1", "household2", "household3", "household4", "household5"));
+}
 
 # base parameter
 $app_counts = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'app_counts' ", $oneValue);
@@ -13,8 +47,8 @@ $household_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `
 $variable_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'local_variable_num' ", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
 
-$household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `LHEMS_control_status` ", array("household_id"));
-$optimize_result = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` ", $controlStatusResult);
+$household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `LHEMS_control_status` ORDER BY `household_id` ASC ", array("household_id"));
+$optimize_result = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` ORDER BY `household_id` ASC ", $controlStatusResult);
 mysqli_close($conn);
 
 
@@ -36,14 +70,11 @@ for ($i = 0; $i < $app_counts; $i++) {
         $end[$j][$i] = intval($end_tmp);
         $operation[$j][$i] = intval($operation_tmp);
     }
-    $power1[$i] = floatval($load_list_array[5][$i]);
-    $power2[$i] = floatval($load_list_array[6][$i]);
-    $power3[$i] = floatval($load_list_array[7][$i]);
-    $block1[$i] = intval($load_list_array[8][$i] * 4);
-    $block2[$i] = intval($load_list_array[9][$i] * 4);
-    $block3[$i] = intval($load_list_array[10][$i] * 4);
-    $number[$i] = intval($load_list_array[11][$i]);
-    $equip_name[$i] = $load_list_array[12][$i];
+    $power1[$i] = floatval($load_list_array[$household_num][$i]);
+    $power2[$i] = floatval($load_list_array[$household_num + 1][$i]);
+    $power3[$i] = floatval($load_list_array[$household_num + 2][$i]);
+    $number[$i] = $load_list_array[$household_num + 3][$i];
+    $equip_name[$i] = $load_list_array[$household_num + 4][$i];
 }
 
 for ($i = 0; $i < $household_num; $i++) {
@@ -87,9 +118,7 @@ $data_array = [
     "power1" => $power1,
     "power2" => $power2,
     "power3" => $power3,
-    "block1" => $block1,
-    "block2" => $block2,
-    "block3" => $block3,
+    "load_list_array" => $load_list_array,
     "number" => $number,
     "equip_name" => $equip_name,
     "optimize_result" => $optimize_result,

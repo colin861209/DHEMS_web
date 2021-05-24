@@ -24,11 +24,18 @@ function get_backEnd_data() {
                 response = JSON.parse(response);
                 console.log(response);
                 now_database_name = response.database_name;
+                simulate_solar(response);
+                simulate_price(response);
                 tableInfo = removeParameter(response, save_target);
                 insertText_after_breadcrumb(now_database_name, tableInfo[1][tableInfo[0].indexOf("simulate_weather")], tableInfo[1][tableInfo[0].indexOf("ini_SOC")])
                 flag_table(tableInfo, save_target);
                 console.log(tableInfo);
-                gauge(tableInfo, response);
+                baseParameter_gauge(tableInfo, response);
+                
+                setInterval(() => {
+                    simulate_solar(response);
+                    simulate_price(response);
+                }, 5000);
             }
         });
 }
@@ -41,10 +48,13 @@ function change_databases(element) {
             target_database_name = 'DHEMS';
             break;
         case 1:
-            target_database_name = 'DHEMS_dr'+element.value;
+            target_database_name = 'DHEMS_dr' + element.value;
             break;
         case 2:
-            target_database_name = 'DHEMS_dr'+element.value;
+            target_database_name = 'DHEMS_dr' + element.value;
+            break;
+        case 50:
+            target_database_name = 'DHEMS_fiftyHousehold';
             break;
         default:
             console.log("Wrong database name")
@@ -54,36 +64,36 @@ function change_databases(element) {
     if (now_database_name != target_database_name) {
 
         $.ajax
-        ({
-            type: "POST",
-            url: "back_end/baseParameter.php",
-            data: { phpReceive_database_name: target_database_name },
-            success: function (response) {
-                
-                response = JSON.parse(response);
-                if (response.database_name == target_database_name) {
+            ({
+                type: "POST",
+                url: "back_end/baseParameter.php",
+                data: { phpReceive_database_name: target_database_name },
+                success: function (response) {
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: '修改連線資料庫',
-                        showCloseButton: true,
-                        focusConfirm: false,
-                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> OK!',
-                    })
-                    .then(() => {
-                            location.reload("")
-                        }
-                    );
+                    response = JSON.parse(response);
+                    if (response.database_name == target_database_name) {
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: '修改連線資料庫',
+                            showCloseButton: true,
+                            focusConfirm: false,
+                            confirmButtonText: '<i class="fa fa-thumbs-up"></i> OK!',
+                        })
+                            .then(() => {
+                                location.reload("")
+                            }
+                            );
+                    }
                 }
-            }
-        });
+            });
     }
     else {
 
         Swal.fire({
             icon: 'warning',
             title: '選到相同資料庫...',
-            text: '現在讀取資料庫: '+ now_database_name,
+            text: '現在讀取資料庫: ' + now_database_name,
         });
     }
 }
@@ -94,13 +104,13 @@ function removeParameter(data, save_target) {
     var modify_index = [];
     var fix_index = [];
     var remainParameter = [];
-    
+
     for (let i = 0; i < save_target.modify_target.length; i++) {
-        
+
         modify_index[i] = baseParameter[0].indexOf(save_target.modify_target[i]);
     }
     for (let i = 0; i < save_target.fix_target.length; i++) {
-        
+
         fix_index[i] = baseParameter[0].indexOf(save_target.fix_target[i]);
     }
     save_index = modify_index.concat(fix_index);
@@ -108,7 +118,7 @@ function removeParameter(data, save_target) {
     for (let row = 0; row < baseParameter.length; row++) {
         remain_content = [];
         for (let i = 0; i < save_index.length; i++) {
-            
+
             remain_content.push(baseParameter[row][save_index[i]]);
         }
         remainParameter.push(remain_content);
@@ -117,29 +127,55 @@ function removeParameter(data, save_target) {
     return remainParameter;
 }
 
-function gauge(data, fullInfo) {
+function baseParameter_gauge(data, fullInfo) {
+  
     
     var fullInfo = {
         
         name: fullInfo.baseParameter[0],
         value: fullInfo.baseParameter[1],
+        database_name: fullInfo.database_name
     }
-
+    
     var baseParameter = {
-
+        
         name: data[0],
         value: data[1],
     }
+    
+    var show = {
+        
+        label: ["住戶時刻", "社區時刻", "now SOC", "排程中住戶", "需量模式"],
+        id: [
+            save_target.fix_target[1],
+            save_target.fix_target[2],
+            save_target.fix_target[0],
+            save_target.fix_target[3],
+            save_target.modify_target[5]
+        ],
+        value: [
+            baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[1])],
+            baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[2])],
+            baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[0])],
+            baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[3])],
+            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])]
+        ],
+    }
+
+    if (fullInfo.database_name == "DHEMS_fiftyHousehold") {
+        
+        document.getElementById(show.id[3]+"_gauge").style.display = 'none';
+    }
 
     var next_simulate_timeblock = new JustGage({
-        
-        id: save_target.fix_target[1] + "_gauge",
-        value: baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[1])],
+
+        id: show.id[0] + "_gauge",
+        value: show.value[0],
         min: 0,
         max: fullInfo.value[fullInfo.name.indexOf(fullInfo.name[0])],
         decimals: 0,
         symbol: '',
-        label: "住戶時刻",
+        label: show.label[0],
         pointer: true,
 
         pointerOptions: {
@@ -157,13 +193,13 @@ function gauge(data, fullInfo) {
 
     var Global_next_simulate_timeblock = new JustGage({
 
-        id: save_target.fix_target[2]+ "_gauge",
-        value: baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[2])],
+        id: show.id[1] + "_gauge",
+        value: show.value[1],
         min: 0,
         max: fullInfo.value[fullInfo.name.indexOf(fullInfo.name[0])],
         decimals: 0, //小數點
         symbol: '',
-        label: "社區時刻",
+        label: show.label[1],
         pointer: true,
 
         pointerOptions: {
@@ -181,13 +217,13 @@ function gauge(data, fullInfo) {
 
     var now_SOC = new JustGage({
 
-        id: save_target.fix_target[0] + "_gauge",
-        value: baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[0])],
+        id: show.id[2] + "_gauge",
+        value: show.value[2],
         min: 0,
         max: 1,
         decimals: 3,
         symbol: '',
-        label: "now SOC",
+        label: show.label[2],
         pointer: true,
 
         pointerOptions: {
@@ -205,13 +241,13 @@ function gauge(data, fullInfo) {
 
     var household_id = new JustGage({
 
-        id: save_target.fix_target[3]+ "_gauge",
-        value: baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[3])],
+        id: show.id[3] + "_gauge",
+        value: show.value[3],
         min: 1,
         max: fullInfo.value[fullInfo.name.indexOf(fullInfo.name[1])],
         decimals: 0,
         symbol: '',
-        label: "排程中住戶",
+        label: show.label[3],
         pointer: true,
 
         pointerOptions: {
@@ -229,13 +265,13 @@ function gauge(data, fullInfo) {
     
     var dr_mode = new JustGage({
         
-        id: save_target.modify_target[5] + "_gauge",
-        value: baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])],
+        id: show.id[4] + "_gauge",
+        value: show.value[4],
         min: 0,
         max: 2,
         decimals: 0,
         symbol: '',
-        label: "需量模式",
+        label: show.label[4],
         pointer: true,
 
         pointerOptions: {
@@ -250,4 +286,32 @@ function gauge(data, fullInfo) {
         gaugeWidthScale: 0.7,
         counter: true
     });
+}
+
+function simulate_solar(data) {
+      
+        var chart_info = ["simulate_solar", "Solar Power", "full day value", "time", "power(kW)", null, 'orange'];
+        var chart_series_type = [];
+        var chart_series_name = [];
+        var chart_series_data = [];
+        var chart_series_stack = [];
+        var chart_series_yAxis = [];
+
+        set_series_function(0, "line", data.simulate_solar, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
+}
+
+function simulate_price(data) {
+      
+        var chart_info = ["simulate_price", "Electric Price", "", "time", "price(NTD)", null];
+        var chart_series_type = [];
+        var chart_series_name = [];
+        var chart_series_data = [];
+        var chart_series_stack = [];
+        var chart_series_yAxis = [];
+
+        set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
 }

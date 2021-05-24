@@ -122,23 +122,28 @@
 	<form>
 		<input type="checkbox" value="auto_run" id="auto" checked ><label style="font-size: 20px; color: black;" onclick="checkbox_status(this)">自動循環</label>
 	</form>
-	<button type="button" class="hosuehold" id="1" onclick="choose_singleHousehold(this)">住戶1</button>
-	<button type="button" class="hosuehold" id="2" onclick="choose_singleHousehold(this)">住戶2</button>
-	<button type="button" class="hosuehold" id="3" onclick="choose_singleHousehold(this)">住戶3</button>
-	<button type="button" class="hosuehold" id="4" onclick="choose_singleHousehold(this)">住戶4</button>
-	<button type="button" class="hosuehold" id="5" onclick="choose_singleHousehold(this)">住戶5</button>
-	
+	<div class="button_household_group" style="display: block;">
+		<button type="button" class="hosuehold" value="1" onclick="choose_singleHousehold(this.value)">住戶1</button>
+		<button type="button" class="hosuehold" value="2" onclick="choose_singleHousehold(this.value)">住戶2</button>
+		<button type="button" class="hosuehold" value="3" onclick="choose_singleHousehold(this.value)">住戶3</button>
+		<button type="button" class="hosuehold" value="4" onclick="choose_singleHousehold(this.value)">住戶4</button>
+		<button type="button" class="hosuehold" value="5" onclick="choose_singleHousehold(this.value)">住戶5</button>
+	</div>
+	<div id="button_household_range" style="display: none;">
+		<button type="button" class="hosuehold" onclick="choose_singleHousehold_by_rangeBar()">Range Bar</button>
+	</div>
 	<h3 id="household_id" style="font-weight:bold; "></h3>
 	<div id="each_household_status"></div>
 	<div id="each_household_status_SOC"></div>
 	<div id="containers"></div>
 
-	<button type="button" class="hosuehold" id="1" onclick="choose_singleHousehold(this)">住戶1</button>
-	<button type="button" class="hosuehold" id="2" onclick="choose_singleHousehold(this)">住戶2</button>
-	<button type="button" class="hosuehold" id="3" onclick="choose_singleHousehold(this)">住戶3</button>
-	<button type="button" class="hosuehold" id="4" onclick="choose_singleHousehold(this)">住戶4</button>
-	<button type="button" class="hosuehold" id="5" onclick="choose_singleHousehold(this)">住戶5</button>
-</div>
+	<div class="button_household_group" style="display: block;">
+		<button type="button" class="hosuehold" value="1" onclick="choose_singleHousehold(this.value)">住戶1</button>
+		<button type="button" class="hosuehold" value="2" onclick="choose_singleHousehold(this.value)">住戶2</button>
+		<button type="button" class="hosuehold" value="3" onclick="choose_singleHousehold(this.value)">住戶3</button>
+		<button type="button" class="hosuehold" value="4" onclick="choose_singleHousehold(this.value)">住戶4</button>
+		<button type="button" class="hosuehold" value="5" onclick="choose_singleHousehold(this.value)">住戶5</button>
+	</div>
 </div>
 
 
