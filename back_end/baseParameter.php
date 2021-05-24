@@ -7,6 +7,8 @@ mysqli_close($conn);
 $data_array = [
 
     "baseParameter" => $baseParameter,
+    "simulate_solar" => $simulate_solar,
+    "electric_price" => $electric_price,
     "database_name" => $database_name
 ];
 
