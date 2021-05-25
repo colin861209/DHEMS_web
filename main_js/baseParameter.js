@@ -290,7 +290,7 @@ function baseParameter_gauge(data, fullInfo) {
 
 function simulate_solar(data) {
       
-        var chart_info = ["simulate_solar", "Solar Power", "full day value", "time", "power(kW)", null, 'orange'];
+        var chart_info = ["simulate_solar_chart", "Solar Power", "full day value", "time", "power(kW)", null, 'orange'];
         var chart_series_type = [];
         var chart_series_name = [];
         var chart_series_data = [];
@@ -304,7 +304,7 @@ function simulate_solar(data) {
 
 function simulate_price(data) {
       
-        var chart_info = ["simulate_price", "Electric Price", "", "time", "price(NTD)", null];
+        var chart_info = ["simulate_price_chart", "Electric Price", "", "time", "price(NTD)", null];
         var chart_series_type = [];
         var chart_series_name = [];
         var chart_series_data = [];
