@@ -47,8 +47,8 @@ $household_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `
 $variable_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'local_variable_num' ", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
 
-$household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `LHEMS_control_status` ORDER BY `household_id` ASC ", array("household_id"));
-$optimize_result = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` ORDER BY `household_id` ASC ", $controlStatusResult);
+$household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `LHEMS_control_status` ORDER BY `household_id`, `control_id` ASC ", array("household_id"));
+$optimize_result = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` ORDER BY `household_id`, `control_id` ASC ", $controlStatusResult);
 mysqli_close($conn);
 
 
