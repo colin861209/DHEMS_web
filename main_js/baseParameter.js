@@ -94,6 +94,23 @@ function change_databases(element) {
             icon: 'warning',
             title: '選到相同資料庫...',
             text: '現在讀取資料庫: ' + now_database_name,
+            timerProgressBar: true,
+            timer: 1000,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                    const content = Swal.getHtmlContainer()
+                    if (content) {
+                      const b = content.querySelector('b')
+                      if (b) {
+                        b.textContent = Swal.getTimerLeft()
+                      }
+                    }
+                  }, 100)
+                },
+                willClose: () => {
+                  clearInterval(timerInterval)
+                }
         });
     }
 }
