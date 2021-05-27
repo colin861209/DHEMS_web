@@ -259,6 +259,7 @@ function choose_singleHousehold_by_rangeBar() {
         confirmButtonText: 'GO <i class="fa fa-arrow-right"></i>',
         icon: 'question',
         input: 'range',
+        width: 800,
         inputLabel: '1 ~ '+ ourData.household_num,
         inputAttributes: {
           min: 1,
