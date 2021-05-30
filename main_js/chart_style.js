@@ -1,3 +1,7 @@
+// =-=-=-=-=-=-=-=-=-=-=-=- function 'show_chart_with_redDashLine' information -=-=-=-=-=-=-=-=-=-=-=-= //
+// parameter 'simulate_timeblock' is null, the chart won't show the red dash line                       //
+// array 'chart_info' [id, title, sub title, x-axis name, left y-axis name, right y-axis name, color]   //
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, simulate_timeblock) {
 
     //set all series data

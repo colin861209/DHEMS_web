@@ -2,8 +2,9 @@
 require 'fetch_mysql.php';
 
 $target_price = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'simulate_price' ", $oneValue);
+$target_solar = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'simulate_weather' ", $oneValue);
 $electric_price_tmp = sqlFetchAssoc($conn, "SELECT `" .$target_price. "` FROM `price` ", array($target_price));
-$simulate_solar = sqlFetchAssoc($conn, "SELECT `value` FROM `solar_day` ", array("value"));
+$simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar_data` ", array($target_solar));
 $GHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `GHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "flag"));
 $LHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `LHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "flag"));
 

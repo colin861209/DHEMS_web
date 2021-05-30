@@ -28,6 +28,7 @@ function get_backEnd_data() {
                 LHEMS_flag = ourData.LHEMS_flag;
                 household_num = 0;
                 hide_household_button(ourData.database_name == "DHEMS_fiftyHousehold");
+                increase_chartHeight('households_loadsSum', ourData.database_name == "DHEMS_fiftyHousehold");
                 insertText_after_breadcrumb(response.database_name, null, null)
                 householdsLoadSum(ourData);
                 uncontrollable_loadSum(ourData);
@@ -249,6 +250,14 @@ function hide_household_button(condition) {
         for (let index = 0; index < button_household_group.length; index++)
             button_household_group[index].style.display = 'none';
         document.getElementById('button_household_range').style.display = 'block';
+    }
+}
+
+function increase_chartHeight(chart_id, condition) {
+
+    if (condition) {
+
+        document.getElementById(chart_id).style.height = '1000px';
     }
 }
 
