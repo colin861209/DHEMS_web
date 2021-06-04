@@ -1,4 +1,5 @@
 var now_database_name = '';
+var compare_timeblock = {};
 
 window.onload = function () {
 
@@ -24,6 +25,11 @@ function get_backEnd_data() {
                 response = JSON.parse(response);
                 console.log(response);
                 now_database_name = response.database_name;
+                compare_timeblock = {
+                
+                    local: response.baseParameter[1][response.baseParameter[0].indexOf("next_simulate_timeblock")],
+                    global: response.baseParameter[1][response.baseParameter[0].indexOf("Global_next_simulate_timeblock")]
+                };
                 simulate_solar(response);
                 simulate_price(response);
                 tableInfo = removeParameter(response, save_target);
@@ -39,6 +45,49 @@ function get_backEnd_data() {
             }
         });
 }
+
+setInterval(() => {
+
+    $.ajax
+        ({
+            type: "POST",
+            url: "back_end/reload_baseParameter_compare.php",
+            data: { compare_timeblock: compare_timeblock },
+            success: function (response) {
+
+                response = JSON.parse(response);
+                if (response.status == "reload") {
+                                        
+                    Swal.fire({
+                        icon: 'info',
+                        title: '時刻更新了',
+                        timerProgressBar: true,
+                        timer: 3000,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                const content = Swal.getHtmlContainer()
+                                if (content) {
+                                  const b = content.querySelector('b')
+                                  if (b) {
+                                    b.textContent = Swal.getTimerLeft()
+                                  }
+                                }
+                              }, 100)
+                            },
+                            willClose: () => {
+                              clearInterval(timerInterval)
+                            }
+                    })
+                    .then(() => {
+
+                        location.reload("")
+                    });
+                }
+            }
+        });
+
+}, 1000*30);
 
 function change_databases(element) {
 
@@ -80,10 +129,10 @@ function change_databases(element) {
                             focusConfirm: false,
                             confirmButtonText: '<i class="fa fa-thumbs-up"></i> OK!',
                         })
-                            .then(() => {
-                                location.reload("")
-                            }
-                            );
+                        .then(() => {
+                            location.reload("")
+                        }
+                        );
                     }
                 }
             });
@@ -146,7 +195,6 @@ function removeParameter(data, save_target) {
 
 function baseParameter_gauge(data, fullInfo) {
   
-    
     var fullInfo = {
         
         name: fullInfo.baseParameter[0],
@@ -307,28 +355,28 @@ function baseParameter_gauge(data, fullInfo) {
 
 function simulate_solar(data) {
       
-        var chart_info = ["simulate_solar_chart", "Solar Power", "full day value", "time", "power(kW)", null, 'orange'];
-        var chart_series_type = [];
-        var chart_series_name = [];
-        var chart_series_data = [];
-        var chart_series_stack = [];
-        var chart_series_yAxis = [];
+    var chart_info = ["simulate_solar_chart", "Solar Power", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")], "time", "power(kW)", null, 'orange'];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
 
-        set_series_function(0, "line", data.simulate_solar, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "line", data.simulate_solar, data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")], 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
-        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
 }
 
 function simulate_price(data) {
       
-        var chart_info = ["simulate_price_chart", "Electric Price", "", "time", "price(NTD)", null];
-        var chart_series_type = [];
-        var chart_series_name = [];
-        var chart_series_data = [];
-        var chart_series_stack = [];
-        var chart_series_yAxis = [];
+    var chart_info = ["simulate_price_chart", "Electric Price", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_price")], "time", "price(NTD)", null];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
 
-        set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
-        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
 }
