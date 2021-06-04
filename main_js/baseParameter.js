@@ -62,7 +62,7 @@ setInterval(() => {
                         icon: 'info',
                         title: '時刻更新了',
                         timerProgressBar: true,
-                        timer: 5000,
+                        timer: 3000,
                         didOpen: () => {
                             Swal.showLoading()
                             timerInterval = setInterval(() => {
@@ -362,7 +362,7 @@ function simulate_solar(data) {
     var chart_series_stack = [];
     var chart_series_yAxis = [];
 
-    set_series_function(0, "line", data.simulate_solar, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "line", data.simulate_solar, data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")], 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
 }
