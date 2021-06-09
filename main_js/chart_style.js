@@ -16,7 +16,7 @@ function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series
             data: chart_series_data[i],
             stack: chart_series_stack[i],
             yAxis: chart_series_yAxis[i],
-            color: chart_info[6]
+            color: chart_info[6+i]
         });
     }
     //set all chart data

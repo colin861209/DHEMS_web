@@ -11,7 +11,7 @@ function get_backEnd_data() {
 
     save_target = {
 
-        modify_target: ["SOCmin", "SOCmax", "SOCthres", "real_time", "Global_real_time", "dr_mode", "uncontrollable_load_flag", "ini_SOC", "hydrogen_price", "simulate_weather", "simulate_price"],
+        modify_target: ["SOCmin", "SOCmax", "SOCthres", "real_time", "Global_real_time", "dr_mode", "uncontrollable_load_flag", "ini_SOC", "hydrogen_price", "simulate_weather", "simulate_price", "simulate_history_weather"],
         fix_target: ["now_SOC", "next_simulate_timeblock", "Global_next_simulate_timeblock", "household_id"]
     }
     $.ajax
@@ -210,26 +210,47 @@ function baseParameter_gauge(data, fullInfo) {
     
     var show = {
         
-        label: ["住戶時刻", "社區時刻", "now SOC", "排程中住戶", "需量模式"],
+        label: ["住戶時刻", "社區時刻", "now SOC", "排程中住戶", "需量模式", "歷史天氣"],
         id: [
             save_target.fix_target[1],
             save_target.fix_target[2],
             save_target.fix_target[0],
             save_target.fix_target[3],
-            save_target.modify_target[5]
+            save_target.modify_target[5],
+            save_target.modify_target[11],
         ],
         value: [
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[1])],
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[2])],
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[0])],
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[3])],
-            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])]
+            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])],
+            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[11])]
         ],
     }
 
     if (fullInfo.database_name == "DHEMS_fiftyHousehold") {
-        
+
         document.getElementById(show.id[3]+"_gauge").style.display = 'none';
+        value_num = -1;
+        if (show.value[4] != 0) {
+
+            document.getElementById(show.id[5]+"_gauge").style.display = 'block';
+            switch (show.value[5]) {
+                case "big_sunny":
+                    value_num = 2;
+                    break;
+                case "sunny":
+                    value_num = 1;
+                    break;
+                case "cloudy":
+                    value_num = 0;
+                    break;
+                default:
+                    console.log("Gauge simulate history weather Wrong cases");
+                    break;
+            }
+        }
     }
 
     var next_simulate_timeblock = new JustGage({
@@ -351,18 +372,48 @@ function baseParameter_gauge(data, fullInfo) {
         gaugeWidthScale: 0.7,
         counter: true
     });
+
+    var simulate_history_weather = new JustGage({
+        
+        id: show.id[5] + "_gauge",
+        value: value_num,
+        min: 0,
+        max: 2,
+        decimals: 0,
+        symbol: '',
+        label: show.label[5] + ": " + show.value[5],
+        pointer: true,
+
+        pointerOptions: {
+            toplength: -15,
+            bottomlength: 10,
+            bottomwidth: 12,
+            color: '#8e8e93',
+            stroke: '#ffffff',
+            stroke_width: 2,
+            stroke_linecap: 'round'
+        },
+        gaugeWidthScale: 0.7,
+        counter: true
+    });
 }
 
 function simulate_solar(data) {
-      
-    var chart_info = ["simulate_solar_chart", "Solar Power", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")], "time", "power(kW)", null, 'orange'];
+    
+    if (data.baseParameter[1][data.baseParameter[0].indexOf("dr_mode")] != 0)
+        sub_title = "T: " + data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")] + ", H: " + data.baseParameter[1][data.baseParameter[0].indexOf("simulate_history_weather")];
+    else
+        sub_title = data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")]
+    var chart_info = ["simulate_solar_chart", "Solar Power", sub_title, "time", "power(kW)", null, 'orange', '#7cb5ec'];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
 
-    set_series_function(0, "line", data.simulate_solar, data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")], 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "line", data.simulate_solar, "Today weather", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    if (data.baseParameter[1][data.baseParameter[0].indexOf("dr_mode")] != 0)
+        set_series_function(0, "line", data.simulate_history_weather, "History weather", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
 }
