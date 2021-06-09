@@ -72,7 +72,7 @@ function autoRun(ourData, household_num) {
 
     function_run = setInterval(function () {
 
-        householdsLoadSum(ourData);
+        // householdsLoadSum(ourData);
         if (household_num + 1 == ourData.household_num)
             household_num = 0
         else
