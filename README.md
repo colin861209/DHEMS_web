@@ -81,7 +81,19 @@
 	* css: breadcrumb, class 'database' button
 
 ---
+2021/06/09
 
++ Commit link [608106b](https://github.com/colin861209/DHEMS_web/commit/608106bd2d62f76efb5a49f9a3cb328ed40a7108)
+
+- ADD `History weather` represent previous days weather
+	- PHP:
+		- Get history solar data, **array_map** can 'floatval' array values in one line
+	- Js:
+		- New gauge & tableinfo & solar chart show two solar data line
+		- Show chart color can be multiple after chart_info 6
+	- Html:
+		- New gauge history weather structure
+---
 ### index.html
 
 * Show `each household's load deployment` and `total load consumption`
