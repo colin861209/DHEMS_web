@@ -3,7 +3,10 @@ require 'commonSQL_data.php';
 
 $load_power_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `backup_totalLoad` ", array("totalLoad"));
 // $uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_uncontrollable_load` ", array("totalLoad"));
-
+$target_price = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` WHERE `parameter_name` = 'simulate_price' ", $oneValue);
+$target_solar = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` WHERE `parameter_name` = 'simulate_weather' ", $oneValue);
+$electric_price = sqlFetchAssoc($conn, "SELECT `" .$target_price. "` FROM `price` ", array($target_price));
+$simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar_data` ", array($target_solar));
 // table info
 $taipower_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'LoadSpend(taipowerPrice)' ", $oneValue);
 $three_level_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'LoadSpend(threeLevelPrice)' ", $oneValue);
@@ -42,9 +45,9 @@ $data_array = [
     "max_sell_price" => floatval($max_sell_price),
     "min_FC_cost" => floatval($min_FC_cost),
     "consumption" => floatval($consumption),
-    "electric_price" => $electric_price,
+    "electric_price" => array_map('floatval', $electric_price),
     "limit_capability" => $limit_capability,
-    "simulate_solar" => $simulate_solar,
+    "simulate_solar" => array_map('floatval', $simulate_solar),
     "FC_power" => $load_status_array[array_search("Pfc", $variable_name, true)],
     "sell_power" => $oppsite_sell_array,
     "battery_power" => $load_status_array[array_search("Pess", $variable_name, true)],
