@@ -229,10 +229,10 @@ function baseParameter_gauge(data, fullInfo) {
         ],
     }
 
+    value_num = -1;
     if (fullInfo.database_name == "DHEMS_fiftyHousehold") {
 
         document.getElementById(show.id[3]+"_gauge").style.display = 'none';
-        value_num = -1;
         if (show.value[4] != 0) {
 
             document.getElementById(show.id[5]+"_gauge").style.display = 'block';
