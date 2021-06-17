@@ -48,9 +48,20 @@ $variable_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `p
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
 
 $household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `LHEMS_control_status` ORDER BY `household_id`, `control_id` ASC ", array("household_id"));
-$optimize_result = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` ORDER BY `household_id`, `control_id` ASC ", $controlStatusResult);
-mysqli_close($conn);
 
+$grid_power = [];
+$load_power = [];
+for ($i=0; $i < $household_num; $i++) { 
+    
+    $interrupt_status = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` WHERE (equip_name LIKE '%interrupt%' OR equip_name LIKE 'varyingPsi%') AND household_id =" .($i+1). " ORDER BY `household_id`, `control_id` ASC ", $controlStatusResult);
+    array_push($load_power, $interrupt_status);
+    $grid_power_tmp = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` WHERE equip_name = 'Pgrid' AND household_id =" .($i+1). " ORDER BY `household_id`, `control_id` ASC ", $aRow);
+    array_splice($grid_power_tmp, 0, 1);
+    array_splice($grid_power_tmp, 96, count($grid_power_tmp)-1);
+    array_push($grid_power, array_map('floatval', $grid_power_tmp));
+}
+
+mysqli_close($conn);
 
 for ($j = 0; $j < count($uncontrollable_load); $j++) {
 
@@ -81,14 +92,12 @@ for ($i = 0; $i < $household_num; $i++) {
 
     for ($y = 0; $y < $time_block; $y++) {
         
-        for ($u = 0; $u < $app_counts; $u++) {
+        for ($u = 0; $u < $interrupt_num + $uninterrupt_num; $u++) {
 
-            if ($u < $interrupt_num + $uninterrupt_num)
-                $load_power[$i][$u][] = $power1[$u] * $optimize_result[$u + $i * $variable_num][$y];
-            else
-                $load_power[$i][$u][] =  $optimize_result[($i + 1) * $variable_num - 1][$y];
-            // $load_power[$u][] = $optimize_result[array_search("varyingPsi1", $variable_name, true)][$y];
-
+            $load_power[$i][$u][$y] = $power1[$u] * $load_power[$i][$u][$y];
+        }
+        for ($u=0; $u < $app_counts; $u++) { 
+            
             $load_power_sum[$i][$y] += $load_power[$i][$u][$y];
         }
     }
@@ -98,7 +107,6 @@ for ($i = 0; $i < $household_num; $i++) {
 
     for ($y = 0; $y < $time_block; $y++) {
 
-        $grid_power[$i][] = $optimize_result[$i * $variable_num + $app_counts][$y];
         $battery_power[$i][] = $optimize_result[$i * $variable_num + $app_counts + 1][$y];
         $SOC[$i][] = $optimize_result[$i * $variable_num + $app_counts + 4][$y];
     }
