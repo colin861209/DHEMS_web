@@ -81,7 +81,7 @@
 	* css: breadcrumb, class 'database' button
 
 ---
-2021/06/09
+### 2021/06/09
 
 + Commit link [608106b](https://github.com/colin861209/DHEMS_web/commit/608106bd2d62f76efb5a49f9a3cb328ed40a7108)
 
@@ -93,6 +93,28 @@
 		- Show chart color can be multiple after chart_info 6
 	- Html:
 		- New gauge history weather structure
+
+---
+### 2021/06/18
+
++ Commit link [f22740b](https://github.com/colin861209/DHEMS_web/commit/f22740bf7f96d385161c82e145bfdfb366c6897c)
++ Commit link [55e572f](https://github.com/colin861209/DHEMS_web/commit/55e572f54634da4f65af97f0708721cbb73e8dca)
++ Commit link [9553ea4](https://github.com/colin861209/DHEMS_web/commit/9553ea48942127859ec1efb592ab56ba20eb04ad)
+
+- ADD `Public Load` in loadFix
+
+- **Technique of PHP**
+- In [f22740b](https://github.com/colin861209/DHEMS_web/commit/f22740bf7f96d385161c82e145bfdfb366c6897c)
+	- array_map: Sum two arrays 
+	- ex: `$load_model = array_map(function() {
+        return array_sum(func_get_args());
+    }, $load_model, $uncontrollable_load_sum);`
+- In [55e572f](https://github.com/colin861209/DHEMS_web/commit/55e572f54634da4f65af97f0708721cbb73e8dca)
+	- array_push: Can push an array into another two dimensional arrays 
+	- array_splice: can remove array values by index, and index will re-sequence
+	
+
+
 ---
 ### index.html
 
