@@ -24,7 +24,10 @@ $load_model = array_map('floatval', $load_power_sum);
 if ($uncontrollable_load_flag) {
     
     array_push($load_model_seperate, array_map('floatval', $uncontrollable_load_sum));
-    $load_model += array_map('floatval', $uncontrollable_load_sum);
+    $uncontrollable_load_sum = array_map('floatval', $uncontrollable_load_sum);
+    $load_model = array_map(function() {
+        return array_sum(func_get_args());
+    }, $load_model, $uncontrollable_load_sum);
 }
 if ($database_name == 'DHEMS_fiftyHousehold') {
     
@@ -40,7 +43,9 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
             }
             array_push($load_model_seperate, $publicLoad[$i]);
         }
-        $load_model += array_map('floatval', $publicLoad_total);
+        $load_model = array_map(function() {
+            return array_sum(func_get_args());
+        }, $load_model, $publicLoad_total);
     }
 }
 

@@ -137,6 +137,11 @@
 	<div id="each_household_status_SOC"></div>
 	<div id="containers"></div>
 
+	<div id="button_household_next" style="display: none;">
+		<button type="button" class="hosuehold" value="-1" onclick="nextOrPrevious_singleHousehold(this.value)">Previous Household</button>
+		<button type="button" class="hosuehold" value="1" onclick="nextOrPrevious_singleHousehold(this.value)">Next Household</button>
+	</div>
+
 	<div class="button_household_group" style="display: block;">
 		<button type="button" class="hosuehold" value="1" onclick="choose_singleHousehold(this.value)">住戶1</button>
 		<button type="button" class="hosuehold" value="2" onclick="choose_singleHousehold(this.value)">住戶2</button>

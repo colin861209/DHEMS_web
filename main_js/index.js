@@ -87,6 +87,7 @@ function autoRun(ourData, household_num) {
 
 function run_household_eachLoad(ourData, household_num) {
 
+    document.getElementById("household_id").setAttribute("value", household_num + 1)
     document.getElementById("household_id").innerHTML = "住戶 " + (household_num + 1) + " 負載使用情況"
     var i = 0;
     for (i = 0; i < ourData.app_counts; i++) {
@@ -250,6 +251,7 @@ function hide_household_button(condition) {
         for (let index = 0; index < button_household_group.length; index++)
             button_household_group[index].style.display = 'none';
         document.getElementById('button_household_range').style.display = 'block';
+        document.getElementById('button_household_next').style.display = 'block';
     }
 }
 
@@ -283,4 +285,11 @@ function choose_singleHousehold_by_rangeBar() {
             })
         }
     })
+}
+
+function nextOrPrevious_singleHousehold(value) {
+    
+    element = document.getElementById('household_id');
+    now_household_id = element.getAttribute('value');
+    choose_singleHousehold(parseInt(now_household_id) + parseInt(value))
 }
