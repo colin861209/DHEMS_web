@@ -12,6 +12,7 @@ $real_buy_grid_cost = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` wh
 $max_sell_price = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'maximumSell' ", $oneValue);
 $min_FC_cost = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` ='fuelCellSpend' ", $oneValue);
 $consumption = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'hydrogenConsumption(g)' ", $oneValue);
+$dr_feedbackPrice = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'demandResponse_feedbackPrice' ", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Global_next_simulate_timeblock' ", $oneValue);
 
 $variable_name = sqlFetchAssoc($conn, "SELECT `equip_name` FROM `GHEMS_control_status` ", array("equip_name"));
@@ -76,6 +77,7 @@ $data_array = [
     "load_status_array" => $load_status_array,
     "load_model_seperate" => $load_model_seperate,
     "GHEMS_flag" => $GHEMS_flag,
+    "dr_feedbackPrice" => $dr_feedbackPrice,
     "database_name" => $database_name
 ];
 
