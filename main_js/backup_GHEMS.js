@@ -17,7 +17,7 @@ function get_backEnd_data() {
     $.ajax
         ({
             type: "GET",
-            url: "back_end/backup.php",
+            url: "back_end/backup_GHEMS.php",
             contentType: "application/x-www-form-urlencoded",
             processData: true,
             success: function (response) {
@@ -31,7 +31,6 @@ function get_backEnd_data() {
                 priceVsLoad(ourData);
                 SOCVsLoad(ourData)
                 loadModel(ourData)
-                flag_table(GHEMS_flag)
             }
         });
 }

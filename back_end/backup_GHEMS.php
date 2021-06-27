@@ -8,6 +8,7 @@ $target_solar = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` W
 $electric_price = sqlFetchAssoc($conn, "SELECT `" .$target_price. "` FROM `price` ", array($target_price));
 $simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar_data` ", array($target_solar));
 // table info
+$total_load_power_sum = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'totalLoad' ", $oneValue);
 $taipower_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'LoadSpend(taipowerPrice)' ", $oneValue);
 $three_level_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'LoadSpend(threeLevelPrice)' ", $oneValue);
 $real_buy_grid_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'realGridPurchase' ", $oneValue);
@@ -18,17 +19,13 @@ $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParame
 
 $variable_name = sqlFetchAssoc($conn, "SELECT `equip_name` FROM `backup_GHEMS` ", array("equip_name"));
 $load_status_array = sqlFetchRow($conn, "SELECT * FROM `backup_GHEMS` ", $controlStatusResult);
-$cost_name = sqlFetchAssoc($conn, "SELECT `cost_name` FROM `cost` ", array("cost_name"));
-$cost_array = sqlFetchRow($conn, "SELECT * FROM `cost` ", $controlStatusResult);
 mysqli_close($conn);
 
-$total_load_power_sum = 0;
 for ($y = 0; $y < $time_block; $y++) {
 
     $load_model[$y] = floatval($load_power_sum[$y]) + floatval($uncontrollable_load_sum[$y]);
     $load_model_seperate[0][$y] = floatval($load_power_sum[$y]);
     $load_model_seperate[1][$y] = floatval($uncontrollable_load_sum[$y]);
-    $total_load_power_sum += $cost_array[array_search("total_load_power", $cost_name, true)][$y];
 }
 
 for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name, true)]); $i++) {
