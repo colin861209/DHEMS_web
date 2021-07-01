@@ -113,7 +113,14 @@
 	- array_push: Can push an array into another two dimensional arrays 
 	- array_splice: can remove array values by index, and index will re-sequence
 	
+---
+### 2021/06/18
 
++ Commit link [681ccf5](https://github.com/colin861209/DHEMS_web/commit/681ccf5d41eb0b5dddc73a839d262b594990fd54)
+
+- baseParameter: Max demand response number
+- index: Participation table
+- loadFix: Demand response feedback price
 
 ---
 ### index.html
