@@ -199,7 +199,8 @@ function baseParameter_gauge(data, fullInfo) {
         
         name: fullInfo.baseParameter[0],
         value: fullInfo.baseParameter[1],
-        database_name: fullInfo.database_name
+        database_name: fullInfo.database_name,
+        dr_count: fullInfo.dr_count
     }
     
     var baseParameter = {
@@ -354,7 +355,7 @@ function baseParameter_gauge(data, fullInfo) {
         id: show.id[4] + "_gauge",
         value: show.value[4],
         min: 0,
-        max: 2,
+        max: fullInfo.dr_count,
         decimals: 0,
         symbol: '',
         label: show.label[4],

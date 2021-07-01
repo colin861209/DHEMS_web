@@ -39,6 +39,7 @@ function get_backEnd_data() {
                 progessbar(ourData);
                 autoRun(ourData, household_num)
                 flag_table(LHEMS_flag)
+                participate_table(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num);
             }
         });
 }
@@ -65,7 +66,7 @@ function choose_singleHousehold(household_id) {
     each_household_status(ourData, household_id - 1)
     each_household_status_SOC(ourData, household_id - 1)
     run_household_eachLoad(ourData, household_id - 1);
-
+    show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_id - 1)
 }
 
 function autoRun(ourData, household_num) {
@@ -81,6 +82,7 @@ function autoRun(ourData, household_num) {
         each_household_status_SOC(ourData, household_num)
         run_household_eachLoad(ourData, household_num)
         progessbar(ourData);
+        show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num)
     }, 7000);
 
 }
@@ -292,4 +294,73 @@ function nextOrPrevious_singleHousehold(value) {
     element = document.getElementById('household_id');
     now_household_id = element.getAttribute('value');
     choose_singleHousehold(parseInt(now_household_id) + parseInt(value))
+}
+
+function participate_table(dr_mode, info, participation_status, household_id) {
+    
+    if (parseInt(dr_mode) != 0) {
+    
+        document.getElementsByClassName('table table-bordered')[0].style.display = 'revert';
+        show_participate_timeblock(dr_mode, info, participation_status, household_id);
+    }
+}
+
+function show_participate_timeblock(dr_mode, info, participation, household_id) {
+
+    if (parseInt(dr_mode) != 0) {
+
+        $('#table_participate_tbody > td').remove()
+        const dr_start = parseInt(info[1]);
+        const dr_end = parseInt(info[2]) - 1;
+        participate_onOff = [[], []];
+        
+        for (let index = dr_start; index < dr_end; index++) {
+            if (participation[household_id][index] == 1)
+                participate_onOff[0].push(index)
+            else if (participation[household_id][index] == 0)
+                participate_onOff[1].push(index)
+        }
+            
+        for (let array_num = 0; array_num < participate_onOff.length; array_num++) {
+            
+            var td = document.createElement('td');
+            
+            if (participate_onOff[array_num].length == 0) {
+                participate_onOff[array_num].push("無")
+                td.appendChild(document.createTextNode(participate_onOff[array_num]));
+            }
+            else {
+                word = replace_continuously_timeblock(participate_onOff[array_num]);
+                td.appendChild(document.createTextNode(word));
+            }
+            td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
+            document.getElementById('table_participate_tbody').appendChild(td);
+        }
+    }
+}
+
+function replace_continuously_timeblock(participate_onOff) {
+    
+    word = String(participate_onOff).replace(/,/g, ' ');
+    replace_text = "";
+
+    for (var i = 1; i < participate_onOff.length-1; i++) {
+        if (participate_onOff[i] == participate_onOff[i-1] + 1 && participate_onOff[i] == participate_onOff[i+1] - 1)
+            replace_text += participate_onOff[i] + " ";
+        
+        else {
+            if (replace_text !== "") {
+                
+                word = word.replace(replace_text, "~ ");
+                replace_text = "";
+            }
+        }
+    }
+    if (replace_text !== "")
+        word = word.replace(replace_text, "~ ");
+    
+    word = word.replace(/ /g, ', ');
+    word = word.replace(/, ~, /g, ' ~ ');
+
+    return word;
 }

@@ -61,6 +61,9 @@ for ($i=0; $i < $household_num; $i++) {
     array_push($grid_power, array_map('floatval', $grid_power_tmp));
 }
 
+if ($dr_mode != 0) 
+    $household_participation = sqlFetchRow($conn, "SELECT * FROM `LHEMS_demand_response_participation` ", $controlStatusResult);
+
 mysqli_close($conn);
 
 for ($j = 0; $j < count($uncontrollable_load); $j++) {
@@ -138,6 +141,9 @@ $data_array = [
     "SOC" => $SOC,
     "LHEMS_flag" => $LHEMS_flag,
     "uncontrollable_load_flag" => $uncontrollable_load_flag,
+    "dr_mode" => $dr_mode,
+    "dr_info" => $dr_info,
+    "dr_participation" => $household_participation,
     "database_name" => $database_name
 ];
 

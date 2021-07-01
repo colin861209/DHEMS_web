@@ -12,6 +12,7 @@ $data_array = [
     "simulate_solar" => $simulate_solar,
     "simulate_history_weather" => array_map('floatval', $simulate_history_weather),
     "electric_price" => $electric_price,
+    "dr_count" => $dr_count,
     "database_name" => $database_name
 ];
 
