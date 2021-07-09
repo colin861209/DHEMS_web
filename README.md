@@ -114,13 +114,25 @@
 	- array_splice: can remove array values by index, and index will re-sequence
 	
 ---
-### 2021/06/18
+### 2021/07/01
 
 + Commit link [681ccf5](https://github.com/colin861209/DHEMS_web/commit/681ccf5d41eb0b5dddc73a839d262b594990fd54)
 
 - baseParameter: Max demand response number
 - index: Participation table
 - loadFix: Demand response feedback price
+
+---
+### 2021/07/10
+
++ Commit link [06f8a5d](https://github.com/colin861209/DHEMS_web/commit/06f8a5d285ce56a8d72fc943ef1aba8b57d5d458)
++ Commit link [60530e0](https://github.com/colin861209/DHEMS_web/commit/60530e0e6bd9a75bed0a52e08101248ade585da5)
++ Commit link [28f0799](https://github.com/colin861209/DHEMS_web/commit/28f079954467d36223cd5a32bc98d261f9cc30e0)
+
+- New Page: log.html
+	- Show all DHEMS log file
+	- pwd is define in log.php and DHEMS show all file include demand response 1&2
+- index: Show `Pess info` in chart SOC & `Catch error` with table Participation
 
 ---
 ### index.html
