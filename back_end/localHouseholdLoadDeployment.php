@@ -51,14 +51,27 @@ $household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `LHEMS_control_
 
 $grid_power = [];
 $load_power = [];
+$battery_power = [];
+$SOC = [];
 for ($i=0; $i < $household_num; $i++) { 
     
     $interrupt_status = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` WHERE (equip_name LIKE '%interrupt%' OR equip_name LIKE 'varyingPsi%') AND household_id =" .($i+1). " ORDER BY `household_id`, `control_id` ASC ", $controlStatusResult);
     array_push($load_power, $interrupt_status);
+    
     $grid_power_tmp = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` WHERE equip_name = 'Pgrid' AND household_id =" .($i+1). " ORDER BY `household_id`, `control_id` ASC ", $aRow);
     array_splice($grid_power_tmp, 0, 1);
     array_splice($grid_power_tmp, 96, count($grid_power_tmp)-1);
     array_push($grid_power, array_map('floatval', $grid_power_tmp));
+
+    $battery_power_tmp = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` WHERE equip_name = 'Pess' AND household_id =" .($i+1). " ORDER BY `household_id`, `control_id` ASC ", $aRow);
+    array_splice($battery_power_tmp, 0, 1);
+    array_splice($battery_power_tmp, 96, count($battery_power_tmp)-1);
+    array_push($battery_power, array_map('floatval', $battery_power_tmp));
+
+    $SOC_tmp = sqlFetchRow($conn, "SELECT * FROM `LHEMS_control_status` WHERE equip_name = 'SOC' AND household_id =" .($i+1). " ORDER BY `household_id`, `control_id` ASC ", $aRow);
+    array_splice($SOC_tmp, 0, 1);
+    array_splice($SOC_tmp, 96, count($SOC_tmp)-1);
+    array_push($SOC, array_map('floatval', $SOC_tmp));
 }
 
 if ($dr_mode != 0) 
@@ -68,10 +81,7 @@ mysqli_close($conn);
 
 for ($j = 0; $j < count($uncontrollable_load); $j++) {
 
-    for ($i = 0; $i < $time_block; $i++) {
-
-        $uncontrollable_load[$j][$i] = floatval($uncontrollable_load[$j][$i]);
-    }
+    $uncontrollable_load[$j] = array_map('floatval', $uncontrollable_load[$j]);
 }
 
 // load_list_array
@@ -105,16 +115,6 @@ for ($i = 0; $i < $household_num; $i++) {
         }
     }
 }
-
-for ($i = 0; $i < $household_num; $i++) {
-
-    for ($y = 0; $y < $time_block; $y++) {
-
-        $battery_power[$i][] = $optimize_result[$i * $variable_num + $app_counts + 1][$y];
-        $SOC[$i][] = $optimize_result[$i * $variable_num + $app_counts + 4][$y];
-    }
-}
-
 
 $data_array = [
 
