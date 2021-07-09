@@ -314,28 +314,34 @@ function show_participate_timeblock(dr_mode, info, participation, household_id) 
         const dr_start = parseInt(info[1]);
         const dr_end = parseInt(info[2]);
         participate_onOff = [[], []];
-        
-        for (let index = dr_start; index < dr_end; index++) {
-            if (participation[household_id][index] == 1)
-                participate_onOff[0].push(index)
-            else if (participation[household_id][index] == 0)
-                participate_onOff[1].push(index)
+        try {
+
+            for (let index = dr_start; index < dr_end; index++) {
+                if (participation[household_id][index] == 1)
+                    participate_onOff[0].push(index)
+                else if (participation[household_id][index] == 0)
+                    participate_onOff[1].push(index)
+            }
+                
+            for (let array_num = 0; array_num < participate_onOff.length; array_num++) {
+                
+                var td = document.createElement('td');
+                
+                if (participate_onOff[array_num].length == 0) {
+                    participate_onOff[array_num].push("無")
+                    td.appendChild(document.createTextNode(participate_onOff[array_num]));
+                }
+                else {
+                    word = replace_continuously_timeblock(participate_onOff[array_num]);
+                    td.appendChild(document.createTextNode(word));
+                }
+                td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
+                document.getElementById('table_participate_tbody').appendChild(td);
+            }
         }
+        catch(e) {
             
-        for (let array_num = 0; array_num < participate_onOff.length; array_num++) {
-            
-            var td = document.createElement('td');
-            
-            if (participate_onOff[array_num].length == 0) {
-                participate_onOff[array_num].push("無")
-                td.appendChild(document.createTextNode(participate_onOff[array_num]));
-            }
-            else {
-                word = replace_continuously_timeblock(participate_onOff[array_num]);
-                td.appendChild(document.createTextNode(word));
-            }
-            td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
-            document.getElementById('table_participate_tbody').appendChild(td);
+            console.log(" Reason: DB may not have realted table with 'Particpation'\n")
         }
     }
 }

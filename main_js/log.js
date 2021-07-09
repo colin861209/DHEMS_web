@@ -31,6 +31,7 @@ function get_backEnd_data(logFile, manual_timer) {
                     success: function (response) {
 
                         data = JSON.parse(response);
+                        console.log(data)
                     }
                 });
         },

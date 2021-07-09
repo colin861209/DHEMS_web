@@ -1,6 +1,15 @@
 <?php
+require 'fetch_mysql.php';
 
-$pwd = '/home/hems/how/fifty_DHEMS/log/';
+if ($database_name == "DHEMS_fiftyHousehold") {
+    
+    $pwd = '/home/hems/how/fifty_DHEMS/log/';
+}
+else {
+    
+    $pwd = '/home/hems/how/DHEMS/log/';
+}
+
 $file = $_POST['sendtoPHP'] . '.log';
 $path_file = $pwd.$file;
 
@@ -28,6 +37,7 @@ $data_array = [
     "log_name" => $file,
     "log_path" => $path_file,
     "file_name_array" => $file_name,
+    "database_name" => $database_name
 ];
 
 echo json_encode($data_array);
