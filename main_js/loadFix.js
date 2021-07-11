@@ -26,7 +26,7 @@ function get_backEnd_data() {
                 ourData = response;
                 GHEMS_flag = ourData.GHEMS_flag;
                 console.log(ourData);
-                insertText_after_breadcrumb(response.database_name, null, null);
+                insertText_after_breadcrumb(response.database_name, null, null, ourData.dr_mode, ourData.dr_info);
                 tableInfo(ourData);
                 progessbar(ourData);
                 priceVsLoad(ourData);
@@ -123,7 +123,7 @@ function priceVsLoad(ABC) {
     // set_series_function(0,"spline",data.load_power[2],"load-3",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
 
     /*Show chart*/
-    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1);
 
 }
 
@@ -155,7 +155,7 @@ function SOCVsLoad(ABC) {
     // set_series_function(0,"spline",data.load_power[2],"load-3",1,chart_series_type,chart_series_name,chart_series_data,chart_series_stack,chart_series_yAxis);
 
     /*Show chart*/
-    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1);
 
 }
 
@@ -174,6 +174,6 @@ function loadModel(ABC) {
     set_series_function(1, "column", data.load_model_seperate, energyType.Pload_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     /*Show chart*/
-    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1);
 
 }

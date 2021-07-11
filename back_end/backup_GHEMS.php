@@ -7,6 +7,9 @@ $target_price = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` W
 $target_solar = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` WHERE `parameter_name` = 'simulate_weather' ", $oneValue);
 $electric_price = sqlFetchAssoc($conn, "SELECT `" .$target_price. "` FROM `price` ", array($target_price));
 $simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar_data` ", array($target_solar));
+$dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
+if ($dr_mode != 0)
+    $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
 // table info
 $total_load_power_sum = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'totalLoad' ", $oneValue);
 $taipower_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'LoadSpend(taipowerPrice)' ", $oneValue);
@@ -54,6 +57,8 @@ $data_array = [
     "load_model" => $load_model,
     "load_status_array" => $load_status_array,
     "load_model_seperate" => $load_model_seperate,
+    "dr_mode" => $dr_mode,
+    "dr_info" => $dr_info,
     "GHEMS_flag" => $GHEMS_flag,
     "database_name" => $database_name
 ];

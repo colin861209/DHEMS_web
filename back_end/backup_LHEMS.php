@@ -46,7 +46,10 @@ $uninterrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter
 $household_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'householdAmount' ", $oneValue);
 $variable_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'local_variable_num' ", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
-
+$dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
+if ($dr_mode != 0)
+    $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
+    
 $household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `backup_LHEMS` ORDER BY `household_id`, `control_id` ASC ", array("household_id"));
 
 $grid_power = [];
@@ -138,6 +141,8 @@ $data_array = [
     "SOC" => $SOC,
     "LHEMS_flag" => $LHEMS_flag,
     "uncontrollable_load_flag" => $uncontrollable_load_flag,
+    "dr_mode" => $dr_mode,
+    "dr_info" => $dr_info,
     "database_name" => $database_name
 ];
 

@@ -2,7 +2,7 @@
 // parameter 'simulate_timeblock' is null, the chart won't show the red dash line                       //
 // array 'chart_info' [id, title, sub title, x-axis name, left y-axis name, right y-axis name, color]   //
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, simulate_timeblock) {
+function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, simulate_timeblock, dr_startTime = null, dr_endTime = null) {
 
     //set all series data
     var series_data = [],
@@ -38,6 +38,11 @@ function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series
             }
         },
         xAxis: {
+            plotBands: [{
+                color: '#e7e7e7', // Color value
+                from: dr_startTime, // Start of the plot band
+                to: dr_endTime // End of the plot band
+            }],
             max: 95,
             title: {
                 text: chart_info[3], style: {
@@ -216,7 +221,7 @@ function set_each_load_function(multi, series_type, DATA, ID, stack_class, yAxis
 
 }
 
-function insertText_after_breadcrumb(database, weather, initSOC) {
+function insertText_after_breadcrumb(database, weather, initSOC, dr_mode = 0, dr_info = null) {
     
     var insert_target = document.getElementById('breadcrumb').getElementsByTagName('li')[1];
     if (database != null)
@@ -225,6 +230,11 @@ function insertText_after_breadcrumb(database, weather, initSOC) {
         insert_target.innerHTML += ", weather: " + weather;
     if (initSOC != null)
         insert_target.innerHTML += ", initSOC: " + initSOC;
+    if (dr_mode != 0) {
+        insert_target.innerHTML += ", dr_startTime: " + dr_info[1];
+        insert_target.innerHTML += ", dr_endTime: " + dr_info[2];
+    }
+    
     if (database != null)
         insert_target.innerHTML += ")";
 }

@@ -78,6 +78,8 @@ $data_array = [
     "load_model_seperate" => $load_model_seperate,
     "GHEMS_flag" => $GHEMS_flag,
     "dr_feedbackPrice" => round($dr_feedbackPrice, 2),
+    "dr_mode" => $dr_mode,
+    "dr_info" => $dr_info,
     "database_name" => $database_name
 ];
 
