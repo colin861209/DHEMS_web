@@ -162,7 +162,7 @@ function loadModel(ABC) {
     //parse to get all json data
     var data = ABC;
     //define all needed data array
-    var chart_info = ["loadModel", "Load Mdoel", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_info = ["loadModel", "Load Model", " ", "time", "price(TWD)", "power(kW)"];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
