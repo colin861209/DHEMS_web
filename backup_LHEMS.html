@@ -120,6 +120,20 @@
 		<button type="button" class="hosuehold" onclick="choose_singleHousehold_by_rangeBar()">Range Bar</button>
 	</div>
 	<h3 id="household_id" style="font-weight:bold; "></h3>
+	<table class="table table-bordered" style="display: none;">
+		<thead>             
+		 <tr class="well">
+			 <th style="text-align: center; color:black; width: 50%; font-size: 25px;">住戶參與時段</th>
+			 <th style="text-align: center; color:black; width: 50%; font-size: 25px;">住戶不參與時段</th>
+		 </tr>
+		</thead>
+		<tbody>
+		  <tr class="alert alert-danger" style="text-align: center" id="table_participate_tbody">
+			<!-- <td><h3><span id="totalLoadsPower"></span>(kWh)</h3></td>
+			<td><h3><span id="taipowerLoadsCost"></span>(NTD)</h3></td> -->
+		  </tr>
+		</tbody>
+	</table>
 	<div id="each_household_status"></div>
 	<div id="each_household_status_SOC"></div>
 	<div id="containers"></div>

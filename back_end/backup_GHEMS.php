@@ -8,6 +8,7 @@ $target_solar = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` W
 $electric_price = sqlFetchAssoc($conn, "SELECT `" .$target_price. "` FROM `price` ", array($target_price));
 $simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar_data` ", array($target_solar));
 $dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
+$publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
 if ($dr_mode != 0)
     $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
 // table info
@@ -18,6 +19,7 @@ $real_buy_grid_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParame
 $max_sell_price = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'maximumSell' ", $oneValue);
 $min_FC_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` ='fuelCellSpend' ", $oneValue);
 $consumption = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'hydrogenConsumption(g)' ", $oneValue);
+$dr_feedbackPrice = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'demandResponse_feedbackPrice' ", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'Global_next_simulate_timeblock' ", $oneValue);
 
 $variable_name = sqlFetchAssoc($conn, "SELECT `equip_name` FROM `backup_GHEMS` ", array("equip_name"));
@@ -31,6 +33,23 @@ for ($y = 0; $y < $time_block; $y++) {
     $load_model_seperate[1][$y] = floatval($uncontrollable_load_sum[$y]);
 }
 
+if ($database_name == 'DHEMS_fiftyHousehold') {
+        
+    for ($i=0; $i < count($publicLoad_power); $i++) { 
+        
+        $name = "publicLoad".($i+1);
+        $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
+        for ($y = 0; $y < $time_block; $y++) {
+            $publicLoad[$i][$y] *= $publicLoad_power[$i];
+            $publicLoad_total[$y] += $publicLoad[$i][$y];
+        }
+        array_push($load_model_seperate, $publicLoad[$i]);
+    }
+    $load_model = array_map(function() {
+        return array_sum(func_get_args());
+    }, $load_model, $publicLoad_total);
+}
+
 for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name, true)]); $i++) {
 
     $oppsite_sell_array[$i] = $load_status_array[array_search("Psell", $variable_name, true)][$i] * (-1);
@@ -38,13 +57,13 @@ for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name,
 
 $data_array = [
 
-    "total_load_power_sum" => $total_load_power_sum,
-    "taipower_loads_cost" => floatval($taipower_loads_cost),
-    "three_level_loads_cost" => floatval($three_level_loads_cost),
-    "real_buy_grid_cost" => floatval($real_buy_grid_cost),
-    "max_sell_price" => floatval($max_sell_price),
-    "min_FC_cost" => floatval($min_FC_cost),
-    "consumption" => floatval($consumption),
+    "total_load_power_sum" => round($total_load_power_sum, 2),
+    "taipower_loads_cost" => round($taipower_loads_cost, 2),
+    "three_level_loads_cost" => round($three_level_loads_cost, 2),
+    "real_buy_grid_cost" => round($real_buy_grid_cost, 2),
+    "max_sell_price" => round($max_sell_price, 2),
+    "min_FC_cost" => round($min_FC_cost, 2),
+    "consumption" => round($consumption, 2),
     "electric_price" => array_map('floatval', $electric_price),
     "limit_capability" => $limit_capability,
     "simulate_solar" => array_map('floatval', $simulate_solar),
@@ -60,6 +79,7 @@ $data_array = [
     "dr_mode" => $dr_mode,
     "dr_info" => $dr_info,
     "GHEMS_flag" => $GHEMS_flag,
+    "dr_feedbackPrice" => round($dr_feedbackPrice, 2),
     "database_name" => $database_name
 ];
 

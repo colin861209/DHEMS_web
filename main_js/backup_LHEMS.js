@@ -38,6 +38,7 @@ function get_backEnd_data() {
                 run_household_eachLoad(ourData, 0)
                 progessbar(ourData);
                 autoRun(ourData, household_num)
+                participate_table(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num);
             }
         });
 }
@@ -64,7 +65,7 @@ function choose_singleHousehold(household_id) {
     each_household_status(ourData, household_id - 1)
     each_household_status_SOC(ourData, household_id - 1)
     run_household_eachLoad(ourData, household_id - 1);
-
+    show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_id - 1)
 }
 
 function autoRun(ourData, household_num) {
@@ -80,6 +81,7 @@ function autoRun(ourData, household_num) {
         each_household_status_SOC(ourData, household_num)
         run_household_eachLoad(ourData, household_num)
         progessbar(ourData);
+        show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num)
     }, 7000);
 
 }
@@ -125,7 +127,7 @@ function each_household_status(data, household_id) {
     set_series_function(0, "column", load_power_sum_with_UCLoad, "household_" + (household_id + 1), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
-    if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1)
+    // if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1)
         set_series_function(0, "spline", data.battery_power[household_id], energyType.Pess_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     /*Show chart*/
@@ -134,7 +136,7 @@ function each_household_status(data, household_id) {
 
 function each_household_status_SOC(data, household_id) {
     
-    if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1) {
+    // if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1) {
 
         var chart_info = ["each_household_status_SOC", "", " ", "time", "SOC", "power(kW)"];
         var chart_series_type = [];
@@ -152,13 +154,16 @@ function each_household_status_SOC(data, household_id) {
         set_series_function(0, "column", load_power_sum_with_UCLoad, "household_" + (household_id + 1), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
         set_series_function(0, "areaspline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
+        // if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1)
+            set_series_function(0, "spline", data.battery_power[household_id], energyType.Pess_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+            
         /*Show chart*/
         show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1, data.dr_info[1], data.dr_info[2] - 1);
-    }
-    else {
+    // }
+    // else {
 
-        document.getElementById('each_household_status_SOC').style.display = "none";
-    }
+    //     document.getElementById('each_household_status_SOC').style.display = "none";
+    // }
 }
 
 function householdsLoadSum(data) {
@@ -291,4 +296,79 @@ function nextOrPrevious_singleHousehold(value) {
     element = document.getElementById('household_id');
     now_household_id = element.getAttribute('value');
     choose_singleHousehold(parseInt(now_household_id) + parseInt(value))
+}
+
+function participate_table(dr_mode, info, participation_status, household_id) {
+    
+    if (parseInt(dr_mode) != 0) {
+    
+        document.getElementsByClassName('table table-bordered')[0].style.display = 'revert';
+        show_participate_timeblock(dr_mode, info, participation_status, household_id);
+    }
+}
+
+function show_participate_timeblock(dr_mode, info, participation, household_id) {
+
+    if (parseInt(dr_mode) != 0) {
+
+        $('#table_participate_tbody > td').remove()
+        const dr_start = parseInt(info[1]);
+        const dr_end = parseInt(info[2]);
+        participate_onOff = [[], []];
+        try {
+
+            for (let index = dr_start; index < dr_end; index++) {
+                if (participation[household_id][index] == 1)
+                    participate_onOff[0].push(index)
+                else if (participation[household_id][index] == 0)
+                    participate_onOff[1].push(index)
+            }
+                
+            for (let array_num = 0; array_num < participate_onOff.length; array_num++) {
+                
+                var td = document.createElement('td');
+                
+                if (participate_onOff[array_num].length == 0) {
+                    participate_onOff[array_num].push("無")
+                    td.appendChild(document.createTextNode(participate_onOff[array_num]));
+                }
+                else {
+                    word = replace_continuously_timeblock(participate_onOff[array_num]);
+                    td.appendChild(document.createTextNode(word));
+                }
+                td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
+                document.getElementById('table_participate_tbody').appendChild(td);
+            }
+        }
+        catch(e) {
+            
+            console.log(" Reason: DB may not have realted table with 'Particpation'\n")
+        }
+    }
+}
+
+function replace_continuously_timeblock(participate_onOff) {
+    
+    word = String(participate_onOff).replace(/,/g, ' ');
+    replace_text = "";
+
+    for (var i = 1; i < participate_onOff.length-1; i++) {
+        if (participate_onOff[i] == participate_onOff[i-1] + 1 && participate_onOff[i] == participate_onOff[i+1] - 1)
+            replace_text += participate_onOff[i] + " ";
+        
+        else {
+            if (replace_text !== "") {
+                
+                word = word.replace(replace_text, "~ ");
+                replace_text = "";
+            }
+        }
+    }
+    if (replace_text !== "")
+        word = word.replace(replace_text, "~ ");
+    
+    word = word.replace(/ /g, ', ');
+    word = word.replace(/, ~, /g, ' ~ ');
+
+    return word;
 }
