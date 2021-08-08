@@ -8,6 +8,8 @@ $simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar
 $GHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `GHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "flag"));
 $LHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `LHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "flag"));
 
+$local_simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
+$global_simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Global_next_simulate_timeblock' ", $oneValue);
 $limit_power = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Pgridmax' ", $oneValue);
 $time_block = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'time_block' ", $oneValue);
 $dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);

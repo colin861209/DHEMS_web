@@ -260,3 +260,48 @@ var energyType = {
     SOC_chart_name: "SOC",
     electrice_chart_name: "price",
 }
+
+var compare_timeblock = {};
+setInterval(() => {
+    
+    $.ajax
+        ({
+            type: "POST",
+            url: "back_end/reload_windows_compare.php",
+            data: { compare_timeblock: compare_timeblock },
+            success: function (response) {
+
+                response = JSON.parse(response);
+                
+                if (response.status == "reload") {
+                                        
+                    Swal.fire({
+                        icon: 'info',
+                        title: '時刻更新了',
+                        timerProgressBar: true,
+                        timer: 3000,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                const content = Swal.getHtmlContainer()
+                                if (content) {
+                                  const b = content.querySelector('b')
+                                  if (b) {
+                                    b.textContent = Swal.getTimerLeft()
+                                  }
+                                }
+                              }, 100)
+                            },
+                            willClose: () => {
+                              clearInterval(timerInterval)
+                            }
+                    })
+                    .then(() => {
+
+                        location.reload("")
+                    });
+                }
+            }
+        });
+
+}, 1000*10);
