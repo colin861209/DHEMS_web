@@ -24,6 +24,11 @@ function get_backEnd_data() {
                 response = JSON.parse(response);
                 console.log(response);
                 now_database_name = response.database_name;
+                if (now_database_name == "DHEMS_fiftyHousehold") {
+                    
+                    save_target.fix_target.pop();
+                    save_target.modify_target.push("comfortLevel_flag");
+                }
                 compare_timeblock = {
                 
                     local: response.baseParameter[1][response.baseParameter[0].indexOf("next_simulate_timeblock")],
@@ -189,7 +194,7 @@ function baseParameter_gauge(data, fullInfo) {
     value_num = -1;
     if (fullInfo.database_name == "DHEMS_fiftyHousehold") {
 
-        document.getElementById(show.id[3]+"_gauge").style.display = 'none';
+        document.getElementById("household_id_gauge").style.display = 'none';
         if (show.value[4] != 0) {
 
             document.getElementById(show.id[5]+"_gauge").style.display = 'block';

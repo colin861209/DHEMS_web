@@ -127,7 +127,36 @@ function set_series_function(multi, series_type, DATA, stack_class, yAxis_locate
     }
 }
 
-function show_chart_with_pinkArea(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, chart_upband, chart_lowband) {
+function show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, chart_lowband, chart_upband, comfortLevel_flag = 0) {
+    
+    var plotBandsArray = [];
+    if (comfortLevel_flag) {
+        
+        // 綠 黃 粉 橘 
+        var color_name = ['#B7FF68', '#FFFF93', 'pink', '#FFBB77'];
+        for (let i = 0; i < chart_lowband.length; i++) {
+                
+            for (let j = 0; j < chart_lowband[i].length; j++) {
+
+                plotBandsArray.push({
+
+                    color: color_name[i],
+                    from: chart_lowband[i][j],
+                    to: chart_upband[i][j],
+                });    
+            }
+        }
+    }
+    else {
+
+        plotBandsArray.push({
+            
+            color: 'pink',
+            from: chart_lowband,
+            to: chart_upband
+        })
+    }
+
     //set all series data
     var series_data = [];
     var len = Object.keys(chart_series_name).length;
@@ -151,11 +180,7 @@ function show_chart_with_pinkArea(chart_info, chart_series_type, chart_series_na
             text: chart_info[2]
         },
         xAxis: {
-            plotBands: [{
-                color: 'pink', // Color value
-                from: chart_upband, // Start of the plot band
-                to: chart_lowband // End of the plot band
-            }],
+            plotBands: plotBandsArray,
             max: 95,
             title: { text: chart_info[3] },
             categories: []

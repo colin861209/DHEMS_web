@@ -77,6 +77,20 @@ for ($i=0; $i < $household_num; $i++) {
 if ($dr_mode != 0) 
     $household_participation = sqlFetchRow($conn, "SELECT * FROM `LHEMS_demand_response_participation` ", $controlStatusResult);
 
+if ($comfortLevel_flag) {
+    
+    $each_household_startComfortLevel = [];
+    $each_household_endComfortLevel = [];
+    $comfortLevel_array = sqlFetchAssoc($conn, "SELECT 
+    level1_startEndTime1, level1_startEndTime2, level1_startEndTime3, 
+    level2_startEndTime1, level2_startEndTime2, level2_startEndTime3, 
+    level3_startEndTime1, level3_startEndTime2, level3_startEndTime3, 
+    level4_startEndTime1, level4_startEndTime2, level4_startEndTime3 FROM `LHEMS_comfort_level` ", 
+    array("level1_startEndTime1", "level1_startEndTime2", "level1_startEndTime3", 
+    "level2_startEndTime1", "level2_startEndTime2", "level2_startEndTime3", 
+    "level3_startEndTime1", "level3_startEndTime2", "level3_startEndTime3", 
+    "level4_startEndTime1", "level4_startEndTime2", "level4_startEndTime3"));
+}
 mysqli_close($conn);
 
 for ($j = 0; $j < count($uncontrollable_load); $j++) {
@@ -99,6 +113,35 @@ for ($i = 0; $i < $app_counts; $i++) {
     $power3[$i] = floatval($load_list_array[$household_num + 2][$i]);
     $number[$i] = $load_list_array[$household_num + 3][$i];
     $equip_name[$i] = $load_list_array[$household_num + 4][$i];
+}
+
+$diff_level_num = 4;
+$same_level_num = 3;
+for ($i=0; $i < $household_num; $i++) { 
+    
+    for ($j=0; $j < $diff_level_num; $j++) { 
+        
+        for ($k=0; $k < $same_level_num; $k++) { 
+            
+            $comfortStart =[]; $comfortEnd = [];
+            for ($z=0; $z < $app_counts; $z++) { 
+                
+                if ($comfortLevel_array[$j * $same_level_num + $k][$i * $app_counts + $z] != null) {
+                    
+                    list($start_tmp, $end_tmp) = explode("~", $comfortLevel_array[$j * $same_level_num + $k][$i * $app_counts + $z]);
+                    array_push($comfortStart, intval($start_tmp));
+                    array_push($comfortEnd, intval($end_tmp));
+                }
+                else {
+                    
+                    array_push($comfortStart, null);
+                    array_push($comfortEnd, null);
+                }
+            }
+            $each_household_startComfortLevel[$i][$j][$k] = $comfortStart;
+            $each_household_endComfortLevel[$i][$j][$k] = $comfortEnd;
+        }
+    }
 }
 
 for ($i = 0; $i < $household_num; $i++) {
@@ -146,6 +189,9 @@ $data_array = [
     "dr_mode" => $dr_mode,
     "dr_info" => $dr_info,
     "dr_participation" => $household_participation,
+    "comfortLevel_flag" => intval($comfortLevel_flag),
+    "each_household_startComfortLevel" => $each_household_startComfortLevel,
+    "each_household_endComfortLevel" => $each_household_endComfortLevel,
     "database_name" => $database_name
 ];
 

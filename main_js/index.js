@@ -230,10 +230,31 @@ function each_load(data, num, household_num) {
     var this_load = data.load_power[household_num];
     var this_ID = data.number
     var this_name = data.equip_name;
-    var this_s_time = data.start[household_num];
-    var this_e_time = data.end[household_num];
-    var start = this_s_time[num];
-    var end = this_e_time[num] - 1;
+    if (data.comfortLevel_flag) {
+
+        var this_s_time = data.each_household_startComfortLevel[household_num];
+        var this_e_time = data.each_household_endComfortLevel[household_num];
+        var start = [], end = [];
+        for (let i = 0; i < this_s_time.length; i++) {
+            
+            var comfort_s_tmp = [], comfort_e_tmp = [];    
+            for (let j = 0; j < this_s_time[i].length; j++) {
+                
+                comfort_s_tmp.push(this_s_time[i][j][num]);
+                comfort_e_tmp.push(this_e_time[i][j][num] - 1);
+            }
+            start.push(comfort_s_tmp);
+            end.push(comfort_e_tmp);
+        }
+    }
+    else {
+
+        var this_s_time = data.start[household_num];
+        var this_e_time = data.end[household_num];
+        var start = this_s_time[num];
+        var end = this_e_time[num] - 1;
+    }
+
     //define all needed data array
     var chart_info = ["con_" + num, this_name[num], "模擬值(simulation)", "時間(區間)", "電價(TWD)", "功率(kW)"];
     var chart_series_type = [];
@@ -246,7 +267,7 @@ function each_load(data, num, household_num) {
     set_each_load_function(0, "line", data.electric_price, null, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_each_load_function(0, "column", this_load[num], ((household_num + 1) + "-" + this_ID[num]), ((household_num + 1) + "-" + this_ID[num]), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     /*Show chart*/
-    show_chart_with_pinkArea(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, start, end);
+    show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, start, end, data.comfortLevel_flag);
 
 }
 
