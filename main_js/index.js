@@ -241,7 +241,16 @@ function each_load(data, num, household_num) {
             for (let j = 0; j < this_s_time[i].length; j++) {
                 
                 comfort_s_tmp.push(this_s_time[i][j][num]);
-                comfort_e_tmp.push(this_e_time[i][j][num] - 1);
+                // if loop is to make chart of comfort interval be normal, but actually it's not correct,
+                // the correct way only use 'comfort_e_tmp.push(this_e_time[i][j][num] - 1);'
+                if (this_e_time[i][j][num] == data.end[household_num][num]) {
+                    
+                    comfort_e_tmp.push(this_e_time[i][j][num] - 1);
+                }
+                else {
+
+                    comfort_e_tmp.push(this_e_time[i][j][num]);
+                }
             }
             start.push(comfort_s_tmp);
             end.push(comfort_e_tmp);
