@@ -133,7 +133,7 @@ function show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, ch
     if (comfortLevel_flag) {
         
         // 綠 黃 粉 橘 
-        var color_name = ['#B7FF68', '#FFFF93', 'pink', '#FFBB77'];
+        var color_name = ['#B7FF68', '#FFFF93', 'pink', '#ff0000a1'];
         for (let i = 0; i < chart_lowband.length; i++) {
                 
             for (let j = 0; j < chart_lowband[i].length; j++) {
