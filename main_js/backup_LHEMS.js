@@ -26,6 +26,11 @@ function get_backEnd_data() {
                 console.log(response);
                 ourData = response;
                 LHEMS_flag = ourData.LHEMS_flag;
+                compare_timeblock = {
+                    
+                    local: ourData.local_simulate_timeblock,
+                    global: ourData.global_simulate_timeblock
+                };
                 household_num = 0;
                 hide_household_button(ourData.database_name == "DHEMS_fiftyHousehold");
                 increase_chartHeight('households_loadsSum', ourData.database_name == "DHEMS_fiftyHousehold");

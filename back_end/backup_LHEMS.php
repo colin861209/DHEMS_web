@@ -125,6 +125,8 @@ for ($i = 0; $i < $household_num; $i++) {
 
 $data_array = [
 
+    "local_simulate_timeblock" => intval($local_simulate_timeblock),
+    "global_simulate_timeblock" => intval($global_simulate_timeblock),
     "simulate_timeblock" => floatval($simulate_timeblock),
     "electric_price" => $electric_price,
     "limit_capability" => $limit_capability,

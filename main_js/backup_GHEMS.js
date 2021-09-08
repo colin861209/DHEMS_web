@@ -26,6 +26,11 @@ function get_backEnd_data() {
                 ourData = response;
                 GHEMS_flag = ourData.GHEMS_flag;
                 console.log(ourData);
+                compare_timeblock = {
+                    
+                    local: ourData.local_simulate_timeblock,
+                    global: ourData.global_simulate_timeblock
+                };
                 insertText_after_breadcrumb(response.database_name, null, null, response.dr_mode, response.dr_info);
                 tableInfo(ourData);
                 progessbar(ourData);

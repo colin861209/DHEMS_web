@@ -57,6 +57,8 @@ for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name,
 
 $data_array = [
 
+    "local_simulate_timeblock" => intval($local_simulate_timeblock),
+    "global_simulate_timeblock" => intval($global_simulate_timeblock),
     "total_load_power_sum" => round($total_load_power_sum, 2),
     "taipower_loads_cost" => round($taipower_loads_cost, 2),
     "three_level_loads_cost" => round($three_level_loads_cost, 2),
