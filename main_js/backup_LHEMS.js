@@ -136,12 +136,15 @@ function each_household_status(data, household_id) {
         set_series_function(0, "spline", data.battery_power[household_id], energyType.Pess_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     /*Show chart*/
-    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1);
+    if (data.dr_mode != 0)
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1);
+    else
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
 }
 
 function each_household_status_SOC(data, household_id) {
     
-    // if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1) {
+    if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1) {
 
         var chart_info = ["each_household_status_SOC", "", " ", "time", "SOC", "power(kW)"];
         var chart_series_type = [];
@@ -159,16 +162,16 @@ function each_household_status_SOC(data, household_id) {
         set_series_function(0, "column", load_power_sum_with_UCLoad, "household_" + (household_id + 1), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
         set_series_function(0, "areaspline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
-        // if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1)
+        if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1)
             set_series_function(0, "spline", data.battery_power[household_id], energyType.Pess_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
             
         /*Show chart*/
         show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1, data.dr_info[1], data.dr_info[2] - 1);
-    // }
-    // else {
+    }
+    else {
 
-    //     document.getElementById('each_household_status_SOC').style.display = "none";
-    // }
+        document.getElementById('each_household_status_SOC').style.display = "none";
+    }
 }
 
 function householdsLoadSum(data) {
@@ -186,8 +189,10 @@ function householdsLoadSum(data) {
     set_series_function(1, "column", data.load_power_sum, "household_", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     /*Show chart*/
-    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1);
-
+    if (data.dr_mode != 0)
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1);
+    else
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
 }
 
 function uncontrollable_loadSum(data) {
@@ -221,8 +226,34 @@ function each_load(data, num, household_num) {
     var this_name = data.equip_name;
     var this_s_time = data.start[household_num];
     var this_e_time = data.end[household_num];
-    var start = this_s_time[num];
-    var end = this_e_time[num] - 1;
+    var non_comfort_start = this_s_time[num];
+    var non_comfort_end = this_e_time[num] - 1;
+    if (data.comfortLevel_flag) {
+
+        var this_s_time = data.each_household_startComfortLevel[household_num];
+        var this_e_time = data.each_household_endComfortLevel[household_num];
+        var comfort_start = [], comfort_end = [];
+        for (let i = 0; i < this_s_time.length; i++) {
+            
+            var comfort_s_tmp = [], comfort_e_tmp = [];    
+            for (let j = 0; j < this_s_time[i].length; j++) {
+                
+                comfort_s_tmp.push(this_s_time[i][j][num]);
+                // if loop is to make chart of comfort interval be normal, but actually it's not correct,
+                // the correct way only use 'comfort_e_tmp.push(this_e_time[i][j][num] - 1);'
+                if (this_e_time[i][j][num] == data.end[household_num][num]) {
+                    
+                    comfort_e_tmp.push(this_e_time[i][j][num] - 1);
+                }
+                else {
+
+                    comfort_e_tmp.push(this_e_time[i][j][num]);
+                }
+            }
+            comfort_start.push(comfort_s_tmp);
+            comfort_end.push(comfort_e_tmp);
+        }
+    }
     //define all needed data array
     var chart_info = ["con_" + num, this_name[num], "模擬值(simulation)", "時間(區間)", "電價(TWD)", "功率(kW)"];
     var chart_series_type = [];
@@ -235,7 +266,7 @@ function each_load(data, num, household_num) {
     set_each_load_function(0, "line", data.electric_price, null, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_each_load_function(0, "column", this_load[num], ((household_num + 1) + "-" + this_ID[num]), ((household_num + 1) + "-" + this_ID[num]), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     /*Show chart*/
-    show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, start, end);
+    show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, non_comfort_start, non_comfort_end, comfort_start, comfort_end, data.comfortLevel_flag);
 
 }
 

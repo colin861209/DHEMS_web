@@ -127,22 +127,30 @@ function set_series_function(multi, series_type, DATA, stack_class, yAxis_locate
     }
 }
 
-function show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, chart_lowband, chart_upband, comfortLevel_flag = 0) {
+function show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, chart_lowband, chart_upband, comfort_lowband = null, comfort_upband = null, comfortLevel_flag = false) {
     
     var plotBandsArray = [];
     if (comfortLevel_flag) {
         
+        plotBandsArray.push({
+            
+            color: '#dddddd',
+            from: chart_lowband,
+            to: chart_upband
+        });
+
         // 綠 黃 粉 橘 
         var color_name = ['#B7FF68', '#FFFF93', 'pink', '#ff0000a1'];
-        for (let i = 0; i < chart_lowband.length; i++) {
+        // var color_name = ['green', 'yellow', 'pink', 'red'];
+        for (let i = 0; i < comfort_lowband.length; i++) {
                 
-            for (let j = 0; j < chart_lowband[i].length; j++) {
+            for (let j = 0; j < comfort_lowband[i].length; j++) {
 
                 plotBandsArray.push({
 
                     color: color_name[i],
-                    from: chart_lowband[i][j],
-                    to: chart_upband[i][j],
+                    from: comfort_lowband[i][j],
+                    to: comfort_upband[i][j],
                 });    
             }
         }
