@@ -44,6 +44,7 @@ function get_backEnd_data() {
                 progessbar(ourData);
                 autoRun(ourData, household_num)
                 flag_table(LHEMS_flag)
+                cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, household_num);
                 participate_table(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num);
             }
         });
@@ -71,6 +72,7 @@ function choose_singleHousehold(household_id) {
     each_household_status(ourData, household_id - 1)
     each_household_status_SOC(ourData, household_id - 1)
     run_household_eachLoad(ourData, household_id - 1);
+    cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, household_id - 1);
     show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_id - 1)
 }
 
@@ -87,6 +89,7 @@ function autoRun(ourData, household_num) {
         each_household_status_SOC(ourData, household_num)
         run_household_eachLoad(ourData, household_num)
         progessbar(ourData);
+        cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, household_num);
         show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num)
     }, 7000);
 
@@ -341,11 +344,33 @@ function nextOrPrevious_singleHousehold(value) {
     choose_singleHousehold(parseInt(now_household_id) + parseInt(value))
 }
 
+function cost_table(origin_grid_price, total_origin_grid_price, real_grid_price, public_price, household_id) {
+    
+    $('#table_cost_tbody > td').remove();
+    show_result = [
+        origin_grid_price[household_id] + " (NTD)",
+        origin_grid_price[household_id] + " / "+ total_origin_grid_price +" (NTD)",
+        real_grid_price[household_id] + " (NTD)",
+        public_price[household_id] + " (NTD)",
+        (real_grid_price[household_id] + public_price[household_id]).toFixed(3) + " (NTD)",
+        (((origin_grid_price[household_id] - (real_grid_price[household_id] + public_price[household_id])) / origin_grid_price[household_id]) * 100).toFixed(3) + " (%)"
+    ]
+    var table_tag = document.getElementsByClassName('table table-bordered')[0];
+
+    for (let i = 0; i < table_tag.getElementsByTagName('th').length; i++) {
+        
+        var td = document.createElement('td');
+        td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
+        td.appendChild(document.createTextNode(show_result[i]));
+        document.getElementById('table_cost_tbody').appendChild(td);
+    }
+}
+
 function participate_table(dr_mode, info, participation_status, household_id) {
     
     if (parseInt(dr_mode) != 0) {
     
-        document.getElementsByClassName('table table-bordered')[0].style.display = 'revert';
+        document.getElementsByClassName('table table-bordered')[1].style.display = 'revert';
         show_participate_timeblock(dr_mode, info, participation_status, household_id);
     }
 }

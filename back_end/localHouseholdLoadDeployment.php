@@ -47,6 +47,10 @@ $household_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `
 $variable_num = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'local_variable_num' ", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
 
+$origin_grid_price = sqlFetchAssoc($conn, "SELECT `origin_grid_price` FROM `LHEMS_cost` ORDER BY household_id", array("origin_grid_price"));
+$real_grid_price = sqlFetchAssoc($conn, "SELECT `real_grid_price` FROM `LHEMS_cost` ORDER BY household_id", array("real_grid_price"));
+$public_price = sqlFetchAssoc($conn, "SELECT `public_price` FROM `LHEMS_cost` ORDER BY household_id", array("public_price"));
+$total_origin_grid_price = sqlFetchRow($conn, "SELECT SUM(origin_grid_price) FROM `LHEMS_cost`", $oneValue);
 $household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `LHEMS_control_status` ORDER BY `household_id`, `control_id` ASC ", array("household_id"));
 
 $grid_power = [];
@@ -192,6 +196,10 @@ $data_array = [
     "comfortLevel_flag" => intval($comfortLevel_flag),
     "each_household_startComfortLevel" => $each_household_startComfortLevel,
     "each_household_endComfortLevel" => $each_household_endComfortLevel,
+    "origin_grid_price" => array_map('floatval', $origin_grid_price),
+    "total_origin_grid_price" => floatval($total_origin_grid_price),
+    "real_grid_price" => array_map('floatval', $real_grid_price),
+    "public_price" => array_map('floatval', $public_price),
     "database_name" => $database_name
 ];
 
