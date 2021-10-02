@@ -49,12 +49,24 @@ function tableInfo(ourData) {
     const hydrogenUnit = "(g)";
     var tableData = {
 
-        name: ["使用總負載", "負載花費(表燈電價)", "負載花費(三段式電價)", "購買市電", "輔助服務回饋", "燃料電池花費", "氫氣消耗"],
+        name: [
+            "使用總負載",
+            "公共負載",
+            "負載花費(表燈電價)",
+            "負載花費(三段式電價)",
+            "購買市電",
+            "公設花費(三段式電價)",
+            "輔助服務回饋",
+            "燃料電池花費",
+            "氫氣消耗"
+        ],
         value: [
             ourData.total_load_power_sum + powerUnit,
+            ourData.total_publicLoad_power + powerUnit,
             ourData.taipower_loads_cost + moneyUnit,
             ourData.three_level_loads_cost + moneyUnit,
             ourData.real_buy_grid_cost + moneyUnit,
+            ourData.total_publicLoad_cost + moneyUnit,
             ourData.dr_feedbackPrice + moneyUnit,
             ourData.min_FC_cost + moneyUnit,
             ourData.consumption + hydrogenUnit

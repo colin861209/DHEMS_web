@@ -6,6 +6,8 @@ $uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_
 $publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
 // table info
 $total_load_power_sum = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'totalLoad' ", $oneValue);
+$total_publicLoad_power = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'publicLoad' ", $oneValue);
+$total_publicLoad_cost = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'publicLoadSpend(threeLevelPrice)' ", $oneValue);
 $taipower_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'LoadSpend(taipowerPrice)' ", $oneValue);
 $three_level_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'LoadSpend(threeLevelPrice)' ", $oneValue);
 $real_buy_grid_cost = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'realGridPurchase' ", $oneValue);
@@ -58,6 +60,8 @@ for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name,
 $data_array = [
 
     "total_load_power_sum" => round($total_load_power_sum, 2),
+    "total_publicLoad_power" => round($total_publicLoad_power, 2),
+    "total_publicLoad_cost" => round($total_publicLoad_cost, 2),
     "taipower_loads_cost" => round($taipower_loads_cost, 2),
     "three_level_loads_cost" => round($three_level_loads_cost, 2),
     "real_buy_grid_cost" => round($real_buy_grid_cost, 2),
