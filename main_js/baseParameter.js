@@ -172,47 +172,26 @@ function baseParameter_gauge(data, fullInfo) {
     
     var show = {
         
-        label: ["住戶時刻", "社區時刻", "now SOC", "排程中住戶", "需量模式", "歷史天氣"],
+        label: ["住戶時刻", "社區時刻", "now SOC", "排程中住戶", "需量模式"],
         id: [
             save_target.fix_target[1],
             save_target.fix_target[2],
             save_target.fix_target[0],
             save_target.fix_target[3],
-            save_target.modify_target[5],
-            save_target.modify_target[11],
+            save_target.modify_target[5]
         ],
         value: [
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[1])],
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[2])],
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[0])],
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[3])],
-            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])],
-            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[11])]
+            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])]
         ],
     }
 
-    value_num = -1;
     if (fullInfo.database_name == "DHEMS_fiftyHousehold") {
 
         document.getElementById("household_id_gauge").style.display = 'none';
-        if (show.value[4] != 0) {
-
-            document.getElementById(show.id[5]+"_gauge").style.display = 'block';
-            switch (show.value[5]) {
-                case "big_sunny":
-                    value_num = 2;
-                    break;
-                case "sunny":
-                    value_num = 1;
-                    break;
-                case "cloudy":
-                    value_num = 0;
-                    break;
-                default:
-                    console.log("Gauge simulate history weather Wrong cases");
-                    break;
-            }
-        }
     }
 
     var next_simulate_timeblock = new JustGage({
@@ -320,30 +299,6 @@ function baseParameter_gauge(data, fullInfo) {
         decimals: 0,
         symbol: '',
         label: show.label[4],
-        pointer: true,
-
-        pointerOptions: {
-            toplength: -15,
-            bottomlength: 10,
-            bottomwidth: 12,
-            color: '#8e8e93',
-            stroke: '#ffffff',
-            stroke_width: 2,
-            stroke_linecap: 'round'
-        },
-        gaugeWidthScale: 0.7,
-        counter: true
-    });
-
-    var simulate_history_weather = new JustGage({
-        
-        id: show.id[5] + "_gauge",
-        value: value_num,
-        min: 0,
-        max: 2,
-        decimals: 0,
-        symbol: '',
-        label: show.label[5] + ": " + show.value[5],
         pointer: true,
 
         pointerOptions: {
