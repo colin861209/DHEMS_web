@@ -44,7 +44,7 @@ function get_backEnd_data() {
                 progessbar(ourData);
                 autoRun(ourData, household_num)
                 flag_table(LHEMS_flag)
-                cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
+                cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
                 participate_table(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num);
             }
         });
@@ -72,7 +72,7 @@ function choose_singleHousehold(household_id) {
     each_household_status(ourData, household_id - 1)
     each_household_status_SOC(ourData, household_id - 1)
     run_household_eachLoad(ourData, household_id - 1);
-    cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.final_pay_price, ourData.saving_efficiency, household_id - 1);
+    cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_id - 1);
     show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_id - 1)
 }
 
@@ -89,7 +89,7 @@ function autoRun(ourData, household_num) {
         each_household_status_SOC(ourData, household_num)
         run_household_eachLoad(ourData, household_num)
         progessbar(ourData);
-        cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
+        cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
         show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num)
     }, 7000);
 
@@ -344,7 +344,7 @@ function nextOrPrevious_singleHousehold(value) {
     choose_singleHousehold(parseInt(now_household_id) + parseInt(value))
 }
 
-function cost_table(origin_grid_price, total_origin_grid_price, real_grid_price, public_price, final_pay_price, saving_efficiency, household_id) {
+function cost_table(origin_grid_price, total_origin_grid_price, real_grid_price, public_price, origin_pay_price, final_pay_price, saving_efficiency, household_id) {
     
     $('#table_cost_thead > th').remove();
     $('#table_cost_tbody > td').remove();
@@ -354,14 +354,16 @@ function cost_table(origin_grid_price, total_origin_grid_price, real_grid_price,
         thead_result: [
             "第"+ (household_id+1) +"戶購買市電",
             "50戶總購買市電",
+            "第"+ (household_id+1) +"戶總花費",
             "最佳化後繳交自家電費",
             "最佳化後繳交公設費",
-            "最佳化後繳總電費",
+            "最佳化後繳交總電費",
             "節省電費比"
         ],
         tbody_result: [
             origin_grid_price[household_id] + " (NTD)",
             origin_grid_price[household_id] + " / "+ total_origin_grid_price +" (NTD)",
+            origin_pay_price[household_id] + " (NTD)",
             real_grid_price[household_id] + " (NTD)",
             public_price[household_id] + " (NTD)",
             final_pay_price[household_id] + " (NTD)",
