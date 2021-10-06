@@ -135,20 +135,25 @@
 - index: Show `Pess info` in chart SOC & `Catch error` with table Participation
 
 ---
-### index.html
+### 2021/08/09
 
-* Show `each household's load deployment` and `total load consumption`
++ Commit link [2e6d052](https://github.com/colin861209/DHEMS_web/commit/2e6d05257fcb6c0bf9a1f27041d225a378a777ec)
 
-### loadFix.html
+- Feature: Comfort level
+- Show in index.html
+- For normal visual in comfort level interval, each level in the end time will connect with another level in start time, but in fact the operate time is determine by the second term start time not the end time of the first term.
 
-* Show enerage management result
-    
-    1. Total Price Cost
-    2. Price & Loads optimize chart
+---
+### 2021/10/01
 
-    ![](https://i.imgur.com/IHWCP2O.png)
-    
-    3. SOC & Loads optimize chart
-    4. Total Loads chart
++ Commit link [dc30e4c](https://github.com/colin861209/DHEMS_web/commit/dc30e4c94e363fd703f7797f8c239f2d6165e443)
 
-    ![](https://i.imgur.com/HBL4TeG.jpg)
+- Feature: Each household electric cost or feedback
+- Show in index.html
+- Show detail:
+	- origin cost
+	- real cost after optimize
+	- public load cost
+	- feedback from demand response
+	- saving efficiency
+
