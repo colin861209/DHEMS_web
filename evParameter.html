@@ -16,21 +16,13 @@
 	<link href="css/prettyPhoto.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet" />
 	<link rel="shortcut icon" href="images/favicon.ico"/>
-	
+
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <style>
-    dd {
-        display: block;
-        margin-left: 40px;
-        font-weight: 600;
-    }
-	
-    </style>
 </head>
 <header>
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -55,13 +47,12 @@
 					<div class="menu">
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation"><a href="baseParameter.html"><i class="fa fa-home"></i>基本參數</a></li>
-							<li role="presentation"><a href="evParameter.html"></i>電動機車參數</a></li>
+							<li role="presentation"><a href="evParameter.html" class="active"></i>電動機車參數</a></li>
 							<li role="presentation"><a href="index.html">所有家庭負載</a></li>
 							<li role="presentation"><a href="loadFix.html">社區負載監控</a></li>
 							<li role="presentation"><a href="backup_LHEMS.html">備用LHEMS</a></li>
 							<li role="presentation"><a href="backup_GHEMS.html">備用GHEMS</a></li>
-							<li role="presentation"><a href="log.html" class="active">log檔</a></li>
-							
+							<li role="presentation"><a href="log.html">log檔</a></li>							
 						</ul>
 					</div>
 				</div>
@@ -74,22 +65,51 @@
 	<div class="container">
 		<div class="breadcrumb">
 			<li><a href="index.html">Home</a></li>
-			<li>log檔</li>
+			<li>電動機車參數</li>
 		</div>
 	</div>
 </div>
 
-<h3 class="text-center" style="font-weight:bold;">FIFTY DHEMS Log 檔</h3>
-<hr>
-
-
-<div class="col-md-12 col-sm-12 col-xs-12">
-	<div>
-		<select onchange="logChange()"></select>
-	</div>
-	<dl style="height: 580px; width: 100%; background-color: #2d2d2d; overflow-y: auto; border: black 10px solid;" id="log"></dl>
+<div>
+	<caption><h3 id = "flag_table" class="text-center" style="font-weight: bold;">電動機車參數設定(點擊展開)</h3></caption>
+	<table id = "flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
+		<thead>
+			<tr class = "well" id="flag_thead">
+			</tr>
+		</thead>
+		<tbody id="flag_tbody">
+		</tbody>
+	</table>
 </div>
 
+<div class="container">
+	<button id="btn_evParameterModify" onclick="sendNewEVParameter()" color="black" style="background-color: red; display: none;">修改</button>
+</div>
+<hr>
+
+<div class="col-md-12 col-sm-12 col-xs-12" style="color:black">
+	<caption><h3 class="text-center" style="font-weight:bold;">電動機車數量設定</h3></caption>
+	<hr>
+	<table id="user_type" class="table text-center" style="border:5px #5E5E5E solid;table-layout:fixed;" rules="all" cellpadding='5';>	
+		<thead>
+			<tr id="motor_name">
+			</tr>
+		</thead>
+		<tbody id="motor_info">
+		</tbody>
+	</table>	
+</div>
+
+<div class="container">
+	<button id="btn_evPercentModify" onclick="sendNewEVPercent()" color="black" style="background-color: red; display:none;">修改</button>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+	<!-- <h3 class="text-center" style="font-weight:bold;">模擬假設來客數</h3> -->
+	<div id="normal_chargingUser_nums" style="min-width: 310px; height: 300px; margin: 0 auto;"></div>
+	<div id="fast_chargingUser_nums" style="min-width: 310px; height: 300px; margin: 0 auto;"></div>
+	<div id="superFast_chargingUser_nums" style="min-width: 310px; height: 300px; margin: 0 auto;"></div>
+</div>
 
 <div class="aboutus">
 	<div class="container">
@@ -141,7 +161,12 @@
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="js/bootstrap-toggle.min.js"></script>
 
-<script src="main_js/log.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://highcharts.github.io/export-csv/export-csv.js"></script>
+<script src="main_js/evParmater_modify.js"></script>
+<script src="main_js/chart_style.js"></script>
+<script src="main_js/evParameter.js"></script>
 
 </body>
 
