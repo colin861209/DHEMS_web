@@ -6,7 +6,7 @@ if(!isset($_POST['phpReceive_database_name'])) {
     // phpReceive 無設置
     if (!isset($_SESSION['database'])) {
         // session database 無設置
-        $database_name = 'DHEMS';
+        $database_name = 'DHEMS_fiftyHousehold';
     }
     else {
 
