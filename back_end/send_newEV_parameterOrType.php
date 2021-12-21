@@ -117,7 +117,20 @@ switch ($newParameter['table']) {
         }
         $status = create_wholeDay_userChargingNumber($conn, "EV_wholeDay_userChargingNumber");
         break;
-    
+    case 'EV_Parameter_of_ESS':
+    case 'EV_Parameter_of_randResult':
+        for ($i=0; $i < count($newParameter['value']); $i++) {
+            
+            updateSQL($conn, $newParameter['table'], "value", $newParameter['value'][$i], 'parameter_name', $newParameter['name'][$i]);
+            
+            $value = sqlFetchRow($conn, "SELECT `value` FROM `" .$newParameter['table']. "` WHERE `parameter_name` = '" .$newParameter['name'][$i]. "'", $oneValue);
+            
+            if ($value == $newParameter['value'][$i])
+                $status = "success";
+            else
+                $status = "something went wrong";
+        }
+        break;
     default:
         // EV_Parameter
         $old_totalPoles = sqlFetchRow($conn, "SELECT `value` FROM `" .$newParameter['table']. "` WHERE `parameter_name` = 'Total_Charging_Pole'", $oneValue);

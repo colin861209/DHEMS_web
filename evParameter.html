@@ -71,19 +71,48 @@
 </div>
 
 <div>
-	<caption><h3 id = "flag_table" class="text-center" style="font-weight: bold;">電動機車參數設定(點擊展開)</h3></caption>
-	<table id = "flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
+	<caption><h3 id = "evParm_table" class="text-center" style="font-weight: bold;">電動機車參數設定(點擊展開)</h3></caption>
+	<table id = "evParm_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
 		<thead>
-			<tr class = "well" id="flag_thead">
+			<tr class = "well" id="evParm_thead">
 			</tr>
 		</thead>
-		<tbody id="flag_tbody">
+		<tbody id="evParm_tbody">
 		</tbody>
 	</table>
 </div>
-
 <div class="container">
-	<button id="btn_evParameterModify" onclick="sendNewEVParameter()" color="black" style="background-color: red; display: none;">修改</button>
+	<button id="btn_evParameterModify" onclick="sendNewEVParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
+</div>
+
+<div>
+	<caption><h3 id = "evESS_table" class="text-center" style="font-weight: bold;">電動機車電池設定(點擊展開)</h3></caption>
+	<table id = "evESS_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
+		<thead>
+			<tr class = "well" id="evESS_thead">
+			</tr>
+		</thead>
+		<tbody id="evESS_tbody">
+		</tbody>
+	</table>
+</div>
+<div class="container">
+	<button id="btn_evESSModify" onclick="sendNewEVParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
+</div>
+
+<div>
+	<caption><h3 id = "evRand_table" class="text-center" style="font-weight: bold;">電動機車隨機產生資料設定(點擊展開)</h3></caption>
+	<table id = "evRand_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
+		<thead>
+			<tr class = "well" id="evRand_thead">
+			</tr>
+		</thead>
+		<tbody id="evRand_tbody">
+		</tbody>
+	</table>
+</div>
+<div class="container">
+	<button id="btn_evRandModify" onclick="sendNewEVParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
 </div>
 <hr>
 

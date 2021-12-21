@@ -1,16 +1,41 @@
 // Motor parameter setting 
-function evParameter_change() {
-    
-    document.getElementById('btn_evParameterModify').style.display = "block";
+function evParameter_change(thead_id) {
+
+    switch (thead_id.id) {
+        case "evParm_thead":
+            document.getElementById('btn_evParameterModify').style.display = "block";
+            break;
+        case "evESS_thead":
+            document.getElementById('btn_evESSModify').style.display = "block";
+            break;
+        case "evRand_thead":
+            document.getElementById('btn_evRandModify').style.display = "block";
+            break;
+        default:
+            break;
+    }
 }
 
-function sendNewEVParameter() {
+function sendNewEVParameter(btn_id) {
 
-    var new_flag = []
+    var new_flag = [], name = [], table;
+    
+    if (btn_id == "btn_evParameterModify") {
+        table = "EV_Parameter";
+        name = evParm_save_target.modify_target;
+    }
+    else if (btn_id == "btn_evESSModify") {
+        table = "EV_Parameter_of_ESS";
+        name = evESS_save_target.modify_target;
+    }
+    else if (btn_id == "btn_evRandModify") {
+        table = "EV_Parameter_of_randomResult";
+        name = evRand_save_target.modify_target;
+    }
+
     var new_ParameterData = {
-
-        table: "EV_Parameter",
-        name: save_target.modify_target,
+        table: table,
+        name: name,
         value: new_flag
     }
     for (let index = 0; index < new_ParameterData.name.length; index++) {
@@ -50,8 +75,18 @@ function sendNewEVParameter() {
 }
 
 $(document).ready(function () {
-    $("#flag_table").click(function () {
-        $("#flags").fadeToggle();
+    $("#evParm_table").click(function () {
+        $("#evParm_flags").fadeToggle();
+    });
+});
+$(document).ready(function () {
+    $("#evESS_table").click(function () {
+        $("#evESS_flags").fadeToggle();
+    });
+});
+$(document).ready(function () {
+    $("#evRand_table").click(function () {
+        $("#evRand_flags").fadeToggle();
     });
 });
 

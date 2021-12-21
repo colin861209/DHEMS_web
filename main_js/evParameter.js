@@ -8,10 +8,18 @@ window.onload = function () {
 
 function get_backEnd_data() {
 
-    save_target = {
+    evParm_save_target = {
 
-        modify_target: ["Super_Fast_Charging_Pole","Fast_Charging_Pole","Normal_Charging_Pole","Total_Num_of_EM","EM_Upper_SOC","EM_Lower_SOC","Normal_Charging_power","Fast_Charging_power","Super_Fast_Charging_power","charging_pole_charging_efficiency","charging_pole_discharging_efficiency","ESS_capacity","ESS_Upper_SOC","ESS_lower_SOC","ESS_SOC_threshold","ESS_efficiency","Pgrid_Upper_limit","normal_soc_mean","normal_soc_variance","nromal_time_mean","normal_time_variance","normal_wait_mean","normal_wait_variance","fast_soc_mean","fast_soc_variance","fast_time_mean","fast_time_variance","fast_wait_mean","fast_wait_variance","super_fast_soc_mean","super_fast_soc_variance","super_fast_time_mean","super_fast_time_variance","super_fast_wait_mean","super_fast_wait_variance"],
-        fix_target: ["Total_Charging_Pole", "now_timeblock", "fake_nowtimeblock", "do_simulation", "ESS_now_SOC"]
+        modify_target: ["Normal_Charging_Pole", "Fast_Charging_Pole", "Super_Fast_Charging_Pole", "generate_random_user_result", "having_ESS", "EV_Upper_SOC","EV_Lower_SOC", "charging_pole_charging_efficiency", "charging_pole_discharging_efficiency",  "Pgrid_Upper_limit"],
+        fix_target: ["Total_Charging_Pole",  "Total_Num_of_EM", "Normal_Charging_power","Fast_Charging_power","Super_Fast_Charging_power"]
+    }
+    evESS_save_target = {
+        modify_target:["ESS_capacity", "ESS_Upper_SOC", "ESS_lower_SOC", "ESS_SOC_threshold", "ESS_efficiency"],
+        fix_target:["ESS_now_SOC"]
+    }
+    evRand_save_target = {
+        modify_target:["normal_soc_mean", "normal_soc_variance", "normal_time_mean", "normal_time_variance", "normal_wait_mean", "normal_wait_variance", "fast_soc_mean", "fast_soc_variance", "fast_time_mean", "fast_time_variance", "fast_wait_mean", "fast_wait_variance", "super_fast_soc_mean", "super_fast_soc_variance", "super_fast_time_mean", "super_fast_time_variance", "super_fast_wait_mean", "super_fast_wait_variance"],
+        fix_target:[]
     }
     $.ajax
         ({
@@ -31,9 +39,19 @@ function get_backEnd_data() {
                     global: response.global_simulate_timeblock,
                 };
 
-                tableInfo = removeParameter(response.evParameter, save_target);
+                var evParm_tableInfo = removeParameter(response.evParameter, evParm_save_target);
+                evParm_tableInfo = removeParameter(response.evParameter, evParm_save_target);
+                show_motorParameter(evParm_tableInfo, evParm_save_target, "evParm_thead", "evParm_tbody");
+               
+                var evESS_tableInfo = removeParameter(response.evParameter_of_ESS, evESS_save_target);
+                evESS_tableInfo = removeParameter(response.evParameter_of_ESS, evESS_save_target);
+                show_motorParameter(evESS_tableInfo, evESS_save_target, "evESS_thead", "evESS_tbody");
+               
+                var evRand_tableInfo = removeParameter(response.evParameter_of_randomResult, evRand_save_target);
+                evRand_tableInfo = removeParameter(response.evParameter_of_randomResult, evRand_save_target);
+                show_motorParameter(evRand_tableInfo, evRand_save_target, "evRand_thead", "evRand_tbody");
+                
                 insertText_after_breadcrumb(now_database_name, null, null);
-                show_motorParameter(tableInfo, save_target);
                 show_motorType_percent(response.ev_motor_type);
                 show_wholeDay_chargingUser_nums(response.n_chargingUser_nums, response.f_chargingUser_nums, response.sf_chargingUser_nums)
             }
@@ -68,19 +86,31 @@ function removeParameter(baseParameter, save_target) {
     return remainParameter;
 }
 
-function show_motorParameter(baseParameter, save_target) {
+function show_motorParameter(baseParameter, save_target, thead_id, tbody_id) {
     
     var tableData = {
 
         name: ["參數名", "數值"]
     }
-
+    switch (thead_id) {
+        case "evParm_thead":
+            onchage_function_name = "evParameter_change("+thead_id+")"
+            break;
+        case "evESS_thead":
+            onchage_function_name = "evParameter_change("+thead_id+")"
+            break;
+        case "evRand_thead":
+            onchage_function_name = "evParameter_change("+thead_id+")"
+            break;
+        default:
+            break;
+    }
     for (let nameNum = 0; nameNum < tableData.name.length; nameNum++) {
 
         var th = document.createElement('th');
         th.appendChild(document.createTextNode(tableData.name[nameNum]));
         th.setAttribute("style", "text-align: center; color:black");
-        document.getElementById('flag_thead').appendChild(th);
+        document.getElementById(thead_id).appendChild(th);
     }
 
     for (let typeNum = 0; typeNum < baseParameter[0].length; typeNum++) {
@@ -103,7 +133,7 @@ function show_motorParameter(baseParameter, save_target) {
                     input.setAttribute("style", "text-align: center; background-color: #ABFFFF;");
                     input.setAttribute("size", "15");
                     input.setAttribute("value", baseParameter[dataNum][typeNum]);
-                    input.setAttribute("onchange", "evParameter_change()");
+                    input.setAttribute("onchange", onchage_function_name);
                     td.appendChild(input);
                     break;
 
@@ -114,7 +144,7 @@ function show_motorParameter(baseParameter, save_target) {
             
             tr.appendChild(td);
         }
-        document.getElementById('flag_tbody').appendChild(tr);
+        document.getElementById(tbody_id).appendChild(tr);
     }
 }
 
