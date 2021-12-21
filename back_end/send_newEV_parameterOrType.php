@@ -78,7 +78,7 @@ function create_chargingPole($conn, $table, $totalPoles, $sfPole, $fPole, $nPole
         mysqli_query($conn, "TRUNCATE TABLE `$table`");
         for ($i=0; $i < $totalPoles; $i++) { 
             
-            $sql = "INSERT INTO `$table` (`Pole_ID`, `number`, `sure`, `charging_status`, `discharge_status`, `full`, `wait`, `SOC`, `BAT_CAP`, `V_battery`, `I_battery`, `Arrived_Timeblock`, `Start_timeblock`, `Departure_timeblock`) VALUES ('" .($i+1). "', NULL, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL);";
+            $sql = "INSERT INTO `$table` (`Pole_ID`, `number`, `sure`, `charging_status`, `discharge_status`, `full`, `wait`, `SOC`, `BAT_CAP`, `V_battery`, `I_battery`, `Start_timeblock`, `Departure_timeblock`) VALUES ('" .($i+1). "', NULL, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL);";
             mysqli_query($conn, $sql);
         }
         if ($nPole != 0) {
