@@ -28,7 +28,6 @@ function get_backEnd_data() {
                     
                     save_target.fix_target.pop();
                     save_target.modify_target.splice(save_target.modify_target.indexOf("EM_generate_random_user_result")+1, 0, "comfortLevel_flag");
-                    save_target.modify_target.splice(save_target.modify_target.indexOf("ElectricMotor")+2, 0, "comfortLevel_flag");
                 }
                 compare_timeblock = {
                 
