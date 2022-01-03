@@ -157,3 +157,19 @@
 	- feedback from demand response
 	- saving efficiency
 
+---
+### 2022/01/04
+
++ Commit link [856a52e](https://github.com/colin861209/DHEMS_web/commit/856a52ec22d80a668cea8febea009818b0540443)
++ `2022/01/03 Comfirm with professor to cancel fast charging and super fast charging`
+
+- Feature: Electric Motor
+- New page: emParameter.html
+	- Set up base parameter 
+	- Set up normal distribution for three type charging user
+	- Set up percentage about which motor type can insert to parking lot
+- Modify: baseParameter.html
+	- EM_flag & EM_generate_random_user_result
+- Modify: loadFix.html
+	- Show load model with EM
+
