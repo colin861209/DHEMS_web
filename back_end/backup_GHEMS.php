@@ -9,6 +9,8 @@ $electric_price = sqlFetchAssoc($conn, "SELECT `" .$target_price. "` FROM `price
 $simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar_data` ", array($target_solar));
 $dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
 $publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
+$EM_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'ElectricMotor' ", $oneValue);
+$EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `backup_EM_user_number`", array("total_power"));
 if ($dr_mode != 0)
     $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
 else
@@ -29,11 +31,16 @@ $variable_name = sqlFetchAssoc($conn, "SELECT `equip_name` FROM `backup_GHEMS` "
 $load_status_array = sqlFetchRow($conn, "SELECT * FROM `backup_GHEMS` ", $controlStatusResult);
 mysqli_close($conn);
 
-for ($y = 0; $y < $time_block; $y++) {
-
-    $load_model[$y] = floatval($load_power_sum[$y]) + floatval($uncontrollable_load_sum[$y]);
-    $load_model_seperate[0][$y] = floatval($load_power_sum[$y]);
-    $load_model_seperate[1][$y] = floatval($uncontrollable_load_sum[$y]);
+$load_model_seperate = [];
+$load_model = array_map('floatval', $load_power_sum);
+array_push($load_model_seperate, $load_model);
+if ($uncontrollable_load_flag) {
+    
+    $uncontrollable_load_sum = array_map('floatval', $uncontrollable_load_sum);
+    array_push($load_model_seperate, $uncontrollable_load_sum);
+    $load_model = array_map(function() {
+        return array_sum(func_get_args());
+    }, $load_model, $uncontrollable_load_sum);
 }
 
 if ($database_name == 'DHEMS_fiftyHousehold') {
@@ -51,6 +58,14 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
     $load_model = array_map(function() {
         return array_sum(func_get_args());
     }, $load_model, $publicLoad_total);
+    if ($EM_flag) {
+    
+        $EM_total_power = array_map('floatval', $EM_total_power);
+        array_push($load_model_seperate, $EM_total_power);
+        $load_model = array_map(function() {
+            return array_sum(func_get_args());
+        }, $load_model, $EM_total_power);
+    }
 }
 
 for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name, true)]); $i++) {
