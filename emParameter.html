@@ -47,7 +47,7 @@
 					<div class="menu">
 						<ul class="nav nav-tabs" role="tablist">
 							<li role="presentation"><a href="baseParameter.html"><i class="fa fa-home"></i>基本參數</a></li>
-							<li role="presentation"><a href="evParameter.html" class="active"></i>電動機車參數</a></li>
+							<li role="presentation"><a href="emParameter.html" class="active"></i>電動機車參數</a></li>
 							<li role="presentation"><a href="index.html">所有家庭負載</a></li>
 							<li role="presentation"><a href="loadFix.html">社區負載監控</a></li>
 							<li role="presentation"><a href="backup_LHEMS.html">備用LHEMS</a></li>
@@ -71,48 +71,48 @@
 </div>
 
 <div>
-	<caption><h3 id = "evParm_table" class="text-center" style="font-weight: bold;">電動機車參數設定(點擊展開)</h3></caption>
-	<table id = "evParm_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
+	<caption><h3 id = "emParm_table" class="text-center" style="font-weight: bold;">電動機車參數設定(點擊展開)</h3></caption>
+	<table id = "emParm_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
 		<thead>
-			<tr class = "well" id="evParm_thead">
+			<tr class = "well" id="emParm_thead">
 			</tr>
 		</thead>
-		<tbody id="evParm_tbody">
+		<tbody id="emParm_tbody">
 		</tbody>
 	</table>
 </div>
 <div class="container">
-	<button id="btn_evParameterModify" onclick="sendNewEVParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
+	<button id="btn_emParameterModify" onclick="sendNewEMParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
 </div>
 
 <div>
-	<caption><h3 id = "evESS_table" class="text-center" style="font-weight: bold;">電動機車電池設定(點擊展開)</h3></caption>
-	<table id = "evESS_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
+	<caption><h3 id = "emESS_table" class="text-center" style="font-weight: bold;">電動機車電池設定(點擊展開)</h3></caption>
+	<table id = "emESS_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
 		<thead>
-			<tr class = "well" id="evESS_thead">
+			<tr class = "well" id="emESS_thead">
 			</tr>
 		</thead>
-		<tbody id="evESS_tbody">
+		<tbody id="emESS_tbody">
 		</tbody>
 	</table>
 </div>
 <div class="container">
-	<button id="btn_evESSModify" onclick="sendNewEVParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
+	<button id="btn_emESSModify" onclick="sendNewEMParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
 </div>
 
 <div>
-	<caption><h3 id = "evRand_table" class="text-center" style="font-weight: bold;">電動機車隨機產生資料設定(點擊展開)</h3></caption>
-	<table id = "evRand_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
+	<caption><h3 id = "emRand_table" class="text-center" style="font-weight: bold;">電動機車隨機產生資料設定(點擊展開)</h3></caption>
+	<table id = "emRand_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
 		<thead>
-			<tr class = "well" id="evRand_thead">
+			<tr class = "well" id="emRand_thead">
 			</tr>
 		</thead>
-		<tbody id="evRand_tbody">
+		<tbody id="emRand_tbody">
 		</tbody>
 	</table>
 </div>
 <div class="container">
-	<button id="btn_evRandModify" onclick="sendNewEVParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
+	<button id="btn_emRandModify" onclick="sendNewEMParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
 </div>
 <hr>
 
@@ -130,7 +130,7 @@
 </div>
 
 <div class="container">
-	<button id="btn_evPercentModify" onclick="sendNewEVPercent()" color="black" style="background-color: red; display:none;">修改</button>
+	<button id="btn_emPercentModify" onclick="sendNewEMPercent()" color="black" style="background-color: red; display:none;">修改</button>
 </div>
 
 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -193,9 +193,9 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://highcharts.github.io/export-csv/export-csv.js"></script>
-<script src="main_js/evParmater_modify.js"></script>
+<script src="main_js/emParameter_modify.js"></script>
 <script src="main_js/chart_style.js"></script>
-<script src="main_js/evParameter.js"></script>
+<script src="main_js/emParameter.js"></script>
 
 </body>
 

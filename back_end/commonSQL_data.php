@@ -19,7 +19,7 @@ if ($dr_mode != 0)
 
 $uncontrollable_load_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'uncontrollable_load_flag' ", $oneValue);
 $comfortLevel_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'comfortLevel_flag' ", $oneValue);
-$EV_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'ElectricVehicle' ", $oneValue);
+$EM_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'ElectricMotor' ", $oneValue);
 
 for ($y = 0; $y < $time_block; $y++) {
 

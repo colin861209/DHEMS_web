@@ -10,7 +10,7 @@ function get_backEnd_data() {
 
     save_target = {
 
-        modify_target: ["SOCmin", "SOCmax", "SOCthres", "real_time", "Global_real_time", "dr_mode", "ElectricVehicle", "EV_generate_random_user_result", "uncontrollable_load_flag", "ini_SOC", "hydrogen_price", "simulate_weather", "simulate_price"],
+        modify_target: ["SOCmin", "SOCmax", "SOCthres", "real_time", "Global_real_time", "dr_mode", "ElectricMotor", "EM_generate_random_user_result", "uncontrollable_load_flag", "ini_SOC", "hydrogen_price", "simulate_weather", "simulate_price"],
         fix_target: ["now_SOC", "next_simulate_timeblock", "Global_next_simulate_timeblock", "household_id"]
     }
     $.ajax
@@ -27,8 +27,8 @@ function get_backEnd_data() {
                 if (now_database_name == "DHEMS_fiftyHousehold") {
                     
                     save_target.fix_target.pop();
-                    save_target.modify_target.splice(save_target.modify_target.indexOf("EV_generate_random_user_result")+1, 0, "comfortLevel_flag");
-                    save_target.modify_target.splice(save_target.modify_target.indexOf("ElectricVehicle")+2, 0, "comfortLevel_flag");
+                    save_target.modify_target.splice(save_target.modify_target.indexOf("EM_generate_random_user_result")+1, 0, "comfortLevel_flag");
+                    save_target.modify_target.splice(save_target.modify_target.indexOf("ElectricMotor")+2, 0, "comfortLevel_flag");
                 }
                 compare_timeblock = {
                 

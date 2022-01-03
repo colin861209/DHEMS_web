@@ -1,36 +1,36 @@
 // Motor parameter setting 
-function evParameter_change(thead_id) {
+function emParameter_change(thead_id) {
 
     switch (thead_id.id) {
-        case "evParm_thead":
-            document.getElementById('btn_evParameterModify').style.display = "block";
+        case "emParm_thead":
+            document.getElementById('btn_emParameterModify').style.display = "block";
             break;
-        case "evESS_thead":
-            document.getElementById('btn_evESSModify').style.display = "block";
+        case "emESS_thead":
+            document.getElementById('btn_emESSModify').style.display = "block";
             break;
-        case "evRand_thead":
-            document.getElementById('btn_evRandModify').style.display = "block";
+        case "emRand_thead":
+            document.getElementById('btn_emRandModify').style.display = "block";
             break;
         default:
             break;
     }
 }
 
-function sendNewEVParameter(btn_id) {
+function sendNewEMParameter(btn_id) {
 
     var new_flag = [], name = [], table;
     
-    if (btn_id == "btn_evParameterModify") {
-        table = "EV_Parameter";
-        name = evParm_save_target.modify_target;
+    if (btn_id == "btn_emParameterModify") {
+        table = "EM_Parameter";
+        name = emParm_save_target.modify_target;
     }
-    else if (btn_id == "btn_evESSModify") {
-        table = "EV_Parameter_of_ESS";
-        name = evESS_save_target.modify_target;
+    else if (btn_id == "btn_emESSModify") {
+        table = "EM_Parameter_of_ESS";
+        name = emESS_save_target.modify_target;
     }
-    else if (btn_id == "btn_evRandModify") {
-        table = "EV_Parameter_of_randomResult";
-        name = evRand_save_target.modify_target;
+    else if (btn_id == "btn_emRandModify") {
+        table = "EM_Parameter_of_randomResult";
+        name = emRand_save_target.modify_target;
     }
 
     var new_ParameterData = {
@@ -46,7 +46,7 @@ function sendNewEVParameter(btn_id) {
     $.ajax
         ({
             type: "POST",
-            url: "back_end/send_newEV_parameterOrType.php",
+            url: "back_end/send_newEM_parameterOrType.php",
             data: { phpReceive: new_ParameterData },
             // contentType: "application/x-www-form-urlencoded",
             // processData: true,
@@ -75,33 +75,33 @@ function sendNewEVParameter(btn_id) {
 }
 
 $(document).ready(function () {
-    $("#evParm_table").click(function () {
-        $("#evParm_flags").fadeToggle();
+    $("#emParm_table").click(function () {
+        $("#emParm_flags").fadeToggle();
     });
 });
 $(document).ready(function () {
-    $("#evESS_table").click(function () {
-        $("#evESS_flags").fadeToggle();
+    $("#emESS_table").click(function () {
+        $("#emESS_flags").fadeToggle();
     });
 });
 $(document).ready(function () {
-    $("#evRand_table").click(function () {
-        $("#evRand_flags").fadeToggle();
+    $("#emRand_table").click(function () {
+        $("#emRand_flags").fadeToggle();
     });
 });
 
 // Motor type setting  
-function evPercent_change() {
+function emPercent_change() {
     
-    document.getElementById('btn_evPercentModify').style.display = "block";
+    document.getElementById('btn_emPercentModify').style.display = "block";
 }
 
-function sendNewEVPercent() {
+function sendNewEMPercent() {
     
     var new_flag = [], id = []
     var new_typeData = {
 
-        table: "EV_motor_type",
+        table: "EM_motor_type",
         id: id,
         percent_value: new_flag
     }
@@ -114,7 +114,7 @@ function sendNewEVPercent() {
     $.ajax
         ({
             type: "POST",
-            url: "back_end/send_newEV_parameterOrType.php",
+            url: "back_end/send_newEM_parameterOrType.php",
             data: { phpReceive: new_typeData },
             // contentType: "application/x-www-form-urlencoded",
             // processData: true,
@@ -141,7 +141,3 @@ function sendNewEVPercent() {
             }
         });
 }
-
-// update simulation_LP_parameter
-// TRUNCATE simulation_percent_number & SELECT simulation_user_number 2 INSERT simulation_percent_number
-// TRUNCATE & INSERT simulation_Pole

@@ -20,9 +20,9 @@ function create_wholeDay_userChargingNumber($conn, $table) {
     try {
         $nfsf_user_number=[]; $type_all=[];
         mysqli_query($conn, "TRUNCATE TABLE `$table`");
-        $user_number_tmp = sqlFetchAssoc($conn, "SELECT `user_number`, `fast_user_number`, `super_fast_user_number` FROM EV_user_number", array("user_number", "fast_user_number", "super_fast_user_number"));
-        $percent = sqlFetchAssoc($conn, "SELECT `percent` FROM `EV_motor_type`", array("percent"));
-        $charging_power = sqlFetchAssoc($conn, "SELECT `power` FROM `EV_motor_type`", array("power"));
+        $user_number_tmp = sqlFetchAssoc($conn, "SELECT `user_number`, `fast_user_number`, `super_fast_user_number` FROM EM_user_number", array("user_number", "fast_user_number", "super_fast_user_number"));
+        $percent = sqlFetchAssoc($conn, "SELECT `percent` FROM `EM_motor_type`", array("percent"));
+        $charging_power = sqlFetchAssoc($conn, "SELECT `power` FROM `EM_motor_type`", array("power"));
         
         for ($i=0; $i < count($user_number_tmp); $i++) 
             array_push($nfsf_user_number, array_map('intval', $user_number_tmp[$i]));
@@ -52,7 +52,7 @@ function create_wholeDay_userChargingNumber($conn, $table) {
     }
 }
 
-function update_EVParameter_totalChargingPole($conn, $old_totalPoles, $old_superFastPoles, $old_fastPoles, $old_normalPoles, $newParameter) {
+function update_EMParameter_totalChargingPole($conn, $old_totalPoles, $old_superFastPoles, $old_fastPoles, $old_normalPoles, $newParameter) {
     
     $new_sfPole = $newParameter['value'][array_search("Super_Fast_Charging_Pole", $newParameter['name'], true)];
     $new_fPole = $newParameter['value'][array_search("Fast_Charging_Pole", $newParameter['name'], true)];
@@ -103,7 +103,7 @@ function create_chargingPole($conn, $table, $totalPoles, $sfPole, $fPole, $nPole
 $newParameter = $_POST['phpReceive'];
 
 switch ($newParameter['table']) {
-    case 'EV_motor_type':
+    case 'EM_motor_type':
         for ($i=0; $i < count($newParameter['id']); $i++) {
 
             updateSQL($conn, $newParameter['table'], "percent", $newParameter['percent_value'][$i], 'id', $newParameter['id'][$i]);
@@ -115,10 +115,10 @@ switch ($newParameter['table']) {
             else
                 $status = "something went wrong";
         }
-        $status = create_wholeDay_userChargingNumber($conn, "EV_wholeDay_userChargingNumber");
+        $status = create_wholeDay_userChargingNumber($conn, "EM_wholeDay_userChargingNumber");
         break;
-    case 'EV_Parameter_of_ESS':
-    case 'EV_Parameter_of_randResult':
+    case 'EM_Parameter_of_ESS':
+    case 'EM_Parameter_of_randResult':
         for ($i=0; $i < count($newParameter['value']); $i++) {
             
             updateSQL($conn, $newParameter['table'], "value", $newParameter['value'][$i], 'parameter_name', $newParameter['name'][$i]);
@@ -132,7 +132,7 @@ switch ($newParameter['table']) {
         }
         break;
     default:
-        // EV_Parameter
+        // EM_Parameter
         $old_totalPoles = sqlFetchRow($conn, "SELECT `value` FROM `" .$newParameter['table']. "` WHERE `parameter_name` = 'Total_Charging_Pole'", $oneValue);
         $old_superFastPoles = sqlFetchRow($conn, "SELECT `value` FROM `" .$newParameter['table']. "` WHERE `parameter_name` = 'Super_Fast_Charging_Pole'", $oneValue);
         $old_FastPoles = sqlFetchRow($conn, "SELECT `value` FROM `" .$newParameter['table']. "` WHERE `parameter_name` = 'Fast_Charging_Pole'", $oneValue);
@@ -148,10 +148,10 @@ switch ($newParameter['table']) {
             else
                 $status = "something went wrong";
         }
-        [$change_status, $totalPoles, $sfPole, $fPole, $nPole] = update_EVParameter_totalChargingPole($conn, $old_totalPoles, $old_superFastPoles, $old_FastPoles, $old_normalPoles, $newParameter);
+        [$change_status, $totalPoles, $sfPole, $fPole, $nPole] = update_EMParameter_totalChargingPole($conn, $old_totalPoles, $old_superFastPoles, $old_FastPoles, $old_normalPoles, $newParameter);
         if ($change_status == "Pole amount change" ||$change_status == "Total pole amount change") {
 
-            $status = create_chargingPole($conn, "EV_Pole", $totalPoles, $sfPole, $fPole, $nPole);
+            $status = create_chargingPole($conn, "EM_Pole", $totalPoles, $sfPole, $fPole, $nPole);
         }
         break;
 }

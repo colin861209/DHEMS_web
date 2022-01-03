@@ -8,23 +8,23 @@ window.onload = function () {
 
 function get_backEnd_data() {
 
-    evParm_save_target = {
+    emParm_save_target = {
 
-        modify_target: ["Normal_Charging_Pole", "Fast_Charging_Pole", "Super_Fast_Charging_Pole", "EV_Upper_SOC","EV_Lower_SOC", "EV_threshold_SOC", "charging_pole_charging_efficiency", "charging_pole_discharging_efficiency",  "Pgrid_Upper_limit"],
+        modify_target: ["Normal_Charging_Pole", "Fast_Charging_Pole", "Super_Fast_Charging_Pole", "EM_Upper_SOC","EM_Lower_SOC", "EM_threshold_SOC", "charging_pole_charging_efficiency", "charging_pole_discharging_efficiency",  "Pgrid_Upper_limit"],
         fix_target: ["Total_Charging_Pole",  "Total_Num_of_EM", "Normal_Charging_power","Fast_Charging_power","Super_Fast_Charging_power"]
     }
-    evESS_save_target = {
+    emESS_save_target = {
         modify_target:["ESS_capacity", "ESS_Upper_SOC", "ESS_lower_SOC", "ESS_SOC_threshold", "ESS_efficiency"],
         fix_target:["ESS_now_SOC"]
     }
-    evRand_save_target = {
+    emRand_save_target = {
         modify_target:["normal_soc_mean", "normal_soc_variance", "normal_time_mean", "normal_time_variance", "normal_wait_mean", "normal_wait_variance", "fast_soc_mean", "fast_soc_variance", "fast_time_mean", "fast_time_variance", "fast_wait_mean", "fast_wait_variance", "super_fast_soc_mean", "super_fast_soc_variance", "super_fast_time_mean", "super_fast_time_variance", "super_fast_wait_mean", "super_fast_wait_variance"],
         fix_target:[]
     }
     $.ajax
         ({
             type: "GET",
-            url: "back_end/evParameter.php",
+            url: "back_end/emParameter.php",
             contentType: "application/x-www-form-urlencoded",
             processData: true,
             success: function (response) {
@@ -39,20 +39,20 @@ function get_backEnd_data() {
                     global: response.global_simulate_timeblock,
                 };
 
-                var evParm_tableInfo = removeParameter(response.evParameter, evParm_save_target);
-                evParm_tableInfo = removeParameter(response.evParameter, evParm_save_target);
-                show_motorParameter(evParm_tableInfo, evParm_save_target, "evParm_thead", "evParm_tbody");
+                var emParm_tableInfo = removeParameter(response.emParameter, emParm_save_target);
+                emParm_tableInfo = removeParameter(response.emParameter, emParm_save_target);
+                show_motorParameter(emParm_tableInfo, emParm_save_target, "emParm_thead", "emParm_tbody");
                
-                var evESS_tableInfo = removeParameter(response.evParameter_of_ESS, evESS_save_target);
-                evESS_tableInfo = removeParameter(response.evParameter_of_ESS, evESS_save_target);
-                show_motorParameter(evESS_tableInfo, evESS_save_target, "evESS_thead", "evESS_tbody");
+                var emESS_tableInfo = removeParameter(response.emParameter_of_ESS, emESS_save_target);
+                emESS_tableInfo = removeParameter(response.emParameter_of_ESS, emESS_save_target);
+                show_motorParameter(emESS_tableInfo, emESS_save_target, "emESS_thead", "emESS_tbody");
                
-                var evRand_tableInfo = removeParameter(response.evParameter_of_randomResult, evRand_save_target);
-                evRand_tableInfo = removeParameter(response.evParameter_of_randomResult, evRand_save_target);
-                show_motorParameter(evRand_tableInfo, evRand_save_target, "evRand_thead", "evRand_tbody");
+                var emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
+                emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
+                show_motorParameter(emRand_tableInfo, emRand_save_target, "emRand_thead", "emRand_tbody");
                 
                 insertText_after_breadcrumb(now_database_name, null, null);
-                show_motorType_percent(response.ev_motor_type);
+                show_motorType_percent(response.em_motor_type);
                 show_wholeDay_chargingUser_nums(response.n_chargingUser_nums, response.f_chargingUser_nums, response.sf_chargingUser_nums)
             }
         });
@@ -93,14 +93,14 @@ function show_motorParameter(baseParameter, save_target, thead_id, tbody_id) {
         name: ["參數名", "數值"]
     }
     switch (thead_id) {
-        case "evParm_thead":
-            onchage_function_name = "evParameter_change("+thead_id+")"
+        case "emParm_thead":
+            onchage_function_name = "emParameter_change("+thead_id+")"
             break;
-        case "evESS_thead":
-            onchage_function_name = "evParameter_change("+thead_id+")"
+        case "emESS_thead":
+            onchage_function_name = "emParameter_change("+thead_id+")"
             break;
-        case "evRand_thead":
-            onchage_function_name = "evParameter_change("+thead_id+")"
+        case "emRand_thead":
+            onchage_function_name = "emParameter_change("+thead_id+")"
             break;
         default:
             break;
@@ -288,7 +288,7 @@ function show_motorType_percent(type) {
             input_tmp.setAttribute("style", "text-align: center; background-color: #ABFFFF;");
             input_tmp.setAttribute("size", "2");
             input_tmp.setAttribute("value", motor.percent[index-1]);
-            input.setAttribute("onchange", "evPercent_change()");
+            input.setAttribute("onchange", "emPercent_change()");
             
             if (motor.name[index-1] != motor.name[index]) {
                 input.appendChild(input_tmp);
