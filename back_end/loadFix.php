@@ -4,6 +4,7 @@ require 'commonSQL_data.php';
 $load_power_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `totalLoad_model` ", array("totalLoad"));
 $uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_uncontrollable_load` ", array("totalLoad"));
 $publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
+$EV_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `EV_user_number`", array("total_power"));
 // table info
 $total_load_power_sum = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'totalLoad' ", $oneValue);
 $total_publicLoad_power = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'publicLoad' ", $oneValue);
@@ -22,12 +23,12 @@ $load_status_array = sqlFetchRow($conn, "SELECT * FROM `GHEMS_control_status` ",
 mysqli_close($conn);
 
 $load_model_seperate = [];
-array_push($load_model_seperate, array_map('floatval', $load_power_sum));
 $load_model = array_map('floatval', $load_power_sum);
+array_push($load_model_seperate, $load_model);
 if ($uncontrollable_load_flag) {
     
-    array_push($load_model_seperate, array_map('floatval', $uncontrollable_load_sum));
     $uncontrollable_load_sum = array_map('floatval', $uncontrollable_load_sum);
+    array_push($load_model_seperate, $uncontrollable_load_sum);
     $load_model = array_map(function() {
         return array_sum(func_get_args());
     }, $load_model, $uncontrollable_load_sum);
@@ -49,6 +50,14 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
         $load_model = array_map(function() {
             return array_sum(func_get_args());
         }, $load_model, $publicLoad_total);
+    }
+    if ($EV_flag) {
+    
+        $EV_total_power = array_map('floatval', $EV_total_power);
+        array_push($load_model_seperate, $EV_total_power);
+        $load_model = array_map(function() {
+            return array_sum(func_get_args());
+        }, $load_model, $EV_total_power);
     }
 }
 
