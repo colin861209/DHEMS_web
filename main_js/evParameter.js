@@ -10,7 +10,7 @@ function get_backEnd_data() {
 
     evParm_save_target = {
 
-        modify_target: ["Normal_Charging_Pole", "Fast_Charging_Pole", "Super_Fast_Charging_Pole", "generate_random_user_result", "having_ESS", "EV_Upper_SOC","EV_Lower_SOC", "charging_pole_charging_efficiency", "charging_pole_discharging_efficiency",  "Pgrid_Upper_limit"],
+        modify_target: ["Normal_Charging_Pole", "Fast_Charging_Pole", "Super_Fast_Charging_Pole", "EV_Upper_SOC","EV_Lower_SOC", "charging_pole_charging_efficiency", "charging_pole_discharging_efficiency",  "Pgrid_Upper_limit"],
         fix_target: ["Total_Charging_Pole",  "Total_Num_of_EM", "Normal_Charging_power","Fast_Charging_power","Super_Fast_Charging_power"]
     }
     evESS_save_target = {
