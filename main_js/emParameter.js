@@ -289,6 +289,11 @@ function show_motorType_percent(type) {
             input_tmp.setAttribute("size", "2");
             input_tmp.setAttribute("value", motor.percent[index-1]);
             input.setAttribute("onchange", "emPercent_change()");
+            // 2022/1/3 Discuss with professor comfirm not using fast/super fast charging users
+            if (motor.power[index-1] != 0.6) {
+                input_tmp.setAttribute("style", "text-align: center; background-color: #A8A8A8;");
+                input_tmp.setAttribute("disabled", "disabled");
+            }
             
             if (motor.name[index-1] != motor.name[index]) {
                 input.appendChild(input_tmp);

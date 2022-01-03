@@ -85,8 +85,9 @@
 	<button id="btn_emParameterModify" onclick="sendNewEMParameter(this.id)" color="black" style="background-color: red; display: none;">修改</button>
 </div>
 
-<div>
-	<caption><h3 id = "emESS_table" class="text-center" style="font-weight: bold;">電動機車電池設定(點擊展開)</h3></caption>
+<!-- ESS has already in CEMS, so annotated (style="display: none) this table -->
+<div style="display: none;">
+	<caption><h3 id = "emESS_table" class="text-center" style="font-weight: bold;">ESS環境設定(點擊展開)</h3></caption>
 	<table id = "emESS_flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all" cellpadding='5'>
 		<thead>
 			<tr class = "well" id="emESS_thead">
@@ -134,10 +135,10 @@
 </div>
 
 <div class="col-md-12 col-sm-12 col-xs-12">
-	<!-- <h3 class="text-center" style="font-weight:bold;">模擬假設來客數</h3> -->
 	<div id="normal_chargingUser_nums" style="min-width: 310px; height: 300px; margin: 0 auto;"></div>
-	<div id="fast_chargingUser_nums" style="min-width: 310px; height: 300px; margin: 0 auto;"></div>
-	<div id="superFast_chargingUser_nums" style="min-width: 310px; height: 300px; margin: 0 auto;"></div>
+	<!-- 2022/1/3 Discuss with professor comfirm not using fast/super fast charging users -->
+	<div id="fast_chargingUser_nums" style="min-width: 310px; height: 300px; margin: 0 auto; display: none;"></div>
+	<div id="superFast_chargingUser_nums" style="min-width: 310px; height: 300px; margin: 0 auto; display: none;"></div>
 </div>
 
 <div class="aboutus">
