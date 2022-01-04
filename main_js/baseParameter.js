@@ -161,7 +161,11 @@ function baseParameter_gauge(data, fullInfo) {
         name: fullInfo.baseParameter[0],
         value: fullInfo.baseParameter[1],
         database_name: fullInfo.database_name,
-        dr_count: fullInfo.dr_count
+        dr_count: fullInfo.dr_count,
+        EM_flag: fullInfo.EM_flag,
+        EM_charging_amount: fullInfo.EM_charging_amount,
+        EM_sure_charging_amount: fullInfo.EM_sure_charging_amount
+
     }
     
     var baseParameter = {
@@ -172,26 +176,23 @@ function baseParameter_gauge(data, fullInfo) {
     
     var show = {
         
-        label: ["住戶時刻", "社區時刻", "now SOC", "排程中住戶", "需量模式"],
+        label: ["住戶時刻", "社區時刻", "now SOC", "排程中住戶", "需量模式", "機車充電數量"],
         id: [
             save_target.fix_target[1],
             save_target.fix_target[2],
             save_target.fix_target[0],
             save_target.fix_target[3],
-            save_target.modify_target[5]
+            save_target.modify_target[5],
+            "EM_charging_amount"
         ],
         value: [
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[1])],
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[2])],
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[0])],
             baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[3])],
-            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])]
+            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])],
+            fullInfo.EM_charging_amount
         ],
-    }
-
-    if (fullInfo.database_name == "DHEMS_fiftyHousehold") {
-
-        document.getElementById("household_id_gauge").style.display = 'none';
     }
 
     var next_simulate_timeblock = new JustGage({
@@ -313,6 +314,39 @@ function baseParameter_gauge(data, fullInfo) {
         gaugeWidthScale: 0.7,
         counter: true
     });
+
+    var EM_charging_amount = new JustGage({
+
+        id: show.id[5] + "_gauge",
+        value: show.value[5],
+        min: 0,
+        max: fullInfo.EM_sure_charging_amount,
+        decimals: 0, //小數點
+        symbol: '',
+        label: show.label[5],
+        pointer: true,
+
+        pointerOptions: {
+            toplength: -15,
+            bottomlength: 10,
+            bottomwidth: 12,
+            color: '#8e8e93',
+            stroke: '#ffffff',
+            stroke_width: 2,
+            stroke_linecap: 'round'
+        },
+        gaugeWidthScale: 0.7,
+        counter: true
+    });
+
+    
+    if (fullInfo.database_name == "DHEMS_fiftyHousehold") {
+
+        document.getElementById("household_id_gauge").style.display = 'none';
+        if (fullInfo.EM_flag)
+            document.getElementById("EM_charging_amount_gauge").style.display = 'block';
+    }
+
 }
 
 function simulate_solar(data) {
