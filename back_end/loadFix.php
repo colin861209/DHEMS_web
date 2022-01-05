@@ -16,6 +16,8 @@ $max_sell_price = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where 
 $min_FC_cost = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` ='fuelCellSpend' ", $oneValue);
 $consumption = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'hydrogenConsumption(g)' ", $oneValue);
 $dr_feedbackPrice = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'demandResponse_feedbackPrice' ", $oneValue);
+$EM_total_power_sum = sqlFetchRow($conn, "SELECT SUM(total_power) FROM `EM_user_number`", $oneValue);
+$EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Global_next_simulate_timeblock' ", $oneValue);
 
 $variable_name = sqlFetchAssoc($conn, "SELECT `equip_name` FROM `GHEMS_control_status` ", array("equip_name"));
@@ -66,6 +68,18 @@ for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name,
     $oppsite_sell_array[$i] = $load_status_array[array_search("Psell", $variable_name, true)][$i] * (-1);
 }
 
+$EM_total_power_cost = array_sum(array_map(function($x, $y) { return $x * $y * 0.25; }, $electric_price, $EM_total_power));
+$EM_start_departure_SOC=[];    
+array_push($EM_start_departure_SOC, array_map('floatval', $EM_start_departure_SOC_tmp[0]));
+array_unshift($EM_start_departure_SOC, array_map(function($x, $y) { return $x - $y; }, array_map('floatval', $EM_start_departure_SOC_tmp[1]), $EM_start_departure_SOC[0]));
+
+for ($i=0; $i < count($EM_start_departure_SOC); $i++) { 
+    
+    foreach ($EM_start_departure_SOC[$i] as $key => $value) {
+        $EM_start_departure_SOC[$i][$key] = $value * 100;
+    }
+}
+
 $data_array = [
 
     "total_load_power_sum" => round($total_load_power_sum, 2),
@@ -77,6 +91,9 @@ $data_array = [
     "max_sell_price" => round($max_sell_price, 2),
     "min_FC_cost" => round($min_FC_cost, 2),
     "consumption" => round($consumption, 2),
+    "EM_total_power_sum" => round($EM_total_power_sum, 2),
+    "EM_total_power_cost" => round($EM_total_power_cost, 2),
+    "EM_start_departure_SOC" => $EM_start_departure_SOC,
     "electric_price" => $electric_price,
     "limit_capability" => $limit_capability,
     "simulate_solar" => $simulate_solar,

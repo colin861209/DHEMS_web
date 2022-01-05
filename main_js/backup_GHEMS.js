@@ -37,6 +37,7 @@ function get_backEnd_data() {
                 priceVsLoad(ourData);
                 SOCVsLoad(ourData)
                 loadModel(ourData)
+                EMchargingSOC(ourData.EM_start_departure_SOC)
             }
         });
 }
@@ -48,12 +49,28 @@ function tableInfo(ourData) {
     const hydrogenUnit = "(g)";
     var tableData = {
 
-        name: ["使用總負載", "負載花費(表燈電價)", "負載花費(三段式電價)", "購買市電", "輔助服務回饋", "燃料電池花費", "氫氣消耗"],
+        name: [
+            "使用總負載",
+            "公共負載",
+            "電動機車充電消耗",
+            "負載花費(表燈電價)",
+            "負載花費(三段式電價)",
+            "購買市電",
+            "公設花費(三段式電價)",
+            "電動機車花費(三段式電價)",
+            "輔助服務回饋",
+            "燃料電池花費",
+            "氫氣消耗"
+        ],
         value: [
             ourData.total_load_power_sum + powerUnit,
+            ourData.total_publicLoad_power + powerUnit,
+            ourData.EM_total_power_sum + powerUnit,
             ourData.taipower_loads_cost + moneyUnit,
             ourData.three_level_loads_cost + moneyUnit,
             ourData.real_buy_grid_cost + moneyUnit,
+            ourData.total_publicLoad_cost + moneyUnit,
+            ourData.EM_total_power_cost + moneyUnit,
             ourData.dr_feedbackPrice + moneyUnit,
             ourData.min_FC_cost + moneyUnit,
             ourData.consumption + hydrogenUnit
@@ -186,4 +203,20 @@ function loadModel(ABC) {
         show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1);
     else
         show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
+}
+
+function EMchargingSOC(EM_start_departure_SOC) {
+
+    var chart_info = ["EMchargingSOC", "EM users Arrived & Departure SOC", " ", "user number", "SOC(%)", ""];
+    var multi_name = ["Departure SOC", "Arrived SOC"];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
+
+    set_series_function(1, "column", EM_start_departure_SOC, energyType.Pload_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
+
+    /*Show chart*/
+    show_chart_with_EM_users(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, EM_start_departure_SOC[0].length);
 }

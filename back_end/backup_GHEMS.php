@@ -18,6 +18,8 @@ else
     
 // table info
 $total_load_power_sum = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'totalLoad' ", $oneValue);
+$total_publicLoad_power = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'publicLoad' ", $oneValue);
+$total_publicLoad_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'publicLoadSpend(threeLevelPrice)' ", $oneValue);
 $taipower_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'LoadSpend(taipowerPrice)' ", $oneValue);
 $three_level_loads_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'LoadSpend(threeLevelPrice)' ", $oneValue);
 $real_buy_grid_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'realGridPurchase' ", $oneValue);
@@ -25,6 +27,8 @@ $max_sell_price = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter`
 $min_FC_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` ='fuelCellSpend' ", $oneValue);
 $consumption = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'hydrogenConsumption(g)' ", $oneValue);
 $dr_feedbackPrice = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'demandResponse_feedbackPrice' ", $oneValue);
+$EM_total_power_sum = sqlFetchRow($conn, "SELECT SUM(total_power) FROM `backup_EM_user_number`", $oneValue);
+$EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `backup_EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'Global_next_simulate_timeblock' ", $oneValue);
 
 $variable_name = sqlFetchAssoc($conn, "SELECT `equip_name` FROM `backup_GHEMS` ", array("equip_name"));
@@ -73,17 +77,34 @@ for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name,
     $oppsite_sell_array[$i] = $load_status_array[array_search("Psell", $variable_name, true)][$i] * (-1);
 }
 
+$EM_total_power_cost = array_sum(array_map(function($x, $y) { return $x * $y * 0.25; }, $electric_price, $EM_total_power));
+$EM_start_departure_SOC=[];    
+array_push($EM_start_departure_SOC, array_map('floatval', $EM_start_departure_SOC_tmp[0]));
+array_unshift($EM_start_departure_SOC, array_map(function($x, $y) { return $x - $y; }, array_map('floatval', $EM_start_departure_SOC_tmp[1]), $EM_start_departure_SOC[0]));
+
+for ($i=0; $i < count($EM_start_departure_SOC); $i++) { 
+    
+    foreach ($EM_start_departure_SOC[$i] as $key => $value) {
+        $EM_start_departure_SOC[$i][$key] = $value * 100;
+    }
+}
+
 $data_array = [
 
     "local_simulate_timeblock" => intval($local_simulate_timeblock),
     "global_simulate_timeblock" => intval($global_simulate_timeblock),
     "total_load_power_sum" => round($total_load_power_sum, 2),
+    "total_publicLoad_power" => round($total_publicLoad_power, 2),
+    "total_publicLoad_cost" => round($total_publicLoad_cost, 2),
     "taipower_loads_cost" => round($taipower_loads_cost, 2),
     "three_level_loads_cost" => round($three_level_loads_cost, 2),
     "real_buy_grid_cost" => round($real_buy_grid_cost, 2),
     "max_sell_price" => round($max_sell_price, 2),
     "min_FC_cost" => round($min_FC_cost, 2),
     "consumption" => round($consumption, 2),
+    "EM_total_power_sum" => round($EM_total_power_sum, 2),
+    "EM_total_power_cost" => round($EM_total_power_cost, 2),
+    "EM_start_departure_SOC" => $EM_start_departure_SOC,
     "electric_price" => array_map('floatval', $electric_price),
     "limit_capability" => $limit_capability,
     "simulate_solar" => array_map('floatval', $simulate_solar),
