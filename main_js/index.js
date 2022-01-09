@@ -309,7 +309,7 @@ function increase_chartHeight(chart_id, condition) {
 
     if (condition) {
 
-        document.getElementById(chart_id).style.height = '1000px';
+        document.getElementById(chart_id).style.height = '850px';
     }
 }
 

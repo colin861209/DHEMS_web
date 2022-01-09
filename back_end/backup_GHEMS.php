@@ -10,6 +10,8 @@ $simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar
 $dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
 $publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
 $EM_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'ElectricMotor' ", $oneValue);
+$EM_discharge_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_EM_Parameter` where `parameter_name` = 'Motor_can_discharge' ", $oneValue);
+$EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `EM_user_number`", array("discharge_normal_power"));
 $EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `backup_EM_user_number`", array("total_power"));
 if ($dr_mode != 0)
     $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
@@ -69,6 +71,14 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
         $load_model = array_map(function() {
             return array_sum(func_get_args());
         }, $load_model, $EM_total_power);
+
+        if ($EM_discharge_flag) {
+            $EM_discharge_power = array_map('floatval', $EM_discharge_power);
+            array_push($load_model_seperate, $EM_discharge_power);
+            $load_model = array_map(function() {
+                return array_sum(func_get_args());
+            }, $load_model, $EM_discharge_power);
+        }
     }
 }
 
@@ -102,6 +112,7 @@ $data_array = [
     "max_sell_price" => round($max_sell_price, 2),
     "min_FC_cost" => round($min_FC_cost, 2),
     "consumption" => round($consumption, 2),
+    "EM_flag" => intval($EM_flag),
     "EM_total_power_sum" => round($EM_total_power_sum, 2),
     "EM_total_power_cost" => round($EM_total_power_cost, 2),
     "EM_start_departure_SOC" => $EM_start_departure_SOC,

@@ -378,6 +378,7 @@ var energyType = {
     Psell_flag_name: "Psell",
     SOC_change_flag_name: "SOC_change",
     Pfc_flag_name: "Pfc",
+    PublicLoad_flag_name: "publicLoad",
 
     Pgrid_chart_name: "pwr-buy",
     Pess_chart_name: "pwr-battery",
@@ -387,6 +388,15 @@ var energyType = {
     Pfc_chart_name: "pwr-FC",
     SOC_chart_name: "SOC",
     electrice_chart_name: "price",
+    
+    // load model chart name
+    HEMS_chart_name: "pwr-HEMS",
+    public1_chart_name: "pwr-public_1",
+    public2_chart_name: "pwr-public_2",
+    public3_chart_name: "pwr-public_3",
+    EM_charging_chart_name: "pwr-charging-EM",
+    EM_discharging_chart_name: "pwr-discharging-EM",
+
 }
 
 var compare_timeblock = {};

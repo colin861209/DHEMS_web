@@ -5,6 +5,7 @@ $load_power_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `totalLoad_model
 $uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_uncontrollable_load` ", array("totalLoad"));
 $publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
 $EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `EM_user_number`", array("total_power"));
+$EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `EM_user_number`", array("discharge_normal_power"));
 // table info
 $total_load_power_sum = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'totalLoad' ", $oneValue);
 $total_publicLoad_power = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'publicLoad' ", $oneValue);
@@ -60,6 +61,14 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
         $load_model = array_map(function() {
             return array_sum(func_get_args());
         }, $load_model, $EM_total_power);
+        
+        if ($EM_discharge_flag) {
+            $EM_discharge_power = array_map('floatval', $EM_discharge_power);
+            array_push($load_model_seperate, $EM_discharge_power);
+            $load_model = array_map(function() {
+                return array_sum(func_get_args());
+            }, $load_model, $EM_discharge_power);
+        }
     }
 }
 
@@ -91,6 +100,8 @@ $data_array = [
     "max_sell_price" => round($max_sell_price, 2),
     "min_FC_cost" => round($min_FC_cost, 2),
     "consumption" => round($consumption, 2),
+    "EM_flag" => intval($EM_flag),
+    "EM_discharge_flag" => intval($EM_discharge_flag),
     "EM_total_power_sum" => round($EM_total_power_sum, 2),
     "EM_total_power_cost" => round($EM_total_power_cost, 2),
     "EM_start_departure_SOC" => $EM_start_departure_SOC,

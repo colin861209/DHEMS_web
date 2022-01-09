@@ -52,30 +52,45 @@ function tableInfo(ourData) {
 
         name: [
             "使用總負載",
-            "公共負載",
-            "電動機車充電消耗",
             "負載花費(表燈電價)",
             "負載花費(三段式電價)",
             "購買市電",
-            "公設花費(三段式電價)",
-            "電動機車花費(三段式電價)",
-            "輔助服務回饋",
-            "燃料電池花費",
-            "氫氣消耗"
         ],
         value: [
-            ourData.total_load_power_sum + powerUnit,
-            ourData.total_publicLoad_power + powerUnit,
-            ourData.EM_total_power_sum + powerUnit,
+            ourData.total_load_power_sum + powerUnit,           
             ourData.taipower_loads_cost + moneyUnit,
             ourData.three_level_loads_cost + moneyUnit,
             ourData.real_buy_grid_cost + moneyUnit,
-            ourData.total_publicLoad_cost + moneyUnit,
-            ourData.EM_total_power_cost + moneyUnit,
-            ourData.dr_feedbackPrice + moneyUnit,
-            ourData.min_FC_cost + moneyUnit,
-            ourData.consumption + hydrogenUnit
         ]
+    }
+    if (GHEMS_flag[1][GHEMS_flag[0].indexOf(energyType.PublicLoad_flag_name)] == 1) {
+
+        tableData.name.splice(1, 0, "公共負載");
+        tableData.name.push("公設花費(三段式電價)");
+        tableData.value.splice(1, 0, ourData.total_publicLoad_power + powerUnit);
+        tableData.value.push(ourData.total_publicLoad_cost + moneyUnit);
+    }
+
+    if (ourData.EM_flag == 1) {
+        
+        tableData.name.splice(2, 0, "電動機車充電消耗");
+        tableData.name.push("電動機車花費(三段式電價)");
+        tableData.value.splice(2, 0, ourData.EM_total_power_sum + powerUnit);
+        tableData.value.push(ourData.EM_total_power_cost + moneyUnit);
+    }
+
+    if (ourData.dr_mode != 0) {
+
+        tableData.name.push("輔助服務回饋");
+        tableData.value.push(ourData.dr_feedbackPrice + moneyUnit);
+    }
+
+    if (GHEMS_flag[1][GHEMS_flag[0].indexOf(energyType.Pfc_flag_name)] == 1) {
+        
+        tableData.name.push("燃料電池花費");
+        tableData.name.push("氫氣消耗");
+        tableData.value.push(ourData.min_FC_cost + moneyUnit,);
+        tableData.value.push(ourData.consumption + hydrogenUnit);
     }
 
     if (tableData.name.length == tableData.value.length) {
@@ -192,15 +207,19 @@ function loadModel(ABC) {
     var data = ABC;
     //define all needed data array
     var chart_info = ["loadModel", "Load Model", " ", "time", "price(TWD)", "power(kW)"];
-    var multi_name = ["pwr-HEMS", "pwr-public_1", "pwr-public_2", "pwr-public_3", "pwr-EM"];
+    var multi_name = [energyType.HEMS_chart_name, energyType.public1_chart_name, energyType.public2_chart_name, energyType.public3_chart_name, energyType.EM_charging_chart_name];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
 
+    if (data.EM_discharge_flag) {
+        multi_name.push(energyType.EM_discharging_chart_name)
+    }
+
     set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    set_series_function(1, "column", data.load_model_seperate, energyType.Pload_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
+    set_series_function(1, "column", data.load_model_seperate, "", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
 
     /*Show chart*/
     if (data.dr_mode != 0)
@@ -223,5 +242,11 @@ function EMchargingSOC(EM_start_departure_SOC) {
     set_series_function(1, "column", EM_start_departure_SOC, energyType.Pload_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
 
     /*Show chart*/
-    show_chart_with_EM_users(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, EM_start_departure_SOC[0].length);
+    if (EM_start_departure_SOC[0] != null) {
+        
+        show_chart_with_EM_users(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, EM_start_departure_SOC[0].length);
+    }
+    else {
+        document.getElementById('EMchargingSOC').style.display = "none";
+    }
 }

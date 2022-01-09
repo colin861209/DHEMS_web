@@ -10,7 +10,7 @@ function get_backEnd_data() {
 
     emParm_save_target = {
 
-        modify_target: ["Normal_Charging_Pole", "Fast_Charging_Pole", "Super_Fast_Charging_Pole", "EM_Upper_SOC","EM_Lower_SOC", "EM_threshold_SOC", "charging_pole_charging_efficiency", "charging_pole_discharging_efficiency",  "Pgrid_Upper_limit"],
+        modify_target: ["Normal_Charging_Pole", "Fast_Charging_Pole", "Super_Fast_Charging_Pole", "EM_Upper_SOC","EM_Lower_SOC", "EM_threshold_SOC", "Motor_can_discharge", "charging_pole_charging_efficiency", "charging_pole_discharging_efficiency",  "Pgrid_Upper_limit"],
         fix_target: ["Total_Charging_Pole",  "Total_Num_of_EM", "Normal_Charging_power","Fast_Charging_power","Super_Fast_Charging_power"]
     }
     emESS_save_target = {
