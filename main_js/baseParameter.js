@@ -351,20 +351,14 @@ function baseParameter_gauge(data, fullInfo) {
 
 function simulate_solar(data) {
     
-    if (data.baseParameter[1][data.baseParameter[0].indexOf("dr_mode")] != 0)
-        sub_title = "T: " + data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")] + ", H: " + data.baseParameter[1][data.baseParameter[0].indexOf("simulate_history_weather")];
-    else
-        sub_title = data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")]
-    var chart_info = ["simulate_solar_chart", "Solar Power", sub_title, "time", "power(kW)", null, 'orange', '#7cb5ec'];
+    var chart_info = ["simulate_solar_chart", "Solar Power", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")], "time", "power(kW)", null, 'orange', '#7cb5ec'];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
 
-    set_series_function(0, "line", data.simulate_solar, "Today weather", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    if (data.baseParameter[1][data.baseParameter[0].indexOf("dr_mode")] != 0)
-        set_series_function(0, "line", data.simulate_history_weather, "History weather", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(0, "line", data.simulate_solar, "Weather", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
 }

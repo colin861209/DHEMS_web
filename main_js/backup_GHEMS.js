@@ -236,9 +236,11 @@ function EMchargingSOC(EM_start_departure_SOC) {
     /*Show chart*/
     if (EM_start_departure_SOC[0] != null) {
         
-        show_chart_with_EM_users(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, EM_start_departure_SOC[0].length);
+        show_chart_with_EM_users(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, EM_start_departure_SOC[0].length-1);
     }
     else {
         document.getElementById('EMchargingSOC').style.display = "none";
+        var hint = document.createTextNode("Wait for first departure EM user...")
+        document.getElementById('EM_hint').appendChild(hint)
     }
 }
