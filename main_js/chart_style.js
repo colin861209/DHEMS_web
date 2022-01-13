@@ -282,6 +282,7 @@ function show_chart_with_EM_users(chart_info, chart_series_type, chart_series_na
         },
         yAxis: [{
             min: 0,
+            max:100,
             title: {
                 text: chart_info[4], style: {
                     fontWeight: 'bold',

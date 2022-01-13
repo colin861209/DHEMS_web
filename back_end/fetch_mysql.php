@@ -37,6 +37,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 $oneValue = "oneValue";
 $aRow = "aRow";
 $controlStatusResult = "controlStatusResult";
+$emChargeDischarge = "emChargeDischarge";
 
 function sqlFetchRow ($conn, $sql, $key) {
 
@@ -72,7 +73,20 @@ function sqlFetchRow ($conn, $sql, $key) {
             mysqli_free_result($result);
             return $array;
             break;
+        case "emChargeDischarge":
+            $k = 0;
+            $result = mysqli_query($conn, $sql);
+            while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
 
+                for($i = 0; $i < 97; $i++) {
+                    
+                    $array[$k][] = ($row[$i]);
+                }
+                $k++;
+            }
+            mysqli_free_result($result);
+            return $array;
+            break;
         default:
             echo "tap key";
     }

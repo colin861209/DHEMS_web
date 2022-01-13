@@ -1,5 +1,5 @@
 /* ==== Google font ==== */
-/* @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600); */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600);
 @import url('font-awesome.css');
 /* ==== overwrite bootstrap standard ==== */
 @import url('animate.css');
@@ -1233,18 +1233,88 @@ select{
 }
 
 ::-webkit-scrollbar {
-  width: 14px;
+  
+	width: 10px;
+	background-color: #F5F5F5;
 }
 
 ::-webkit-scrollbar-track {
   
-  background-color: lightgrey;
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+	border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(128, 128, 128, 0.623);
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+  
+  background-color: #FFF;
+	background-image: -webkit-linear-gradient(90deg,
+                        rgba(0, 0, 0, 1) 0%,
+											  rgba(0, 0, 0, 1) 25%,
+											  transparent 100%,
+											  rgba(0, 0, 0, 1) 75%,
+											  transparent)
+}
+
+/* em table */
+.emChargeDischargeStatus_div {
+  overflow: auto;
+  max-height: 500px;
+  width: 100%;
+}
+
+#emChargeDischargeStatus_table {
+  position: relative;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+#emChargeDischargeStatus_table th,
+#emChargeDischargeStatus_table td {
+  width: 50px;
+  padding: 5px;
+  background-color: white;
+  color: black;
+}
+
+#emChargeDischargeStatus_table tbody {
+  height: 90px;
+}
+
+#emChargeDischargeStatus_table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+#emChargeDischargeStatus_table th:nth-child(1) {
+  left: 0;
+  z-index: 3;
+}
+
+#emChargeDischargeStatus_table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.emChargeDischargeStatus_div::-webkit-scrollbar-track {
+	
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+.emChargeDischargeStatus_div::-webkit-scrollbar {
+
+	width: 10px;
+	height: 10px;
+	background-color: #F5F5F5;
+}
+
+.emChargeDischargeStatus_div::-webkit-scrollbar-thumb {
+
+	background-color: rgb(0, 238, 178);	
+	background-image: -webkit-gradient(linear, 0 0, 0 100%,
+	                   color-stop(.5, rgba(255, 255, 255, .2)),
+					   color-stop(.5, transparent), to(transparent));
 }

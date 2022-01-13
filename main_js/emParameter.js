@@ -51,6 +51,7 @@ function get_backEnd_data() {
                 emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
                 show_motorParameter(emRand_tableInfo, emRand_save_target, "emRand_thead", "emRand_tbody");
                 
+                show_chargingOrDischarging_status(response.em_chargingOrDischargingStatus_array)
                 insertText_after_breadcrumb(now_database_name, null, null);
                 show_motorType_percent(response.em_motor_type);
                 show_wholeDay_chargingUser_nums(response.n_chargingUser_nums, response.f_chargingUser_nums, response.sf_chargingUser_nums)
@@ -331,3 +332,62 @@ function show_wholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_num
         show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
     }
 }
+
+function show_chargingOrDischarging_status(status_array) {
+
+    for (let index = 0; index < status_array[0].length; index++) {
+        
+        var th = document.createElement('th');
+        if (index == 0) {
+            
+            th.appendChild(document.createTextNode("USER"));
+            th.setAttribute("class", "text-center");
+        }
+        else {
+
+            th.appendChild(document.createTextNode(index-1));
+            th.setAttribute("style", "color:black; width: 5px");
+        }
+        document.getElementById('emChargeDischargeStatus_thead').appendChild(th)
+    }
+
+    for (let users = 0; users < status_array.length; users++) {
+        
+        var tr = document.createElement('tr');
+        for (let index = 0; index < status_array[users].length; index++) {
+            
+            var td = document.createElement('td');
+            if (index == 0) {
+
+                td.appendChild(document.createTextNode(status_array[users][index]));
+                td.setAttribute("class", "text-center");
+            }
+            else {
+                switch (status_array[users][index]) {
+                    case "1":
+                        td.setAttribute("style", "background-color: green;");
+                        break;
+                    case "-1":
+                        td.setAttribute("style", "background-color: red;");
+                        break;
+                    case "0":
+                        td.setAttribute("style", "background-color: gray;");
+                        break;
+                    default:
+                        td.setAttribute("style", "background-color: #dbd8d8;");
+                        break;
+                }
+            }
+            tr.appendChild(td);
+        }
+        document.getElementById('emChargeDischargeStatus_tbody').appendChild(tr)
+    }
+}
+
+// $(document).ready(function() {
+//     $('tbody').scroll(function(e) { 
+//       $('thead').css("left", -$("tbody").scrollLeft());
+//       $('thead th:nth-child(1)').css("left", $("tbody").scrollLeft()-5); 
+//       $('tbody td:nth-child(1)').css("left", $("tbody").scrollLeft()-5); 
+//     });
+//   });
