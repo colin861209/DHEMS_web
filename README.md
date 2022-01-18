@@ -173,3 +173,9 @@
 - Modify: loadFix.html
 	- Show load model with EM
 
+---
+### 2022/01/18
++ Commit link [62505be](https://github.com/colin861209/DHEMS_web/commit/62505be741a3d70ee9426d8c22782138b8bfbf90)
++ Commit link [4041322](https://github.com/colin861209/DHEMS_web/commit/404132257e5cdde18a71d26c88e31635f1f95a8f)
+
+- Feature: EM Table & Users' EM status
