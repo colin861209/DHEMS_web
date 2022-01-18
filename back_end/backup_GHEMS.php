@@ -13,6 +13,8 @@ $EM_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where 
 $EM_discharge_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_EM_Parameter` where `parameter_name` = 'Motor_can_discharge' ", $oneValue);
 $EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `EM_user_number`", array("discharge_normal_power"));
 $EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `backup_EM_user_number`", array("total_power"));
+$EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `backup_EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
+
 if ($dr_mode != 0)
     $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
 else
@@ -30,7 +32,8 @@ $min_FC_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` wh
 $consumption = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'hydrogenConsumption(g)' ", $oneValue);
 $dr_feedbackPrice = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'demandResponse_feedbackPrice' ", $oneValue);
 $EM_total_power_sum = sqlFetchRow($conn, "SELECT SUM(total_power) FROM `backup_EM_user_number`", $oneValue);
-$EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `backup_EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
+$EM_MIN_departureSOC = sqlFetchRow($conn, "SELECT MIN(Departure_SOC) FROM `EM_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
+$EM_AVG_departureSOC = sqlFetchRow($conn, "SELECT AVG(Departure_SOC) FROM `EM_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'Global_next_simulate_timeblock' ", $oneValue);
 
 $variable_name = sqlFetchAssoc($conn, "SELECT `equip_name` FROM `backup_GHEMS` ", array("equip_name"));
@@ -116,6 +119,8 @@ $data_array = [
     "EM_total_power_sum" => round($EM_total_power_sum, 2),
     "EM_total_power_cost" => round($EM_total_power_cost, 2),
     "EM_start_departure_SOC" => $EM_start_departure_SOC,
+    "EM_MIN_departureSOC" => round(floatval($EM_MIN_departureSOC)*100, 2),
+    "EM_AVG_departureSOC" => round(floatval($EM_AVG_departureSOC)*100, 2),
     "electric_price" => array_map('floatval', $electric_price),
     "limit_capability" => $limit_capability,
     "simulate_solar" => array_map('floatval', $simulate_solar),

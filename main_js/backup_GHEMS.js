@@ -70,14 +70,6 @@ function tableInfo(ourData) {
         tableData.value.push(ourData.total_publicLoad_cost + moneyUnit);
     }
 
-    if (ourData.EM_flag == 1) {
-        
-        tableData.name.splice(2, 0, "電動機車充電消耗");
-        tableData.name.push("電動機車花費(三段式電價)");
-        tableData.value.splice(2, 0, ourData.EM_total_power_sum + powerUnit);
-        tableData.value.push(ourData.EM_total_power_cost + moneyUnit);
-    }
-
     if (ourData.dr_mode != 0) {
 
         tableData.name.push("輔助服務回饋");
@@ -113,6 +105,44 @@ function tableInfo(ourData) {
     else {
 
         console.log("Function: " + tableInfo.name + " Wrong length in table 'name' & 'data'")
+    }
+
+    if (ourData.EM_flag == 1) {
+        
+        var EMData = {
+            name:[],
+            value:[]
+        }
+        EMData.name.push("電動機車花費(三段式電價)");
+        EMData.name.push("電動機車充電消耗");
+        EMData.name.push("電動機車最小離場SOC");
+        EMData.name.push("電動機車平均離場SOC");
+        EMData.value.push(ourData.EM_total_power_cost + moneyUnit);
+        EMData.value.push(ourData.EM_total_power_sum + powerUnit);
+        EMData.value.push(ourData.EM_MIN_departureSOC + " %");
+        EMData.value.push(ourData.EM_AVG_departureSOC + " %");
+        if (EMData.name.length == EMData.value.length) {
+            
+            for (let nameNum = 0; nameNum < EMData.name.length; nameNum++) {
+                
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode(EMData.name[nameNum]));
+                th.setAttribute("style", "text-align: center; color:black");
+                document.getElementById('table_EMInfo_thead').appendChild(th);
+            }
+            
+            for (let dataNum = 0; dataNum < EMData.value.length; dataNum++) {
+                
+                var td = document.createElement('td');
+                td.appendChild(document.createTextNode(EMData.value[dataNum]));
+                td.setAttribute("style", "text-align: center; color:black; font-size: 20px");
+                document.getElementById('table_EMInfo_tbody').appendChild(td);
+            }
+        }
+        else {
+            
+            console.log("Function: " + tableInfo.name + " Wrong length in table 'name' & 'data'")
+        }
     }
 }
 
