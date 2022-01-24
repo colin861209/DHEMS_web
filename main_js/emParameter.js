@@ -13,10 +13,6 @@ function get_backEnd_data() {
         modify_target: ["Normal_Charging_Pole", "Fast_Charging_Pole", "Super_Fast_Charging_Pole", "EM_Upper_SOC","EM_Lower_SOC", "EM_threshold_SOC", "Motor_can_discharge"],
         fix_target: ["Total_Charging_Pole",  "Total_Num_of_EM", "Normal_Charging_power","Fast_Charging_power","Super_Fast_Charging_power", "charging_pole_charging_efficiency", "charging_pole_discharging_efficiency"]
     }
-    emESS_save_target = {
-        modify_target:["ESS_capacity", "ESS_Upper_SOC", "ESS_lower_SOC", "ESS_SOC_threshold", "ESS_efficiency"],
-        fix_target:["ESS_now_SOC"]
-    }
     emRand_save_target = {
         modify_target:["normal_soc_mean", "normal_soc_variance", "normal_time_mean", "normal_time_variance", "normal_wait_mean", "normal_wait_variance"],
         fix_target:["fast_soc_mean", "fast_soc_variance", "fast_time_mean", "fast_time_variance", "fast_wait_mean", "fast_wait_variance", "super_fast_soc_mean", "super_fast_soc_variance", "super_fast_time_mean", "super_fast_time_variance", "super_fast_wait_mean", "super_fast_wait_variance"]
@@ -42,10 +38,6 @@ function get_backEnd_data() {
                 var emParm_tableInfo = removeParameter(response.emParameter, emParm_save_target);
                 emParm_tableInfo = removeParameter(response.emParameter, emParm_save_target);
                 show_motorParameter(emParm_tableInfo, emParm_save_target, "emParm_thead", "emParm_tbody");
-               
-                var emESS_tableInfo = removeParameter(response.emParameter_of_ESS, emESS_save_target);
-                emESS_tableInfo = removeParameter(response.emParameter_of_ESS, emESS_save_target);
-                show_motorParameter(emESS_tableInfo, emESS_save_target, "emESS_thead", "emESS_tbody");
                
                 var emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
                 emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);

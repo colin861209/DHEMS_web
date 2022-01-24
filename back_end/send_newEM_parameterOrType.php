@@ -117,7 +117,6 @@ switch ($newParameter['table']) {
         }
         $status = create_wholeDay_userChargingNumber($conn, "EM_wholeDay_userChargingNumber");
         break;
-    case 'EM_Parameter_of_ESS':
     case 'EM_Parameter_of_randResult':
         for ($i=0; $i < count($newParameter['value']); $i++) {
             

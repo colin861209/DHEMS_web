@@ -4,7 +4,6 @@ require 'commonSQL_data.php';
 $em_motor_type = sqlFetchAssoc($conn, "SELECT `type`, `capacity`, `voltage`, `power`, `percent` FROM `EM_motor_type`", array("type", "capacity", "voltage", "power", "percent"));
 
 $emParameter = sqlFetchAssoc($conn, "SELECT `parameter_name`, `value` FROM `EM_Parameter`", array("parameter_name", "value"));
-$emParameter_of_ESS = sqlFetchAssoc($conn, "SELECT `parameter_name`, `value` FROM `EM_Parameter_of_ESS`", array("parameter_name", "value"));
 $emParameter_of_randomResult = sqlFetchAssoc($conn, "SELECT `parameter_name`, `value` FROM `EM_Parameter_of_randomResult`", array("parameter_name", "value"));
 
 $wholeDay_chargingUser_nums = sqlFetchAssoc($conn, "SELECT `type_0`, `type_1`, `type_2`, `type_3`, `type_4`, `type_5`, `type_6`, `type_7`, `type_8`, `type_9` FROM `EM_wholeDay_userChargingNumber`", array("type_0", "type_1", "type_2", "type_3", "type_4", "type_5", "type_6", "type_7", "type_8", "type_9"));

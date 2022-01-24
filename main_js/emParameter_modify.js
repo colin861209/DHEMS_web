@@ -24,10 +24,6 @@ function sendNewEMParameter(btn_id) {
         table = "EM_Parameter";
         name = emParm_save_target.modify_target;
     }
-    else if (btn_id == "btn_emESSModify") {
-        table = "EM_Parameter_of_ESS";
-        name = emESS_save_target.modify_target;
-    }
     else if (btn_id == "btn_emRandModify") {
         table = "EM_Parameter_of_randomResult";
         name = emRand_save_target.modify_target;
