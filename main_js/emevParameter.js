@@ -17,10 +17,20 @@ function get_backEnd_data() {
         modify_target:["normal_soc_mean", "normal_soc_variance", "normal_time_mean", "normal_time_variance", "normal_wait_mean", "normal_wait_variance"],
         fix_target:["fast_soc_mean", "fast_soc_variance", "fast_time_mean", "fast_time_variance", "fast_wait_mean", "fast_wait_variance", "super_fast_soc_mean", "super_fast_soc_variance", "super_fast_time_mean", "super_fast_time_variance", "super_fast_wait_mean", "super_fast_wait_variance"]
     }
+    evParm_save_target = {
+
+        modify_target:["Total_Charging_Pole", "Total_Num_of_EM", "EM_Upper_SOC", "EM_Lower_SOC", "EM_threshold_SOC", "Vehicle_can_discharge"],
+        fix_target:[]
+    }
+    evRand_save_target = {
+
+        modify_target:["soc_mean", "soc_variance", "time_mean", "time_variance", "wait_mean", "wait_variance"],
+        fix_target:[]
+    }
     $.ajax
         ({
             type: "GET",
-            url: "back_end/emParameter.php",
+            url: "back_end/emevParameter.php",
             contentType: "application/x-www-form-urlencoded",
             processData: true,
             success: function (response) {
@@ -34,19 +44,27 @@ function get_backEnd_data() {
                     local: response.local_simulate_timeblock,
                     global: response.global_simulate_timeblock,
                 };
-
+                var evParm_tableInfo = removeParameter(response.evParameter, evParm_save_target);
+                evParm_tableInfo = removeParameter(response.evParameter, evParm_save_target);
+                show_vehicleMotorParameter(evParm_tableInfo, evParm_save_target, "evParm_thead", "evParm_tbody");
+                
+                var evRand_tableInfo = removeParameter(response.evParameter_of_randomResult, evRand_save_target);
+                evRand_tableInfo = removeParameter(response.evParameter_of_randomResult, evRand_save_target);
+                show_vehicleMotorParameter(evRand_tableInfo, evRand_save_target, "evRand_thead", "evRand_tbody");
+                
                 var emParm_tableInfo = removeParameter(response.emParameter, emParm_save_target);
                 emParm_tableInfo = removeParameter(response.emParameter, emParm_save_target);
-                show_motorParameter(emParm_tableInfo, emParm_save_target, "emParm_thead", "emParm_tbody");
+                show_vehicleMotorParameter(emParm_tableInfo, emParm_save_target, "emParm_thead", "emParm_tbody");
                
                 var emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
                 emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
-                show_motorParameter(emRand_tableInfo, emRand_save_target, "emRand_thead", "emRand_tbody");
-                
-                show_chargingOrDischarging_status(response.em_chargingOrDischargingStatus_array)
+                show_vehicleMotorParameter(emRand_tableInfo, emRand_save_target, "emRand_thead", "emRand_tbody");
+                console.log(response.em_chargingOrDischargingStatus_array)
+                show_chargingOrDischarging_status([response.em_chargingOrDischargingStatus_array, response.ev_chargingOrDischargingStatus_array])
                 insertText_after_breadcrumb(now_database_name, null, null);
-                show_motorType_percent(response.em_motor_type);
-                show_wholeDay_chargingUser_nums(response.n_chargingUser_nums, response.f_chargingUser_nums, response.sf_chargingUser_nums)
+                show_vehicleMotorType_percent(response.ev_motor_type, response.em_motor_type);
+                show_EVwholeDay_chargingUser_nums(response.ev_chargingUser_nums)
+                show_EMwholeDay_chargingUser_nums(response.n_chargingUser_nums, response.f_chargingUser_nums, response.sf_chargingUser_nums)
             }
         });
 }
@@ -79,21 +97,24 @@ function removeParameter(baseParameter, save_target) {
     return remainParameter;
 }
 
-function show_motorParameter(baseParameter, save_target, thead_id, tbody_id) {
+function show_vehicleMotorParameter(baseParameter, save_target, thead_id, tbody_id) {
     
     var tableData = {
 
         name: ["參數名", "數值"]
     }
     switch (thead_id) {
-        case "emParm_thead":
-            onchage_function_name = "emParameter_change("+thead_id+")"
+        case "evParm_thead":
+            onchage_function_name = "emevParameter_change("+thead_id+")"
             break;
-        case "emESS_thead":
-            onchage_function_name = "emParameter_change("+thead_id+")"
+        case "evRand_thead":
+            onchage_function_name = "emevParameter_change("+thead_id+")"
+            break;
+        case "emParm_thead":
+            onchage_function_name = "emevParameter_change("+thead_id+")"
             break;
         case "emRand_thead":
-            onchage_function_name = "emParameter_change("+thead_id+")"
+            onchage_function_name = "emevParameter_change("+thead_id+")"
             break;
         default:
             break;
@@ -141,7 +162,7 @@ function show_motorParameter(baseParameter, save_target, thead_id, tbody_id) {
     }
 }
 
-function show_motorType_percent(type) {
+function show_vehicleMotorType_percent(ev_type, em_type) {
     
     motor = {
         img: [
@@ -152,14 +173,28 @@ function show_motorType_percent(type) {
             "images/motor/emoving_Super.png",
             "images/motor/emoving_bobe.png",
         ],
-        name: type[0],
-        capacity: type[1],
-        voltage: type[2],
-        power: type[3],
-        percent: type[4],
+        name: em_type[0],
+        capacity: em_type[1],
+        voltage: em_type[2],
+        power: em_type[3],
+        percent: em_type[4],
     }
     motor_key = ["單位", " ", "電池容量", "電池電壓", "電池功率", "設定人數"];
     
+    vehicle = {
+        img: [
+            "images/vehicle/BMW_i3.png",
+            "images/vehicle/chevy_volt.png",
+            "images/vehicle/E_Golf.png",
+            "images/vehicle/Tesla_Model_S.png",
+        ],
+        name: ev_type[0],
+        capacity: ev_type[1],
+        power: ev_type[2],
+        percent: ev_type[3]
+    }
+    vehicle_key = ["單位", " ", "電池容量", "電池功率", "設定人數"];
+
     // 單位
     for (let index = 0; index < motor.name.length + 1; index++) {
 
@@ -177,7 +212,23 @@ function show_motorType_percent(type) {
             }
         }
     }
-    
+    for (let index = 0; index < vehicle.name.length + 1; index++) {
+
+        var th = document.createElement('th');
+        if (index == 0) {
+            th.appendChild(document.createTextNode(vehicle_key[0]));
+            th.setAttribute("class", "text-center");
+            document.getElementById('vehicle_name').appendChild(th);
+        }
+        else {
+            if (vehicle.name[index-1] != vehicle.name[index]) {
+                th.appendChild(document.createTextNode(vehicle.name[index-1]));
+                th.setAttribute("class", "text-center");
+                document.getElementById('vehicle_name').appendChild(th);
+            }
+        }
+    }
+
     // 圖片
     var tr = document.createElement('tr');
     for (let imgNum = 0; imgNum < motor.img.length + 1; imgNum++) {
@@ -195,6 +246,23 @@ function show_motorType_percent(type) {
         }
     }
     document.getElementById('motor_info').appendChild(tr);
+    
+    var tr = document.createElement('tr');
+    for (let imgNum = 0; imgNum < vehicle.img.length + 1; imgNum++) {
+        
+        var td = document.createElement('td');
+        if (imgNum == 0) {
+            td.appendChild(document.createTextNode(vehicle_key[1]));
+            tr.appendChild(td);
+        }
+        else {
+            var img = document.createElement('img');
+            img.src = vehicle.img[imgNum-1];
+            img.width = 200;
+            tr.appendChild(td).appendChild(img); 
+        }
+    }
+    document.getElementById('vehicle_info').appendChild(tr);
     
     // 容量
     var tr = document.createElement('tr');
@@ -216,6 +284,25 @@ function show_motorType_percent(type) {
     }
     document.getElementById('motor_info').appendChild(tr);
 
+    var tr = document.createElement('tr');
+    for (let index = 0; index < vehicle.capacity.length + 1; index++) {
+
+        var td = document.createElement('td');
+        if (index == 0) {
+            td.appendChild(document.createTextNode(vehicle_key[2]));
+            td.setAttribute("style", "text-align: center");
+            tr.appendChild(td);
+        }
+        else {
+            if (vehicle.name[index-1] != vehicle.name[index]) {
+                td.appendChild(document.createTextNode(vehicle.capacity[index-1]+"(Ah)"));
+                td.setAttribute("style", "text-align: center");
+                tr.appendChild(td);
+            }
+        }
+    }
+    document.getElementById('vehicle_info').appendChild(tr);
+    
     // 電壓
     var tr = document.createElement('tr');
     for (let index = 0; index < motor.voltage.length + 1; index++) {
@@ -262,6 +349,31 @@ function show_motorType_percent(type) {
     }
     document.getElementById('motor_info').appendChild(tr);
 
+    var tr = document.createElement('tr');
+    var word="";
+    for (let index = 0; index < vehicle.power.length + 1; index++) {
+
+        var td = document.createElement('td');
+        if (index == 0) {
+            td.appendChild(document.createTextNode(vehicle_key[3]));
+            td.setAttribute("style", "text-align: center");
+            tr.appendChild(td);
+        }
+        else {
+            if (vehicle.name[index-1] != vehicle.name[index]) {
+                word += vehicle.power[index-1] + "(kW)";
+                td.appendChild(document.createTextNode(word));
+                td.setAttribute("style", "text-align: center");
+                tr.appendChild(td);
+                word="";
+            }
+            else {
+                word += vehicle.power[index-1] + "(kW) / ";
+            }
+        }
+    }
+    document.getElementById('vehicle_info').appendChild(tr);
+
     // 設定人數
     var tr = document.createElement('tr');
     var input = document.createElement('td');
@@ -276,7 +388,7 @@ function show_motorType_percent(type) {
         else {
             var input_tmp = document.createElement('input');
             input_tmp.setAttribute("type", "text");
-            input_tmp.setAttribute("name", "motor_type");
+            input_tmp.setAttribute("name", "EM_motor_type");
             input_tmp.setAttribute("id", "type"+(index-1));
             input_tmp.setAttribute("style", "text-align: center; background-color: #ABFFFF;");
             input_tmp.setAttribute("size", "2");
@@ -301,9 +413,43 @@ function show_motorType_percent(type) {
         }
     }
     document.getElementById('motor_info').appendChild(tr);
+
+    var tr = document.createElement('tr');
+    var input = document.createElement('td');
+    for (let index = 0; index < vehicle.power.length + 1; index++) {
+
+        var td = document.createElement('td');
+        if (index == 0) {
+            td.appendChild(document.createTextNode(vehicle_key[4]));
+            td.setAttribute("style", "text-align: center");
+            tr.appendChild(td);
+        }
+        else {
+            var input_tmp = document.createElement('input');
+            input_tmp.setAttribute("type", "text");
+            input_tmp.setAttribute("name", "vehicle_type");
+            input_tmp.setAttribute("id", "type"+(index-1));
+            input_tmp.setAttribute("style", "text-align: center; background-color: #ABFFFF;");
+            input_tmp.setAttribute("size", "2");
+            input_tmp.setAttribute("value", vehicle.percent[index-1]);
+            input.setAttribute("onchange", "evPercent_change()");          
+            
+            if (vehicle.name[index-1] != vehicle.name[index]) {
+                input.appendChild(input_tmp);
+                input.appendChild(document.createTextNode(" (%)"));
+                tr.appendChild(input);
+                input = document.createElement('td')
+            }
+            else {
+                input.appendChild(input_tmp);
+                input.appendChild(document.createTextNode(" (%) / "));
+            }
+        }
+    }
+    document.getElementById('vehicle_info').appendChild(tr);
 }
 
-function show_wholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_nums, sf_chargingUser_nums) {
+function show_EMwholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_nums, sf_chargingUser_nums) {
     
     chargingNums_dic = {
         id: ["normal_chargingUser_nums", "fast_chargingUser_nums", "superFast_chargingUser_nums"],
@@ -325,53 +471,94 @@ function show_wholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_num
     }
 }
 
+function show_EVwholeDay_chargingUser_nums(ev_charging_user_number) {
+    
+    chargingNums_dic = {
+        id: "EV_chargingUser_nums",
+        title: "EV Charging User Numbers",
+        data: ev_charging_user_number,
+        name: ["Chevy Volt", "Volkswagen E-Golf", "BMW i3", "Tesla Model S"],
+    }
+        
+    var chart_info = [chargingNums_dic.id, chargingNums_dic.title, "", "time", "個數", null];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
+    
+    set_series_function(1, "column", chargingNums_dic.data, "", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, chargingNums_dic.name);
+    show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
+}
+
 function show_chargingOrDischarging_status(status_array) {
 
-    for (let index = 0; index < status_array[0].length; index++) {
+    var emev_type_array = [['emChargeDischargeStatus_thead', 'emChargeDischargeStatus_tbody'], ['evChargeDischargeStatus_thead', 'evChargeDischargeStatus_tbody']]
+    console.log(status_array)
+    for (let emev_type_index = 0; emev_type_index < emev_type_array.length; emev_type_index++) {
         
-        var th = document.createElement('th');
-        if (index == 0) {
+        for (let index = 0; index < status_array[emev_type_index][0].length; index++) {
             
-            th.appendChild(document.createTextNode("USER"));
-            th.setAttribute("class", "text-center");
-        }
-        else {
-
-            th.appendChild(document.createTextNode(index-1));
-            th.setAttribute("style", "color:black; width: 5px");
-        }
-        document.getElementById('emChargeDischargeStatus_thead').appendChild(th)
-    }
-
-    for (let users = 0; users < status_array.length; users++) {
-        
-        var tr = document.createElement('tr');
-        for (let index = 0; index < status_array[users].length; index++) {
-            
-            var td = document.createElement('td');
+            var th = document.createElement('th');
             if (index == 0) {
-
-                td.appendChild(document.createTextNode(status_array[users][index]));
-                td.setAttribute("class", "text-center");
+                
+                th.appendChild(document.createTextNode("USER"));
+                th.setAttribute("class", "text-center");
+                th.setAttribute("style", "color:black");
             }
             else {
-                switch (status_array[users][index]) {
-                    case "1":
-                        td.setAttribute("style", "background-color: green;");
-                        break;
-                    case "-1":
-                        td.setAttribute("style", "background-color: red;");
-                        break;
-                    case "0":
-                        td.setAttribute("style", "background-color: gray;");
-                        break;
-                    default:
-                        td.setAttribute("style", "background-color: #dbd8d8;");
-                        break;
-                }
+
+                th.appendChild(document.createTextNode(index-1));
+                th.setAttribute("style", "color:black; width: 5px");
             }
-            tr.appendChild(td);
+            document.getElementById(emev_type_array[emev_type_index][0]).appendChild(th)
         }
-        document.getElementById('emChargeDischargeStatus_tbody').appendChild(tr)
+
+        for (let users = 0; users < status_array[emev_type_index].length; users++) {
+            
+            var tr = document.createElement('tr');
+            for (let index = 0; index < status_array[emev_type_index][users].length; index++) {
+                
+                var td = document.createElement('td');
+                if (index == 0) {
+
+                    td.appendChild(document.createTextNode(status_array[emev_type_index][users][index]));
+                    td.setAttribute("class", "text-center");
+                    td.setAttribute("style", "color:black");
+                }
+                else {
+                    switch (status_array[emev_type_index][users][index]) {
+                        case "1":
+                            td.setAttribute("style", "background-color: green;");
+                            break;
+                        case "-1":
+                            td.setAttribute("style", "background-color: red;");
+                            break;
+                        case "0":
+                            td.setAttribute("style", "background-color: gray;");
+                            break;
+                        default:
+                            td.setAttribute("style", "background-color: #dbd8d8;");
+                            break;
+                    }
+                }
+                tr.appendChild(td);
+            }
+            document.getElementById(emev_type_array[emev_type_index][1]).appendChild(tr)
+        }
+    }
+}
+
+function choose_EMEV(element)
+{
+    if (element.getAttribute('name') == "EM")
+    {
+        document.getElementById("EM").setAttribute('style', 'display: block')
+        document.getElementById("EV").setAttribute('style', 'display: none')
+    }
+    else if (element.getAttribute('name') == "EV")
+    {
+        document.getElementById("EM").setAttribute('style', 'display: none')
+        document.getElementById("EV").setAttribute('style', 'display: block')
     }
 }

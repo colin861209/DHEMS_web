@@ -6,7 +6,7 @@ mysqli_close($conn);
 
 $compare_timeblock = $_POST['compare_timeblock'];
 
-if ($compare_timeblock['local'] == $new_timeblock[1][array_search("next_simulate_timeblock", $new_timeblock[0], true)] && 
+if ($compare_timeblock['local'] == $new_timeblock[1][array_search("next_simulate_timeblock", $new_timeblock[0], true)] || 
     $compare_timeblock['global'] == $new_timeblock[1][array_search("Global_next_simulate_timeblock", $new_timeblock[0], true)]) {
     
     $status = "not_reload";
