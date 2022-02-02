@@ -15,6 +15,13 @@ $EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM
 $EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `backup_EM_user_number`", array("total_power"));
 $EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `backup_EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
 
+$EV_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'ElectricVehicle' ", $oneValue);
+$EV_discharge_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_EV_Parameter` where `parameter_name` = 'Vehicle_can_discharge' ", $oneValue);
+$EV_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `backup_EV_user_number`", array("total_power"));
+$EV_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `backup_EV_user_number`", array("discharge_normal_power"));
+$EV_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `backup_EV_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
+
+
 if ($dr_mode != 0)
     $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
 else
@@ -34,6 +41,9 @@ $dr_feedbackPrice = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParamete
 $EM_total_power_sum = sqlFetchRow($conn, "SELECT SUM(total_power) FROM `backup_EM_user_number`", $oneValue);
 $EM_MIN_departureSOC = sqlFetchRow($conn, "SELECT MIN(Departure_SOC) FROM `EM_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
 $EM_AVG_departureSOC = sqlFetchRow($conn, "SELECT AVG(Departure_SOC) FROM `EM_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
+$EV_total_power_sum = sqlFetchRow($conn, "SELECT SUM(total_power) FROM `backup_EV_user_number`", $oneValue);
+$EV_MIN_departureSOC = sqlFetchRow($conn, "SELECT MIN(Departure_SOC) FROM `backup_EV_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
+$EV_AVG_departureSOC = sqlFetchRow($conn, "SELECT AVG(Departure_SOC) FROM `backup_EV_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
 $simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'Global_next_simulate_timeblock' ", $oneValue);
 
 $variable_name = sqlFetchAssoc($conn, "SELECT `equip_name` FROM `backup_GHEMS` ", array("equip_name"));
@@ -83,6 +93,22 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
             }, $load_model, $EM_discharge_power);
         }
     }
+    if ($EV_flag) {
+    
+        $EV_total_power = array_map('floatval', $EV_total_power);
+        array_push($load_model_seperate, $EV_total_power);
+        $load_model = array_map(function() {
+            return array_sum(func_get_args());
+        }, $load_model, $EV_total_power);
+        
+        if ($EV_discharge_flag) {
+            $EV_discharge_power = array_map('floatval', $EV_discharge_power);
+            array_push($load_model_seperate, $EV_discharge_power);
+            $load_model = array_map(function() {
+                return array_sum(func_get_args());
+            }, $load_model, $EV_discharge_power);
+        }
+    }
 }
 
 for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name, true)]); $i++) {
@@ -91,14 +117,25 @@ for ($i = 0; $i < count($load_status_array[array_search("Psell", $variable_name,
 }
 
 $EM_total_power_cost = array_sum(array_map(function($x, $y) { return $x * $y * 0.25; }, $electric_price, $EM_total_power));
-$EM_start_departure_SOC=[];    
+$EV_total_power_cost = array_sum(array_map(function($x, $y) { return $x * $y * 0.25; }, $electric_price, $EV_total_power));
+$EM_start_departure_SOC=[];
 array_push($EM_start_departure_SOC, array_map('floatval', $EM_start_departure_SOC_tmp[0]));
 array_unshift($EM_start_departure_SOC, array_map(function($x, $y) { return $x - $y; }, array_map('floatval', $EM_start_departure_SOC_tmp[1]), $EM_start_departure_SOC[0]));
+$EV_start_departure_SOC=[];    
+array_push($EV_start_departure_SOC, array_map('floatval', $EV_start_departure_SOC_tmp[0]));
+array_unshift($EV_start_departure_SOC, array_map(function($x, $y) { return $x - $y; }, array_map('floatval', $EV_start_departure_SOC_tmp[1]), $EV_start_departure_SOC[0]));
 
 for ($i=0; $i < count($EM_start_departure_SOC); $i++) { 
     
     foreach ($EM_start_departure_SOC[$i] as $key => $value) {
         $EM_start_departure_SOC[$i][$key] = $value * 100;
+    }
+}
+
+for ($i=0; $i < count($EV_start_departure_SOC); $i++) { 
+    
+    foreach ($EV_start_departure_SOC[$i] as $key => $value) {
+        $EV_start_departure_SOC[$i][$key] = $value * 100;
     }
 }
 
@@ -121,6 +158,13 @@ $data_array = [
     "EM_start_departure_SOC" => $EM_start_departure_SOC,
     "EM_MIN_departureSOC" => round(floatval($EM_MIN_departureSOC)*100, 2),
     "EM_AVG_departureSOC" => round(floatval($EM_AVG_departureSOC)*100, 2),
+    "EV_flag" => intval($EV_flag),
+    "EV_discharge_flag" => intval($EV_discharge_flag),
+    "EV_total_power_sum" => round($EV_total_power_sum, 2),
+    "EV_MIN_departureSOC" => round(floatval($EV_MIN_departureSOC)*100, 2),
+    "EV_AVG_departureSOC" => round(floatval($EV_AVG_departureSOC)*100, 2),
+    "EV_total_power_cost" => round($EV_total_power_cost, 2),
+    "EV_start_departure_SOC" => $EV_start_departure_SOC,
     "electric_price" => array_map('floatval', $electric_price),
     "limit_capability" => $limit_capability,
     "simulate_solar" => array_map('floatval', $simulate_solar),

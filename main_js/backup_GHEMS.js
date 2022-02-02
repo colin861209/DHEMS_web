@@ -144,6 +144,44 @@ function tableInfo(ourData) {
             console.log("Function: " + tableInfo.name + " Wrong length in table 'name' & 'data'")
         }
     }
+    
+    if (ourData.EV_flag) {
+        
+        var EVData = {
+            name:[],
+            value:[]
+        }
+        EVData.name.push("電動汽車花費(三段式電價)");
+        EVData.name.push("電動汽車充電消耗");
+        EVData.name.push("電動汽車最小離場SOC");
+        EVData.name.push("電動汽車平均離場SOC");
+        EVData.value.push(ourData.EV_total_power_cost + moneyUnit);
+        EVData.value.push(ourData.EV_total_power_sum + powerUnit);
+        EVData.value.push(ourData.EV_MIN_departureSOC + " %");
+        EVData.value.push(ourData.EV_AVG_departureSOC + " %");
+        if (EVData.name.length == EVData.value.length) {
+            
+            for (let nameNum = 0; nameNum < EVData.name.length; nameNum++) {
+                
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode(EVData.name[nameNum]));
+                th.setAttribute("style", "text-align: center; color:black");
+                document.getElementById('table_EMInfo_thead').appendChild(th);
+            }
+            
+            for (let dataNum = 0; dataNum < EVData.value.length; dataNum++) {
+                
+                var td = document.createElement('td');
+                td.appendChild(document.createTextNode(EVData.value[dataNum]));
+                td.setAttribute("style", "text-align: center; color:black; font-size: 20px");
+                document.getElementById('table_EMInfo_tbody').appendChild(td);
+            }
+        }
+        else {
+            
+            console.log("Function: " + tableInfo.name + " Wrong length in table 'name' & 'data'")
+        }
+    }
 }
 
 function progessbar(ourData) {
@@ -272,5 +310,29 @@ function EMchargingSOC(EM_start_departure_SOC) {
         document.getElementById('EMchargingSOC').style.display = "none";
         var hint = document.createTextNode("Wait for first departure EM user...")
         document.getElementById('EM_hint').appendChild(hint)
+    }
+}
+
+function EVchargingSOC(EV_start_departure_SOC) {
+
+    var chart_info = ["EVchargingSOC", "EV users Arrived & Departure SOC", " ", "user number", "SOC(%)", ""];
+    var multi_name = ["Departure SOC", "Arrived SOC"];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
+
+    set_series_function(1, "column", EV_start_departure_SOC, energyType.Pload_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
+
+    /*Show chart*/
+    if (EV_start_departure_SOC[0] != null) {
+        
+        show_chart_with_EM_users(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, EV_start_departure_SOC[0].length-1);
+    }
+    else {
+        document.getElementById('EVchargingSOC').style.display = "none";
+        var hint = document.createTextNode("Wait for first departure EV user...")
+        document.getElementById('EV_hint').appendChild(hint)
     }
 }

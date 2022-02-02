@@ -59,7 +59,7 @@ function get_backEnd_data() {
                 var emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
                 emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
                 show_vehicleMotorParameter(emRand_tableInfo, emRand_save_target, "emRand_thead", "emRand_tbody");
-                console.log(response.em_chargingOrDischargingStatus_array)
+                console.log([response.em_chargingOrDischargingStatus_array, response.ev_chargingOrDischargingStatus_array])
                 show_chargingOrDischarging_status([response.em_chargingOrDischargingStatus_array, response.ev_chargingOrDischargingStatus_array])
                 insertText_after_breadcrumb(now_database_name, null, null);
                 show_vehicleMotorType_percent(response.ev_motor_type, response.em_motor_type);
@@ -494,57 +494,71 @@ function show_EVwholeDay_chargingUser_nums(ev_charging_user_number) {
 function show_chargingOrDischarging_status(status_array) {
 
     var emev_type_array = [['emChargeDischargeStatus_thead', 'emChargeDischargeStatus_tbody'], ['evChargeDischargeStatus_thead', 'evChargeDischargeStatus_tbody']]
-    console.log(status_array)
+
     for (let emev_type_index = 0; emev_type_index < emev_type_array.length; emev_type_index++) {
         
-        for (let index = 0; index < status_array[emev_type_index][0].length; index++) {
+        if (status_array[emev_type_index] != null) {
             
-            var th = document.createElement('th');
-            if (index == 0) {
+            for (let index = 0; index < status_array[emev_type_index][0].length; index++) {
                 
-                th.appendChild(document.createTextNode("USER"));
-                th.setAttribute("class", "text-center");
-                th.setAttribute("style", "color:black");
-            }
-            else {
-
-                th.appendChild(document.createTextNode(index-1));
-                th.setAttribute("style", "color:black; width: 5px");
-            }
-            document.getElementById(emev_type_array[emev_type_index][0]).appendChild(th)
-        }
-
-        for (let users = 0; users < status_array[emev_type_index].length; users++) {
-            
-            var tr = document.createElement('tr');
-            for (let index = 0; index < status_array[emev_type_index][users].length; index++) {
-                
-                var td = document.createElement('td');
+                var th = document.createElement('th');
                 if (index == 0) {
-
-                    td.appendChild(document.createTextNode(status_array[emev_type_index][users][index]));
-                    td.setAttribute("class", "text-center");
-                    td.setAttribute("style", "color:black");
+                    
+                    th.appendChild(document.createTextNode("USER"));
+                    th.setAttribute("class", "text-center");
+                    th.setAttribute("style", "color:black");
                 }
                 else {
-                    switch (status_array[emev_type_index][users][index]) {
-                        case "1":
-                            td.setAttribute("style", "background-color: green;");
-                            break;
-                        case "-1":
-                            td.setAttribute("style", "background-color: red;");
-                            break;
-                        case "0":
-                            td.setAttribute("style", "background-color: gray;");
-                            break;
-                        default:
-                            td.setAttribute("style", "background-color: #dbd8d8;");
-                            break;
-                    }
+
+                    th.appendChild(document.createTextNode(index-1));
+                    th.setAttribute("style", "color:black; width: 5px");
                 }
-                tr.appendChild(td);
+                document.getElementById(emev_type_array[emev_type_index][0]).appendChild(th)
             }
-            document.getElementById(emev_type_array[emev_type_index][1]).appendChild(tr)
+
+            for (let users = 0; users < status_array[emev_type_index].length; users++) {
+                
+                var tr = document.createElement('tr');
+                for (let index = 0; index < status_array[emev_type_index][users].length; index++) {
+                    
+                    var td = document.createElement('td');
+                    if (index == 0) {
+
+                        td.appendChild(document.createTextNode(status_array[emev_type_index][users][index]));
+                        td.setAttribute("class", "text-center");
+                        td.setAttribute("style", "color:black");
+                    }
+                    else {
+                        switch (status_array[emev_type_index][users][index]) {
+                            case "1":
+                                td.setAttribute("style", "background-color: green;");
+                                break;
+                            case "-1":
+                                td.setAttribute("style", "background-color: red;");
+                                break;
+                            case "0":
+                                td.setAttribute("style", "background-color: gray;");
+                                break;
+                            default:
+                                td.setAttribute("style", "background-color: #dbd8d8;");
+                                break;
+                        }
+                    }
+                    tr.appendChild(td);
+                }
+                document.getElementById(emev_type_array[emev_type_index][1]).appendChild(tr)
+            }
+        }
+        else {
+            console.log("status_array["+emev_type_index+"] is null");
+            if (emev_type_index == 0) {   
+                document.getElementsByClassName('ChargeDischargeStatus_div')[emev_type_index].setAttribute("style", "display: none");
+                document.getElementsByClassName('status_hint')[emev_type_index].innerText = "EM is no charging users"
+            }
+            else if (emev_type_index == 1) {
+                document.getElementsByClassName('ChargeDischargeStatus_div')[emev_type_index].setAttribute("style", "display: none");
+                document.getElementsByClassName('status_hint')[emev_type_index].innerText = "EV is no charging users"
+            }
         }
     }
 }

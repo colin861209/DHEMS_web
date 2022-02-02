@@ -1,3 +1,4 @@
+
 <?php
 require 'commonSQL_data.php';
 
@@ -141,6 +142,8 @@ function create_chargingPole($conn, $table, $totalPoles, $sfPole=null, $fPole=nu
                     mysqli_query($conn, $sql);
 
                     mysqli_query($conn, "UPDATE `EV_Pole` SET `P_charging_pole` = (SELECT `power` FROM `EV_motor_type` WHERE `percent` <> 0 LIMIT 1 OFFSET 0)");
+                    mysqli_query($conn, "UPDATE `EV_Parameter` SET value = (SELECT `power` FROM `EV_motor_type` WHERE `percent` <> 0 LIMIT 1 OFFSET 0) WHERE `parameter_name` = 'Charging_Power' ");
+
                 }
                 return "success";
 
@@ -223,6 +226,7 @@ switch ($newParameter['table']) {
         if (sqlFetchRow($conn, "SELECT DISTINCT(P_charging_pole) FROM `EV_Pole`", $oneValue) != sqlFetchRow($conn, "SELECT `power` FROM `EV_motor_type` WHERE `percent` <> 0 LIMIT 1 OFFSET 0", $oneValue)) {
             
             mysqli_query($conn, "UPDATE `EV_Pole` SET `P_charging_pole` = (SELECT `power` FROM `EV_motor_type` WHERE `percent` <> 0 LIMIT 1 OFFSET 0)");
+            mysqli_query($conn, "UPDATE `EV_Parameter` SET value = (SELECT `power` FROM `EV_motor_type` WHERE `percent` <> 0 LIMIT 1 OFFSET 0) WHERE `parameter_name` = 'Charging_Power' ");
         }
         $status = create_wholeDay_userChargingNumber($conn, "EV_wholeDay_userChargingNumber", $newParameter['table']);
         break;

@@ -38,6 +38,7 @@ function get_backEnd_data() {
                 SOCVsLoad(ourData)
                 loadModel(ourData)
                 EMchargingSOC(ourData.EM_start_departure_SOC)
+                EVchargingSOC(ourData.EV_start_departure_SOC)
                 flag_table(GHEMS_flag)
             }
         });
@@ -108,7 +109,7 @@ function tableInfo(ourData) {
         console.log("Function: " + tableInfo.name + " Wrong length in table 'name' & 'data'")
     }
     
-    if (ourData.EM_flag == 1) {
+    if (ourData.EM_flag) {
         
         var EMData = {
             name:[],
@@ -136,6 +137,43 @@ function tableInfo(ourData) {
                 
                 var td = document.createElement('td');
                 td.appendChild(document.createTextNode(EMData.value[dataNum]));
+                td.setAttribute("style", "text-align: center; color:black; font-size: 20px");
+                document.getElementById('table_EMInfo_tbody').appendChild(td);
+            }
+        }
+        else {
+            
+            console.log("Function: " + tableInfo.name + " Wrong length in table 'name' & 'data'")
+        }
+    }
+    if (ourData.EV_flag) {
+        
+        var EVData = {
+            name:[],
+            value:[]
+        }
+        EVData.name.push("電動汽車花費(三段式電價)");
+        EVData.name.push("電動汽車充電消耗");
+        EVData.name.push("電動汽車最小離場SOC");
+        EVData.name.push("電動汽車平均離場SOC");
+        EVData.value.push(ourData.EV_total_power_cost + moneyUnit);
+        EVData.value.push(ourData.EV_total_power_sum + powerUnit);
+        EVData.value.push(ourData.EV_MIN_departureSOC + " %");
+        EVData.value.push(ourData.EV_AVG_departureSOC + " %");
+        if (EVData.name.length == EVData.value.length) {
+            
+            for (let nameNum = 0; nameNum < EVData.name.length; nameNum++) {
+                
+                var th = document.createElement('th');
+                th.appendChild(document.createTextNode(EVData.name[nameNum]));
+                th.setAttribute("style", "text-align: center; color:black");
+                document.getElementById('table_EMInfo_thead').appendChild(th);
+            }
+            
+            for (let dataNum = 0; dataNum < EVData.value.length; dataNum++) {
+                
+                var td = document.createElement('td');
+                td.appendChild(document.createTextNode(EVData.value[dataNum]));
                 td.setAttribute("style", "text-align: center; color:black; font-size: 20px");
                 document.getElementById('table_EMInfo_tbody').appendChild(td);
             }
@@ -237,17 +275,24 @@ function loadModel(ABC) {
     var data = ABC;
     //define all needed data array
     var chart_info = ["loadModel", "Load Model", " ", "time", "price(TWD)", "power(kW)"];
-    var multi_name = [energyType.HEMS_chart_name, energyType.public1_chart_name, energyType.public2_chart_name, energyType.public3_chart_name, energyType.EM_charging_chart_name];
+    var multi_name = [energyType.HEMS_chart_name, energyType.public1_chart_name, energyType.public2_chart_name, energyType.public3_chart_name];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
-
-    if (data.EM_discharge_flag) {
+    if (data.EM_flag) {
+        multi_name.push(energyType.EM_charging_chart_name)
+    }
+    if (data.EM_flag && data.EM_discharge_flag) {
         multi_name.push(energyType.EM_discharging_chart_name)
     }
-
+    if (data.EV_flag) {
+        multi_name.push(energyType.EV_charging_chart_name)
+    }
+    if (data.EV_flag && data.EV_discharge_flag) {
+        multi_name.push(energyType.EV_discharging_chart_name)
+    }
     set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(1, "column", data.load_model_seperate, "", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
 
@@ -280,5 +325,29 @@ function EMchargingSOC(EM_start_departure_SOC) {
         document.getElementById('EMchargingSOC').style.display = "none";
         var hint = document.createTextNode("Wait for first departure EM user...")
         document.getElementById('EM_hint').appendChild(hint)
+    }
+}
+
+function EVchargingSOC(EV_start_departure_SOC) {
+
+    var chart_info = ["EVchargingSOC", "EV users Arrived & Departure SOC", " ", "user number", "SOC(%)", ""];
+    var multi_name = ["Departure SOC", "Arrived SOC"];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
+
+    set_series_function(1, "column", EV_start_departure_SOC, energyType.Pload_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
+
+    /*Show chart*/
+    if (EV_start_departure_SOC[0] != null) {
+        
+        show_chart_with_EM_users(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, EV_start_departure_SOC[0].length-1);
+    }
+    else {
+        document.getElementById('EVchargingSOC').style.display = "none";
+        var hint = document.createTextNode("Wait for first departure EV user...")
+        document.getElementById('EV_hint').appendChild(hint)
     }
 }

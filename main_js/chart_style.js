@@ -397,7 +397,8 @@ var energyType = {
     public3_chart_name: "pwr-public_3",
     EM_charging_chart_name: "pwr-charging-EM",
     EM_discharging_chart_name: "pwr-discharging-EM",
-
+    EV_charging_chart_name: "pwr-charging-EV",
+    EV_discharging_chart_name: "pwr-discharging-EV",
 }
 
 var compare_timeblock = {};
