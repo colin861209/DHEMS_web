@@ -134,7 +134,7 @@ function sendNewEMEVPercent(btn_id) {
     
     for (let index = 0; index < document.getElementsByName(new_typeData.name).length; index++) {
 
-        new_flag[index] = document.getElementById('type'+index).value
+        new_flag[index] = document.getElementsByName(new_typeData.name)[index].value
         id[index] = index
     }
     console.log(new_typeData)

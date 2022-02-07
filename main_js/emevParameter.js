@@ -59,12 +59,11 @@ function get_backEnd_data() {
                 var emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
                 emRand_tableInfo = removeParameter(response.emParameter_of_randomResult, emRand_save_target);
                 show_vehicleMotorParameter(emRand_tableInfo, emRand_save_target, "emRand_thead", "emRand_tbody");
-                console.log([response.em_chargingOrDischargingStatus_array, response.ev_chargingOrDischargingStatus_array])
                 show_chargingOrDischarging_status([response.em_chargingOrDischargingStatus_array, response.ev_chargingOrDischargingStatus_array])
                 insertText_after_breadcrumb(now_database_name, null, null);
                 show_vehicleMotorType_percent(response.ev_motor_type, response.em_motor_type);
-                show_EVwholeDay_chargingUser_nums(response.ev_chargingUser_nums)
-                show_EMwholeDay_chargingUser_nums(response.n_chargingUser_nums, response.f_chargingUser_nums, response.sf_chargingUser_nums)
+                show_EVwholeDay_chargingUser_nums(response.ev_chargingUser_nums, response.electric_price)
+                show_EMwholeDay_chargingUser_nums(response.n_chargingUser_nums, response.f_chargingUser_nums, response.sf_chargingUser_nums, response.electric_price)
             }
         });
 }
@@ -295,7 +294,7 @@ function show_vehicleMotorType_percent(ev_type, em_type) {
         }
         else {
             if (vehicle.name[index-1] != vehicle.name[index]) {
-                td.appendChild(document.createTextNode(vehicle.capacity[index-1]+"(Ah)"));
+                td.appendChild(document.createTextNode(vehicle.capacity[index-1]+"(kWh)"));
                 td.setAttribute("style", "text-align: center");
                 tr.appendChild(td);
             }
@@ -449,7 +448,7 @@ function show_vehicleMotorType_percent(ev_type, em_type) {
     document.getElementById('vehicle_info').appendChild(tr);
 }
 
-function show_EMwholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_nums, sf_chargingUser_nums) {
+function show_EMwholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_nums, sf_chargingUser_nums, electric_price) {
     
     chargingNums_dic = {
         id: ["normal_chargingUser_nums", "fast_chargingUser_nums", "superFast_chargingUser_nums"],
@@ -459,19 +458,20 @@ function show_EMwholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_n
     
     for (let index = 0; index < chargingNums_dic.id.length; index++) {
         
-        var chart_info = [chargingNums_dic.id[index], chargingNums_dic.title[index], "", "time", "個數", null];
+        var chart_info = [chargingNums_dic.id[index], chargingNums_dic.title[index], "", "time", "個數", "價錢(NTD)"];
         var chart_series_type = [];
         var chart_series_name = [];
         var chart_series_data = [];
         var chart_series_stack = [];
         var chart_series_yAxis = [];
         
+        set_series_function(0, "line", electric_price, energyType.electrice_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
         set_series_function(1, "column", chargingNums_dic.data[index], "", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
         show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
     }
 }
 
-function show_EVwholeDay_chargingUser_nums(ev_charging_user_number) {
+function show_EVwholeDay_chargingUser_nums(ev_charging_user_number, electric_price) {
     
     chargingNums_dic = {
         id: "EV_chargingUser_nums",
@@ -480,13 +480,14 @@ function show_EVwholeDay_chargingUser_nums(ev_charging_user_number) {
         name: ["Chevy Volt", "Volkswagen E-Golf", "BMW i3", "Tesla Model S"],
     }
         
-    var chart_info = [chargingNums_dic.id, chargingNums_dic.title, "", "time", "個數", null];
+    var chart_info = [chargingNums_dic.id, chargingNums_dic.title, "", "time", "個數", "價錢(NTD)"];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
     
+    set_series_function(0, "line", electric_price, energyType.electrice_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(1, "column", chargingNums_dic.data, "", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, chargingNums_dic.name);
     show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
 }
@@ -550,7 +551,6 @@ function show_chargingOrDischarging_status(status_array) {
             }
         }
         else {
-            console.log("status_array["+emev_type_index+"] is null");
             if (emev_type_index == 0) {   
                 document.getElementsByClassName('ChargeDischargeStatus_div')[emev_type_index].setAttribute("style", "display: none");
                 document.getElementsByClassName('status_hint')[emev_type_index].innerText = "EM is no charging users"

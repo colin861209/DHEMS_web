@@ -40,6 +40,7 @@ for ($i=0; $i < count($ev_wholeDay_chargingUser_nums); $i++) {
 $data_array = [
     "local_simulate_timeblock" => intval($local_simulate_timeblock),
     "global_simulate_timeblock" => intval($global_simulate_timeblock),
+    "electric_price" => $electric_price,
     "em_motor_type" => $em_motor_type,
     "ev_motor_type" => $ev_motor_type,
     "emParameter" => $emParameter,

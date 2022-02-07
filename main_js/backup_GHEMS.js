@@ -38,6 +38,7 @@ function get_backEnd_data() {
                 SOCVsLoad(ourData)
                 loadModel(ourData)
                 EMchargingSOC(ourData.EM_start_departure_SOC)
+                EVchargingSOC(ourData.EV_start_departure_SOC)
             }
         });
 }
@@ -310,6 +311,30 @@ function EMchargingSOC(EM_start_departure_SOC) {
         document.getElementById('EMchargingSOC').style.display = "none";
         var hint = document.createTextNode("Wait for first departure EM user...")
         document.getElementById('EM_hint').appendChild(hint)
+    }
+}
+
+function EVchargingSOC(EV_start_departure_SOC) {
+
+    var chart_info = ["EVchargingSOC", "EV users Arrived & Departure SOC", " ", "user number", "SOC(%)", ""];
+    var multi_name = ["Departure SOC", "Arrived SOC"];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
+
+    set_series_function(1, "column", EV_start_departure_SOC, energyType.Pload_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
+
+    /*Show chart*/
+    if (EV_start_departure_SOC[0] != null) {
+        
+        show_chart_with_EM_users(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, EV_start_departure_SOC[0].length-1);
+    }
+    else {
+        document.getElementById('EVchargingSOC').style.display = "none";
+        var hint = document.createTextNode("Wait for first departure EV user...")
+        document.getElementById('EV_hint').appendChild(hint)
     }
 }
 

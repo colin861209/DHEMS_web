@@ -22,7 +22,7 @@ $comfortLevel_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` whe
 $EM_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'ElectricMotor' ", $oneValue);
 $EM_discharge_flag = sqlFetchRow($conn, "SELECT `value` FROM `EM_Parameter` where `parameter_name` = 'Motor_can_discharge' ", $oneValue);
 $EV_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'ElectricVehicle' ", $oneValue);
-$EV_discharge_flag = sqlFetchRow($conn, "SELECT `value` FROM `EM_Parameter` where `parameter_name` = 'Vehicle_can_discharge' ", $oneValue);
+$EV_discharge_flag = sqlFetchRow($conn, "SELECT `value` FROM `EV_Parameter` where `parameter_name` = 'Vehicle_can_discharge' ", $oneValue);
 
 for ($y = 0; $y < $time_block; $y++) {
 
