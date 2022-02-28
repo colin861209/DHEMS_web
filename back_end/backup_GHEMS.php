@@ -39,8 +39,8 @@ $min_FC_cost = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` wh
 $consumption = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'hydrogenConsumption(g)' ", $oneValue);
 $dr_feedbackPrice = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'demandResponse_feedbackPrice' ", $oneValue);
 $EM_total_power_sum = sqlFetchRow($conn, "SELECT SUM(total_power) FROM `backup_EM_user_number`", $oneValue);
-$EM_MIN_departureSOC = sqlFetchRow($conn, "SELECT MIN(Departure_SOC) FROM `EM_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
-$EM_AVG_departureSOC = sqlFetchRow($conn, "SELECT AVG(Departure_SOC) FROM `EM_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
+$EM_MIN_departureSOC = sqlFetchRow($conn, "SELECT MIN(Departure_SOC) FROM `backup_EM_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
+$EM_AVG_departureSOC = sqlFetchRow($conn, "SELECT AVG(Departure_SOC) FROM `backup_EM_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
 $EV_total_power_sum = sqlFetchRow($conn, "SELECT SUM(total_power) FROM `backup_EV_user_number`", $oneValue);
 $EV_MIN_departureSOC = sqlFetchRow($conn, "SELECT MIN(Departure_SOC) FROM `backup_EV_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
 $EV_AVG_departureSOC = sqlFetchRow($conn, "SELECT AVG(Departure_SOC) FROM `backup_EV_user_result` WHERE Departure_SOC IS NOT NULL", $oneValue);
@@ -171,7 +171,7 @@ $data_array = [
     "FC_power" => $load_status_array[array_search("Pfc", $variable_name, true)],
     "sell_power" => $oppsite_sell_array,
     "battery_power" => $load_status_array[array_search("Pess", $variable_name, true)],
-    "SOC_value" => $load_status_array[array_search("SOC", $variable_name, true)],
+    "SOC_value" => $load_status_array[array_search("ESS_SOC", $variable_name, true)],
     "grid_power" => $load_status_array[array_search("Pgrid", $variable_name, true)],
     "simulate_timeblock" => intval($simulate_timeblock),
     "load_model" => $load_model,

@@ -45,7 +45,9 @@ function get_backEnd_data() {
                 autoRun(ourData, household_num)
                 flag_table(LHEMS_flag)
                 cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
-                participate_table(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num);
+                if (parseInt(ourData.dr_mode) != 0 && ourData.dr_participate_flag) {
+                    participate_table(ourData.dr_info, ourData.dr_participation, household_num);
+                }
             }
         });
 }
@@ -73,7 +75,9 @@ function choose_singleHousehold(household_id) {
     each_household_status_SOC(ourData, household_id - 1)
     run_household_eachLoad(ourData, household_id - 1);
     cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_id - 1);
-    show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_id - 1)
+    if (parseInt(ourData.dr_mode) != 0 && ourData.dr_participate_flag) {
+        show_participate_timeblock(ourData.dr_info, ourData.dr_participation, household_id - 1)
+    }
 }
 
 function autoRun(ourData, household_num) {
@@ -90,7 +94,9 @@ function autoRun(ourData, household_num) {
         run_household_eachLoad(ourData, household_num)
         progessbar(ourData);
         cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
-        show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num)
+        if (parseInt(ourData.dr_mode) != 0 && ourData.dr_participate_flag) {
+            show_participate_timeblock(ourData.dr_info, ourData.dr_participation, household_num)
+        }
     }, 7000);
 
 }
@@ -384,52 +390,46 @@ function cost_table(origin_grid_price, total_origin_grid_price, real_grid_price,
     }
 }
 
-function participate_table(dr_mode, info, participation_status, household_id) {
+function participate_table(info, participation_status, household_id) {
     
-    if (parseInt(dr_mode) != 0) {
-    
-        document.getElementsByClassName('table table-bordered')[1].style.display = 'revert';
-        show_participate_timeblock(dr_mode, info, participation_status, household_id);
-    }
+    document.getElementsByClassName('table table-bordered')[1].style.display = 'revert';
+    show_participate_timeblock(info, participation_status, household_id);
 }
 
-function show_participate_timeblock(dr_mode, info, participation, household_id) {
+function show_participate_timeblock(info, participation, household_id) {
 
-    if (parseInt(dr_mode) != 0) {
+    $('#table_participate_tbody > td').remove()
+    const dr_start = parseInt(info[1]);
+    const dr_end = parseInt(info[2]);
+    participate_onOff = [[], []];
+    try {
 
-        $('#table_participate_tbody > td').remove()
-        const dr_start = parseInt(info[1]);
-        const dr_end = parseInt(info[2]);
-        participate_onOff = [[], []];
-        try {
-
-            for (let index = dr_start; index < dr_end; index++) {
-                if (participation[household_id][index] == 1)
-                    participate_onOff[0].push(index)
-                else if (participation[household_id][index] == 0)
-                    participate_onOff[1].push(index)
-            }
-                
-            for (let array_num = 0; array_num < participate_onOff.length; array_num++) {
-                
-                var td = document.createElement('td');
-                
-                if (participate_onOff[array_num].length == 0) {
-                    participate_onOff[array_num].push("無")
-                    td.appendChild(document.createTextNode(participate_onOff[array_num]));
-                }
-                else {
-                    word = replace_continuously_timeblock(participate_onOff[array_num]);
-                    td.appendChild(document.createTextNode(word));
-                }
-                td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
-                document.getElementById('table_participate_tbody').appendChild(td);
-            }
+        for (let index = dr_start; index < dr_end; index++) {
+            if (participation[household_id][index] == 1)
+                participate_onOff[0].push(index)
+            else if (participation[household_id][index] == 0)
+                participate_onOff[1].push(index)
         }
-        catch(e) {
             
-            console.log(" Reason: DB may not have realted table with 'Particpation'\n")
+        for (let array_num = 0; array_num < participate_onOff.length; array_num++) {
+            
+            var td = document.createElement('td');
+            
+            if (participate_onOff[array_num].length == 0) {
+                participate_onOff[array_num].push("無")
+                td.appendChild(document.createTextNode(participate_onOff[array_num]));
+            }
+            else {
+                word = replace_continuously_timeblock(participate_onOff[array_num]);
+                td.appendChild(document.createTextNode(word));
+            }
+            td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
+            document.getElementById('table_participate_tbody').appendChild(td);
         }
+    }
+    catch(e) {
+        
+        console.log(" Reason: DB may not have realted table with 'Particpation'\n")
     }
 }
 

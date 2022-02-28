@@ -14,8 +14,10 @@ $limit_power = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `pa
 $time_block = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'time_block' ", $oneValue);
 $dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
 $dr_count = sqlFetchRow($conn, "SELECT COUNT(*) FROM `demand_response` ", $oneValue);
-if ($dr_mode != 0)
+if ($dr_mode != 0) {
+    $dr_participate_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'dr_participate_flag' ", $oneValue);
     $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
+}
 
 $uncontrollable_load_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'uncontrollable_load_flag' ", $oneValue);
 $comfortLevel_flag = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'comfortLevel_flag' ", $oneValue);

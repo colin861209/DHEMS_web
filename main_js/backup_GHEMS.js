@@ -273,13 +273,24 @@ function loadModel(ABC) {
     var data = ABC;
     //define all needed data array
     var chart_info = ["loadModel", "Load Model", " ", "time", "price(TWD)", "power(kW)"];
-    var multi_name = [energyType.HEMS_chart_name, energyType.public1_chart_name, energyType.public2_chart_name, energyType.public3_chart_name, energyType.EM_charging_chart_name, energyType.EM_discharging_chart_name];
+    var multi_name = [energyType.HEMS_chart_name, energyType.public1_chart_name, energyType.public2_chart_name, energyType.public3_chart_name];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
-
+    if (data.EM_flag) {
+        multi_name.push(energyType.EM_charging_chart_name)
+    }
+    if (data.EM_flag && data.EM_discharge_flag) {
+        multi_name.push(energyType.EM_discharging_chart_name)
+    }
+    if (data.EV_flag) {
+        multi_name.push(energyType.EV_charging_chart_name)
+    }
+    if (data.EV_flag && data.EV_discharge_flag) {
+        multi_name.push(energyType.EV_discharging_chart_name)
+    }
     set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(1, "column", data.load_model_seperate, "", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
 

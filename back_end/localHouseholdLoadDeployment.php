@@ -195,6 +195,7 @@ $data_array = [
     "uncontrollable_load_flag" => $uncontrollable_load_flag,
     "dr_mode" => $dr_mode,
     "dr_info" => $dr_info,
+    "dr_participate_flag" => boolval($dr_participate_flag),
     "dr_participation" => $household_participation,
     "comfortLevel_flag" => intval($comfortLevel_flag),
     "each_household_startComfortLevel" => $each_household_startComfortLevel,

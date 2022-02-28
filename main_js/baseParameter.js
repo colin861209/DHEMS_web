@@ -10,7 +10,7 @@ function get_backEnd_data() {
 
     save_target = {
 
-        modify_target: ["SOCmin", "SOCmax", "SOCthres", "real_time", "Global_real_time", "dr_mode", "ElectricVehicle", "ElectricMotor", "EV_generate_random_user_result", "EM_generate_random_user_result", "uncontrollable_load_flag", "ini_SOC", "hydrogen_price", "simulate_weather", "simulate_price"],
+        modify_target: ["real_time", "Global_real_time", "dr_mode", "dr_participate_flag", "ElectricVehicle", "ElectricMotor", "EV_generate_random_user_result", "EM_generate_random_user_result", "Pgridmax", "Cbat", "battery_rate", "simulate_weather", "simulate_price", "SOCmin", "SOCmax", "SOCthres", "ini_SOC", "uncontrollable_load_flag", "hydrogen_price"],
         fix_target: ["now_SOC", "next_simulate_timeblock", "Global_next_simulate_timeblock", "household_id"]
     }
     $.ajax
@@ -178,19 +178,19 @@ function baseParameter_gauge(data, fullInfo) {
         
         label: ["住戶時刻", "社區時刻", "now SOC", "排程中住戶", "需量模式", "機車充電數量"],
         id: [
-            save_target.fix_target[1],
-            save_target.fix_target[2],
-            save_target.fix_target[0],
-            save_target.fix_target[3],
-            save_target.modify_target[5],
+            "next_simulate_timeblock",
+            "Global_next_simulate_timeblock",
+            "now_SOC",
+            "household_id",
+            "dr_mode",
             "EM_charging_amount"
         ],
         value: [
-            baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[1])],
-            baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[2])],
-            baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[0])],
-            baseParameter.value[baseParameter.name.indexOf(save_target.fix_target[3])],
-            baseParameter.value[baseParameter.name.indexOf(save_target.modify_target[5])],
+            baseParameter.value[baseParameter.name.indexOf("next_simulate_timeblock")],
+            baseParameter.value[baseParameter.name.indexOf("Global_next_simulate_timeblock")],
+            baseParameter.value[baseParameter.name.indexOf("now_SOC")],
+            baseParameter.value[baseParameter.name.indexOf("household_id")],
+            baseParameter.value[baseParameter.name.indexOf("dr_mode")],
             fullInfo.EM_charging_amount
         ],
     }
