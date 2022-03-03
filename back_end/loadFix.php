@@ -6,6 +6,7 @@ $uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_
 $f_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
 $i_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 6", array("power1"));
 $p_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 7", array("power1"));
+$Global_uncontrollable_load_array = sqlFetchAssoc($conn, "SELECT `uncontrollable_load1`, `uncontrollable_load2`, `uncontrollable_load3` FROM `GHEMS_uncontrollable_load` ", array("uncontrollable_load1", "uncontrollable_load2", "uncontrollable_load3"));
 $EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `EM_user_number`", array("total_power"));
 $EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `EM_user_number`", array("discharge_normal_power"));
 $EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
@@ -96,6 +97,17 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
         $load_model = array_map(function() {
             return array_sum(func_get_args());
         }, $load_model, $publicLoad_total);
+    }
+    if ($Global_uncontrollable_load_flag) {
+
+        for ($i=0; $i < count($Global_uncontrollable_load_array); $i++) { 
+            
+            $Global_uncontrollable_load = array_map('floatval', $Global_uncontrollable_load_array[$i]);
+            array_push($load_model_seperate, $Global_uncontrollable_load);
+            $load_model = array_map(function() {
+                return array_sum(func_get_args());
+            }, $load_model, $Global_uncontrollable_load);
+        }
     }
     if ($EM_flag) {
     
@@ -202,7 +214,7 @@ $data_array = [
     "dr_feedbackPrice" => round($dr_feedbackPrice, 2),
     "dr_mode" => $dr_mode,
     "dr_info" => $dr_info,
-    "%" => $p_publicLoad_power,
+    "Global_ucLoad_flag" => intval($Global_uncontrollable_load_flag),
     "database_name" => $database_name
 ];
 

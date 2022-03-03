@@ -275,12 +275,21 @@ function loadModel(ABC) {
     var data = ABC;
     //define all needed data array
     var chart_info = ["loadModel", "Load Model", " ", "time", "price(TWD)", "power(kW)"];
-    var multi_name = [energyType.HEMS_chart_name, energyType.public1_chart_name, energyType.public2_chart_name, energyType.public3_chart_name];
+    var multi_name = [energyType.HEMS_chart_name, 
+        energyType.force_public1_chart_name, energyType.force_public2_chart_name, energyType.force_public3_chart_name, 
+        energyType.interrupt_public1_chart_name, energyType.interrupt_public2_chart_name, 
+        energyType.periodic_public1_chart_name, energyType.periodic_public2_chart_name 
+    ];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
+    if (data.Global_ucLoad_flag) {
+        multi_name.push(energyType.uncontrollable_public1_chart_name)
+        multi_name.push(energyType.uncontrollable_public2_chart_name)
+        multi_name.push(energyType.uncontrollable_public3_chart_name)
+    }
     if (data.EM_flag) {
         multi_name.push(energyType.EM_charging_chart_name)
     }

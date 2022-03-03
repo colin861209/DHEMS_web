@@ -3,6 +3,9 @@ require 'commonSQL_data.php';
 
 $load_power_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `backup_totalLoad` ", array("totalLoad"));
 // $uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_uncontrollable_load` ", array("totalLoad"));
+$Global_uncontrollable_load_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'Global_uncontrollable_load_flag' ", $oneValue);
+$Global_uncontrollable_load_array = sqlFetchAssoc($conn, "SELECT `uncontrollable_load1`, `uncontrollable_load2`, `uncontrollable_load3` FROM `backup_GHEMS_uncontrollable_load` ", array("uncontrollable_load1", "uncontrollable_load2", "uncontrollable_load3"));
+
 $target_price = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` WHERE `parameter_name` = 'simulate_price' ", $oneValue);
 $target_solar = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` WHERE `parameter_name` = 'simulate_weather' ", $oneValue);
 $electric_price = sqlFetchAssoc($conn, "SELECT `" .$target_price. "` FROM `price` ", array($target_price));
@@ -64,19 +67,65 @@ if ($uncontrollable_load_flag) {
 
 if ($database_name == 'DHEMS_fiftyHousehold') {
         
-    for ($i=0; $i < count($publicLoad_power); $i++) { 
+    if ($GHEMS_flag[1][array_search("publicLoad", $GHEMS_flag[0], true)]) {
         
-        $name = "publicLoad".($i+1);
-        $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
-        for ($y = 0; $y < $time_block; $y++) {
-            $publicLoad[$i][$y] *= $publicLoad_power[$i];
-            $publicLoad_total[$y] += $publicLoad[$i][$y];
+        for ($i=0; $i < count($f_publicLoad_power); $i++) { 
+            
+            $name = "forceToStop_publicLoad".($i+1);
+            $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
+            for ($y = 0; $y < $time_block; $y++) {
+                $publicLoad[$i][$y] *= $f_publicLoad_power[$i];
+                $publicLoad_total[$y] += $publicLoad[$i][$y];
+            }
+            array_push($load_model_seperate, $publicLoad[$i]);
         }
-        array_push($load_model_seperate, $publicLoad[$i]);
+        for ($i=0; $i < count($i_publicLoad_power); $i++) { 
+            
+            $name = "interrupt_publicLoad".($i+1);
+            $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
+            for ($y = 0; $y < $time_block; $y++) {
+                $publicLoad[$i][$y] *= $i_publicLoad_power[$i];
+                $publicLoad_total[$y] += $publicLoad[$i][$y];
+            }
+            array_push($load_model_seperate, $publicLoad[$i]);
+        }
+        $periodic_load = [];
+        for ($i=0; $i < count($p_publicLoad_power); $i++) { 
+            
+            $name = "periodic_publicLoad".($i+1);
+            $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
+            for ($y = 0; $y < $time_block; $y++) {
+                $publicLoad[$i][$y] *= $p_publicLoad_power[$i];
+                $publicLoad_total[$y] += $publicLoad[$i][$y];
+            }
+            if ($p_publicLoad_power[$i] == $p_publicLoad_power[$i+1]) {
+                $periodic_load = array_map(function() {
+                    return array_sum(func_get_args());
+                }, $periodic_load, $publicLoad[$i]);
+            }
+            else {
+                array_push($load_model_seperate, $periodic_load);
+                $periodic_load = [];
+                $periodic_load = array_map(function() {
+                    return array_sum(func_get_args());
+                }, $periodic_load, $publicLoad[$i]);
+            }
+        }
+        $load_model = array_map(function() {
+            return array_sum(func_get_args());
+        }, $load_model, $publicLoad_total);
     }
-    $load_model = array_map(function() {
-        return array_sum(func_get_args());
-    }, $load_model, $publicLoad_total);
+    if ($Global_uncontrollable_load_flag) {
+
+        for ($i=0; $i < count($Global_uncontrollable_load_array); $i++) { 
+            
+            $Global_uncontrollable_load = array_map('floatval', $Global_uncontrollable_load_array[$i]);
+            array_push($load_model_seperate, $Global_uncontrollable_load);
+            $load_model = array_map(function() {
+                return array_sum(func_get_args());
+            }, $load_model, $Global_uncontrollable_load);
+        }
+    }
     if ($EM_flag) {
     
         $EM_total_power = array_map('floatval', $EM_total_power);
@@ -181,6 +230,7 @@ $data_array = [
     "dr_info" => $dr_info,
     "GHEMS_flag" => $GHEMS_flag,
     "dr_feedbackPrice" => round($dr_feedbackPrice, 2),
+    "Global_ucLoad_flag" => intval($Global_uncontrollable_load_flag),
     "database_name" => $database_name
 ];
 

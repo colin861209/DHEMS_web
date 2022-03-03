@@ -10,7 +10,7 @@ function get_backEnd_data() {
 
     save_target = {
 
-        modify_target: ["real_time", "Global_real_time", "dr_mode", "dr_participate_flag", "ElectricVehicle", "ElectricMotor", "EV_generate_random_user_result", "EM_generate_random_user_result", "Pgridmax", "Cbat", "battery_rate", "simulate_weather", "simulate_price", "SOCmin", "SOCmax", "SOCthres", "ini_SOC", "uncontrollable_load_flag", "hydrogen_price"],
+        modify_target: ["real_time", "Global_real_time", "dr_mode", "dr_participate_flag", "ElectricVehicle", "ElectricMotor", "EV_generate_random_user_result", "EM_generate_random_user_result", "Global_uncontrollable_load_flag", "generate_Global_uncontrollable_load_flag", "Pgridmax", "Cbat", "battery_rate", "simulate_weather", "simulate_price", "SOCmin", "SOCmax", "SOCthres", "ini_SOC", "uncontrollable_load_flag", "hydrogen_price"],
         fix_target: ["now_SOC", "next_simulate_timeblock", "Global_next_simulate_timeblock", "household_id"]
     }
     $.ajax
