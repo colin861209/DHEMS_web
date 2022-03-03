@@ -3,7 +3,9 @@ require 'commonSQL_data.php';
 
 $load_power_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `totalLoad_model` ", array("totalLoad"));
 $uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_uncontrollable_load` ", array("totalLoad"));
-$publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
+$f_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
+$i_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 6", array("power1"));
+$p_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 7", array("power1"));
 $EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `EM_user_number`", array("total_power"));
 $EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `EM_user_number`", array("discharge_normal_power"));
 $EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
@@ -49,15 +51,47 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
     
     if ($GHEMS_flag[1][array_search("publicLoad", $GHEMS_flag[0], true)]) {
         
-        for ($i=0; $i < count($publicLoad_power); $i++) { 
+        for ($i=0; $i < count($f_publicLoad_power); $i++) { 
             
-            $name = "publicLoad".($i+1);
+            $name = "forceToStop_publicLoad".($i+1);
             $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
             for ($y = 0; $y < $time_block; $y++) {
-                $publicLoad[$i][$y] *= $publicLoad_power[$i];
+                $publicLoad[$i][$y] *= $f_publicLoad_power[$i];
                 $publicLoad_total[$y] += $publicLoad[$i][$y];
             }
             array_push($load_model_seperate, $publicLoad[$i]);
+        }
+        for ($i=0; $i < count($i_publicLoad_power); $i++) { 
+            
+            $name = "interrupt_publicLoad".($i+1);
+            $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
+            for ($y = 0; $y < $time_block; $y++) {
+                $publicLoad[$i][$y] *= $i_publicLoad_power[$i];
+                $publicLoad_total[$y] += $publicLoad[$i][$y];
+            }
+            array_push($load_model_seperate, $publicLoad[$i]);
+        }
+        $periodic_load = [];
+        for ($i=0; $i < count($p_publicLoad_power); $i++) { 
+            
+            $name = "periodic_publicLoad".($i+1);
+            $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
+            for ($y = 0; $y < $time_block; $y++) {
+                $publicLoad[$i][$y] *= $p_publicLoad_power[$i];
+                $publicLoad_total[$y] += $publicLoad[$i][$y];
+            }
+            if ($p_publicLoad_power[$i] == $p_publicLoad_power[$i+1]) {
+                $periodic_load = array_map(function() {
+                    return array_sum(func_get_args());
+                }, $periodic_load, $publicLoad[$i]);
+            }
+            else {
+                array_push($load_model_seperate, $periodic_load);
+                $periodic_load = [];
+                $periodic_load = array_map(function() {
+                    return array_sum(func_get_args());
+                }, $periodic_load, $publicLoad[$i]);
+            }
         }
         $load_model = array_map(function() {
             return array_sum(func_get_args());
@@ -168,6 +202,7 @@ $data_array = [
     "dr_feedbackPrice" => round($dr_feedbackPrice, 2),
     "dr_mode" => $dr_mode,
     "dr_info" => $dr_info,
+    "%" => $p_publicLoad_power,
     "database_name" => $database_name
 ];
 
