@@ -45,9 +45,7 @@ function get_backEnd_data() {
                 autoRun(ourData, household_num)
                 flag_table(LHEMS_flag)
                 cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
-                if (parseInt(ourData.dr_mode) != 0 && ourData.dr_participate_flag) {
-                    participate_table(ourData.dr_info, ourData.dr_participation, household_num);
-                }
+                participate_table(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num);
             }
         });
 }
@@ -75,9 +73,7 @@ function choose_singleHousehold(household_id) {
     each_household_status_SOC(ourData, household_id - 1)
     run_household_eachLoad(ourData, household_id - 1);
     cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_id - 1);
-    if (parseInt(ourData.dr_mode) != 0 && ourData.dr_participate_flag) {
-        show_participate_timeblock(ourData.dr_info, ourData.dr_participation, household_id - 1)
-    }
+    show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_id - 1)
 }
 
 function autoRun(ourData, household_num) {
@@ -94,9 +90,7 @@ function autoRun(ourData, household_num) {
         run_household_eachLoad(ourData, household_num)
         progessbar(ourData);
         cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
-        if (parseInt(ourData.dr_mode) != 0 && ourData.dr_participate_flag) {
-            show_participate_timeblock(ourData.dr_info, ourData.dr_participation, household_num)
-        }
+        show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num)
     }, 7000);
 
 }
@@ -126,7 +120,7 @@ function progessbar(ourData) {
 
 function each_household_status(data, household_id) {
 
-    var chart_info = ["each_household_status", "Household " + (household_id + 1) + " Status", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_info = ["each_household_status", "Household " + (household_id + 1) + " Status", " ", "time", "price(TWD)", "power(kW)", data.electric_price_upper_limit, [0, data.each_household_status_upper_limit], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -156,7 +150,7 @@ function each_household_status_SOC(data, household_id) {
     
     if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1) {
 
-        var chart_info = ["each_household_status_SOC", "", " ", "time", "SOC", "power(kW)"];
+        var chart_info = ["each_household_status_SOC", "", " ", "time", "SOC", "power(kW)", null, [null, null], null];
         var chart_series_type = [];
         var chart_series_name = [];
         var chart_series_data = [];
@@ -188,7 +182,7 @@ function each_household_status_SOC(data, household_id) {
 function householdsLoadSum(data) {
     //parse to get all json data
 
-    var chart_info = ["households_loadsSum", "Households' Loads Comsuption", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_info = ["households_loadsSum", "Households' Loads Comsuption", " ", "time", "price(TWD)", "power(kW)", null, [0, data.householdsLoadSum_upper_limit], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -211,7 +205,7 @@ function uncontrollable_loadSum(data) {
 
     if (parseInt(data.uncontrollable_load_flag)) {
 
-        var chart_info = ["uncontrollable_loadSum", "Households' Uncontrllable Loads", " ", "time", "price(TWD)", "power(kW)"];
+        var chart_info = ["uncontrollable_loadSum", "Households' Uncontrllable Loads", " ", "time", "price(TWD)", "power(kW)", null, [null, null], null];
         var chart_series_type = [];
         var chart_series_name = [];
         var chart_series_data = [];
@@ -271,7 +265,7 @@ function each_load(data, num, household_num) {
     }
 
     //define all needed data array
-    var chart_info = ["con_" + num, this_name[num], "模擬值(simulation)", "時間(區間)", "電價(TWD)", "功率(kW)"];
+    var chart_info = ["con_" + num, this_name[num], "模擬值(simulation)", "時間(區間)", "price(TWD)", "power(kW)", data.electric_price_upper_limit, [null, null], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -315,7 +309,7 @@ function increase_chartHeight(chart_id, condition) {
 
     if (condition) {
 
-        document.getElementById(chart_id).style.height = '850px';
+        document.getElementById(chart_id).style.height = '800px';
     }
 }
 
@@ -390,46 +384,52 @@ function cost_table(origin_grid_price, total_origin_grid_price, real_grid_price,
     }
 }
 
-function participate_table(info, participation_status, household_id) {
+function participate_table(dr_mode, info, participation_status, household_id) {
     
-    document.getElementsByClassName('table table-bordered')[1].style.display = 'revert';
-    show_participate_timeblock(info, participation_status, household_id);
+    if (parseInt(dr_mode) != 0) {
+    
+        document.getElementsByClassName('table table-bordered')[1].style.display = 'revert';
+        show_participate_timeblock(dr_mode, info, participation_status, household_id);
+    }
 }
 
-function show_participate_timeblock(info, participation, household_id) {
+function show_participate_timeblock(dr_mode, info, participation, household_id) {
 
-    $('#table_participate_tbody > td').remove()
-    const dr_start = parseInt(info[1]);
-    const dr_end = parseInt(info[2]);
-    participate_onOff = [[], []];
-    try {
+    if (parseInt(dr_mode) != 0) {
+    
+        $('#table_participate_tbody > td').remove()
+        const dr_start = parseInt(info[1]);
+        const dr_end = parseInt(info[2]);
+        participate_onOff = [[], []];
+        try {
 
-        for (let index = dr_start; index < dr_end; index++) {
-            if (participation[household_id][index] == 1)
-                participate_onOff[0].push(index)
-            else if (participation[household_id][index] == 0)
-                participate_onOff[1].push(index)
-        }
-            
-        for (let array_num = 0; array_num < participate_onOff.length; array_num++) {
-            
-            var td = document.createElement('td');
-            
-            if (participate_onOff[array_num].length == 0) {
-                participate_onOff[array_num].push("無")
-                td.appendChild(document.createTextNode(participate_onOff[array_num]));
+            for (let index = dr_start; index < dr_end; index++) {
+                if (participation[household_id][index] == 1)
+                    participate_onOff[0].push(index)
+                else if (participation[household_id][index] == 0)
+                    participate_onOff[1].push(index)
             }
-            else {
-                word = replace_continuously_timeblock(participate_onOff[array_num]);
-                td.appendChild(document.createTextNode(word));
+                
+            for (let array_num = 0; array_num < participate_onOff.length; array_num++) {
+                
+                var td = document.createElement('td');
+                
+                if (participate_onOff[array_num].length == 0) {
+                    participate_onOff[array_num].push("無")
+                    td.appendChild(document.createTextNode(participate_onOff[array_num]));
+                }
+                else {
+                    word = replace_continuously_timeblock(participate_onOff[array_num]);
+                    td.appendChild(document.createTextNode(word));
+                }
+                td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
+                document.getElementById('table_participate_tbody').appendChild(td);
             }
-            td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
-            document.getElementById('table_participate_tbody').appendChild(td);
         }
-    }
-    catch(e) {
-        
-        console.log(" Reason: DB may not have realted table with 'Particpation'\n")
+        catch(e) {
+            
+            console.log(" Reason: DB may not have realted table with 'Particpation'\n")
+        }
     }
 }
 

@@ -10,7 +10,7 @@ function get_backEnd_data() {
 
     save_target = {
 
-        modify_target: ["real_time", "Global_real_time", "dr_mode", "dr_participate_flag", "ElectricVehicle", "ElectricMotor", "EV_generate_random_user_result", "EM_generate_random_user_result", "Global_uncontrollable_load_flag", "generate_Global_uncontrollable_load_flag", "Pgridmax", "Cbat", "battery_rate", "simulate_weather", "simulate_price", "SOCmin", "SOCmax", "SOCthres", "ini_SOC", "uncontrollable_load_flag", "hydrogen_price"],
+        modify_target: ["real_time", "Global_real_time", "dr_mode", "dr_participate_flag", "ElectricVehicle", "ElectricMotor", "Global_uncontrollable_load_flag", "EV_generate_random_user_result", "EM_generate_random_user_result", "generate_Global_uncontrollable_load_flag", "chart_upperLowerLimit_flag", "Pgridmax", "Cbat", "battery_rate", "simulate_weather", "simulate_price", "SOCmin", "SOCmax", "SOCthres", "ini_SOC", "uncontrollable_load_flag", "hydrogen_price"],
         fix_target: ["now_SOC", "next_simulate_timeblock", "Global_next_simulate_timeblock", "household_id"]
     }
     $.ajax
@@ -27,7 +27,7 @@ function get_backEnd_data() {
                 if (now_database_name == "DHEMS_fiftyHousehold") {
                     
                     save_target.fix_target.pop();
-                    save_target.modify_target.splice(save_target.modify_target.indexOf("EM_generate_random_user_result")+1, 0, "comfortLevel_flag");
+                    save_target.modify_target.splice(save_target.modify_target.indexOf("generate_Global_uncontrollable_load_flag")+1, 0, "comfortLevel_flag");
                 }
                 compare_timeblock = {
                 
@@ -351,7 +351,7 @@ function baseParameter_gauge(data, fullInfo) {
 
 function simulate_solar(data) {
     
-    var chart_info = ["simulate_solar_chart", "Solar Power", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")], "time", "power(kW)", null, 'orange', '#7cb5ec'];
+    var chart_info = ["simulate_solar_chart", "Solar Power", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")], "time", "power(kW)", null, null, [null, null], 'orange'];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -365,7 +365,7 @@ function simulate_solar(data) {
 
 function simulate_price(data) {
       
-    var chart_info = ["simulate_price_chart", "Electric Price", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_price")], "time", "price(NTD)", null];
+    var chart_info = ["simulate_price_chart", "Electric Price", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_price")], "time", "price(NTD)", null, data.electric_price_upper_limit, [null, null]];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];

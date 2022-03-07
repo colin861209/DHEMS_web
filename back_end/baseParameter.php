@@ -13,12 +13,12 @@ $data_array = [
 
     "baseParameter" => $baseParameter,
     "simulate_solar" => $simulate_solar,
-    "simulate_history_weather" => array_map('floatval', $simulate_history_weather),
     "electric_price" => $electric_price,
     "dr_count" => $dr_count,
     "EM_flag" => $EM_flag,
     "EM_charging_amount" => $EM_charging_amount,
     "EM_sure_charging_amount" => $EM_sure_charging_amount,
+    "electric_price_upper_limit" => $electric_price_upper_limit,
     "database_name" => $database_name
 ];
 

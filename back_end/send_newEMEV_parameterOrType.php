@@ -8,6 +8,7 @@ function updateSQL($conn, $table, $target_col, $target_value, $condition_col, $c
     mysqli_query($conn, $sql);
 }
 
+// return array multiple a value 
 function multiply(array $array, float $factor) {
 
     foreach ($array as $key => $value) {

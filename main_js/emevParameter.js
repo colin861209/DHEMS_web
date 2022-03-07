@@ -62,8 +62,8 @@ function get_backEnd_data() {
                 show_chargingOrDischarging_status([response.em_chargingOrDischargingStatus_array, response.ev_chargingOrDischargingStatus_array])
                 insertText_after_breadcrumb(now_database_name, null, null);
                 show_vehicleMotorType_percent(response.ev_motor_type, response.em_motor_type);
-                show_EVwholeDay_chargingUser_nums(response.ev_chargingUser_nums, response.electric_price)
-                show_EMwholeDay_chargingUser_nums(response.n_chargingUser_nums, response.f_chargingUser_nums, response.sf_chargingUser_nums, response.electric_price)
+                show_EVwholeDay_chargingUser_nums(response.ev_chargingUser_nums, response.electric_price, response.ev_chargingUser_nums_upper_limit, response.electric_price_upper_limit)
+                show_EMwholeDay_chargingUser_nums(response.n_chargingUser_nums, response.f_chargingUser_nums, response.sf_chargingUser_nums, response.electric_price, response.em_n_chargingUser_nums_upper_limit, response.electric_price_upper_limit)
             }
         });
 }
@@ -448,7 +448,7 @@ function show_vehicleMotorType_percent(ev_type, em_type) {
     document.getElementById('vehicle_info').appendChild(tr);
 }
 
-function show_EMwholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_nums, sf_chargingUser_nums, electric_price) {
+function show_EMwholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_nums, sf_chargingUser_nums, electric_price, em_n_chargingUser_nums_upper_limit, electric_price_upper_limit) {
     
     chargingNums_dic = {
         id: ["normal_chargingUser_nums", "fast_chargingUser_nums", "superFast_chargingUser_nums"],
@@ -458,7 +458,7 @@ function show_EMwholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_n
     
     for (let index = 0; index < chargingNums_dic.id.length; index++) {
         
-        var chart_info = [chargingNums_dic.id[index], chargingNums_dic.title[index], "", "time", "個數", "價錢(NTD)"];
+        var chart_info = [chargingNums_dic.id[index], chargingNums_dic.title[index], "", "time", "個數", "價錢(NTD)", em_n_chargingUser_nums_upper_limit, [0, electric_price_upper_limit], null];
         var chart_series_type = [];
         var chart_series_name = [];
         var chart_series_data = [];
@@ -471,7 +471,7 @@ function show_EMwholeDay_chargingUser_nums(n_chargingUser_nums, f_chargingUser_n
     }
 }
 
-function show_EVwholeDay_chargingUser_nums(ev_charging_user_number, electric_price) {
+function show_EVwholeDay_chargingUser_nums(ev_charging_user_number, electric_price, ev_chargingUser_nums_upper_limit, electric_price_upper_limit) {
     
     chargingNums_dic = {
         id: "EV_chargingUser_nums",
@@ -480,7 +480,7 @@ function show_EVwholeDay_chargingUser_nums(ev_charging_user_number, electric_pri
         name: ["Chevy Volt", "Volkswagen E-Golf", "BMW i3", "Tesla Model S"],
     }
         
-    var chart_info = [chargingNums_dic.id, chargingNums_dic.title, "", "time", "個數", "價錢(NTD)"];
+    var chart_info = [chargingNums_dic.id, chargingNums_dic.title, "", "time", "個數", "價錢(NTD)", ev_chargingUser_nums_upper_limit, [0, electric_price_upper_limit], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];

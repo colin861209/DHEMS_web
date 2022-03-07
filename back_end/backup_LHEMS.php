@@ -51,7 +51,14 @@ if (($dr_mode) != 0)
     $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
 else
     $dr_info = null;
-    
+
+$origin_grid_price = sqlFetchAssoc($conn, "SELECT `origin_grid_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("origin_grid_price"));
+$real_grid_price = sqlFetchAssoc($conn, "SELECT `real_grid_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("real_grid_price"));
+$public_price = sqlFetchAssoc($conn, "SELECT `public_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("public_price"));
+$origin_pay_price = sqlFetchAssoc($conn, "SELECT `origin_pay_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("origin_pay_price"));
+$final_pay_price = sqlFetchAssoc($conn, "SELECT `final_pay_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("final_pay_price"));
+$saving_efficiency = sqlFetchAssoc($conn, "SELECT `saving_efficiency` FROM `backup_LHEMS_cost` ORDER BY household_id", array("saving_efficiency"));
+$total_origin_grid_price = sqlFetchRow($conn, "SELECT SUM(origin_grid_price) FROM `backup_LHEMS_cost`", $oneValue);
 $household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `backup_LHEMS` ORDER BY `household_id`, `control_id` ASC ", array("household_id"));
 $comfortLevel_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'comfortLevel_flag' ", $oneValue);
 
@@ -202,6 +209,16 @@ $data_array = [
     "comfortLevel_flag" => intval($comfortLevel_flag),
     "each_household_startComfortLevel" => $each_household_startComfortLevel,
     "each_household_endComfortLevel" => $each_household_endComfortLevel,
+    "origin_grid_price" => array_map('floatval', $origin_grid_price),
+    "total_origin_grid_price" => floatval($total_origin_grid_price),
+    "real_grid_price" => array_map('floatval', $real_grid_price),
+    "public_price" => array_map('floatval', $public_price),
+    "origin_pay_price" => array_map('floatval', $origin_pay_price),
+    "final_pay_price" => array_map('floatval', $final_pay_price),
+    "saving_efficiency" => array_map('floatval', $saving_efficiency),
+    "electric_price_upper_limit" => $electric_price_upper_limit,
+    "householdsLoadSum_upper_limit" => $householdsLoadSum_upper_limit,
+    "each_household_status_upper_limit" => $each_household_status_upper_limit,
     "database_name" => $database_name
 ];
 

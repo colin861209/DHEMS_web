@@ -202,7 +202,7 @@ function priceVsLoad(ABC) {
     //parse to get all json data
     var data = ABC;
     //define all needed data array
-    var chart_info = ["priceVsLoad", "Price vs Load", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_info = ["priceVsLoad", "Price vs Load", " ", "time", "price(TWD)", "power(kW)", ABC.electric_price_upper_limit, [ABC.load_model_lower_limit, ABC.load_model_upper_limit], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -238,7 +238,7 @@ function SOCVsLoad(ABC) {
     //parse to get all json data
     var data = ABC;
     //define all needed data array
-    var chart_info = ["SOCVsLoad", "SOC vs Load", " ", "time", "SOC", "power(kW)"];
+    var chart_info = ["SOCVsLoad", "SOC vs Load", " ", "time", "SOC", "power(kW)", null, [ABC.load_model_lower_limit, ABC.load_model_upper_limit], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -272,7 +272,7 @@ function loadModel(ABC) {
     //parse to get all json data
     var data = ABC;
     //define all needed data array
-    var chart_info = ["loadModel", "Load Model", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_info = ["loadModel", "Load Model", " ", "time", "price(TWD)", "power(kW)", data.electric_price_upper_limit, [data.load_model_seperate_lower_limit, data.load_model_seperate_upper_limit], null];
     var multi_name = [energyType.HEMS_chart_name, 
         energyType.force_public1_chart_name, energyType.force_public2_chart_name, energyType.force_public3_chart_name, 
         energyType.interrupt_public1_chart_name, energyType.interrupt_public2_chart_name, 
@@ -312,7 +312,7 @@ function loadModel(ABC) {
 
 function EMchargingSOC(EM_start_departure_SOC) {
 
-    var chart_info = ["EMchargingSOC", "EM users Arrived & Departure SOC", " ", "user number", "SOC(%)", ""];
+    var chart_info = ["EMchargingSOC", "EM users Arrived & Departure SOC", " ", "user number", "SOC(%)", "", null, null, null];
     var multi_name = ["Departure SOC", "Arrived SOC"];
     var chart_series_type = [];
     var chart_series_name = [];
@@ -336,7 +336,7 @@ function EMchargingSOC(EM_start_departure_SOC) {
 
 function EVchargingSOC(EV_start_departure_SOC) {
 
-    var chart_info = ["EVchargingSOC", "EV users Arrived & Departure SOC", " ", "user number", "SOC(%)", ""];
+    var chart_info = ["EVchargingSOC", "EV users Arrived & Departure SOC", " ", "user number", "SOC(%)", "", null, null, null];
     var multi_name = ["Departure SOC", "Arrived SOC"];
     var chart_series_type = [];
     var chart_series_name = [];
@@ -360,7 +360,7 @@ function EVchargingSOC(EV_start_departure_SOC) {
 
 function EVchargingSOC(EV_start_departure_SOC) {
 
-    var chart_info = ["EVchargingSOC", "EV users Arrived & Departure SOC", " ", "user number", "SOC(%)", ""];
+    var chart_info = ["EVchargingSOC", "EV users Arrived & Departure SOC", " ", "user number", "SOC(%)", "", null];
     var multi_name = ["Departure SOC", "Arrived SOC"];
     var chart_series_type = [];
     var chart_series_name = [];

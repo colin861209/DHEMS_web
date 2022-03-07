@@ -212,6 +212,11 @@ $data_array = [
     "dr_mode" => $dr_mode,
     "dr_info" => $dr_info,
     "Global_ucLoad_flag" => intval($Global_uncontrollable_load_flag),
+    "electric_price_upper_limit" => $electric_price_upper_limit,
+    "load_model_upper_limit" => $load_model_upper_limit,
+    "load_model_lower_limit" => $load_model_lower_limit,
+    "load_model_seperate_upper_limit" => $load_model_seperate_upper_limit,
+    "load_model_seperate_lower_limit" => $load_model_seperate_lower_limit,
     "database_name" => $database_name
 ];
 

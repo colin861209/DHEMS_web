@@ -44,6 +44,7 @@ function get_backEnd_data() {
                 progessbar(ourData);
                 autoRun(ourData, household_num)
                 participate_table(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num);
+                cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num)
             }
         });
 }
@@ -70,6 +71,7 @@ function choose_singleHousehold(household_id) {
     each_household_status(ourData, household_id - 1)
     each_household_status_SOC(ourData, household_id - 1)
     run_household_eachLoad(ourData, household_id - 1);
+    cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_id - 1)
     show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_id - 1)
 }
 
@@ -86,6 +88,7 @@ function autoRun(ourData, household_num) {
         each_household_status_SOC(ourData, household_num)
         run_household_eachLoad(ourData, household_num)
         progessbar(ourData);
+        cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num)
         show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num)
     }, 7000);
 
@@ -116,7 +119,7 @@ function progessbar(ourData) {
 
 function each_household_status(data, household_id) {
 
-    var chart_info = ["each_household_status", "Household " + (household_id + 1) + " Status", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_info = ["each_household_status", "Household " + (household_id + 1) + " Status", " ", "time", "price(TWD)", "power(kW)", data.electric_price_upper_limit, [0, data.each_household_status_upper_limit], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -146,7 +149,7 @@ function each_household_status_SOC(data, household_id) {
     
     if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1) {
 
-        var chart_info = ["each_household_status_SOC", "", " ", "time", "SOC", "power(kW)"];
+        var chart_info = ["each_household_status_SOC", "", " ", "time", "SOC", "power(kW)", null, [null, null], null];
         var chart_series_type = [];
         var chart_series_name = [];
         var chart_series_data = [];
@@ -177,7 +180,7 @@ function each_household_status_SOC(data, household_id) {
 function householdsLoadSum(data) {
     //parse to get all json data
 
-    var chart_info = ["households_loadsSum", "Households' Loads Comsuption", " ", "time", "price(TWD)", "power(kW)"];
+    var chart_info = ["households_loadsSum", "Households' Loads Comsuption", " ", "time", "price(TWD)", "power(kW)", null, [0, data.householdsLoadSum_upper_limit], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -199,7 +202,7 @@ function uncontrollable_loadSum(data) {
 
     if (data.uncontrollable_flag) {
 
-        var chart_info = ["uncontrollable_loadSum", "Households' Uncontrllable Loads", " ", "time", "price(TWD)", "power(kW)"];
+        var chart_info = ["uncontrollable_loadSum", "Households' Uncontrllable Loads", " ", "time", "price(TWD)", "power(kW)", null, [null, null], null];
         var chart_series_type = [];
         var chart_series_name = [];
         var chart_series_data = [];
@@ -255,7 +258,7 @@ function each_load(data, num, household_num) {
         }
     }
     //define all needed data array
-    var chart_info = ["con_" + num, this_name[num], "模擬值(simulation)", "時間(區間)", "電價(TWD)", "功率(kW)"];
+    var chart_info = ["con_" + num, this_name[num], "模擬值(simulation)", "時間(區間)", "電價(TWD)", "功率(kW)", data.electric_price_upper_limit, [null, null], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -299,7 +302,7 @@ function increase_chartHeight(chart_id, condition) {
 
     if (condition) {
 
-        document.getElementById(chart_id).style.height = '850px';
+        document.getElementById(chart_id).style.height = '800px';
     }
 }
 
@@ -338,7 +341,7 @@ function participate_table(dr_mode, info, participation_status, household_id) {
     
     if (parseInt(dr_mode) != 0) {
     
-        document.getElementsByClassName('table table-bordered')[0].style.display = 'revert';
+        document.getElementsByClassName('table table-bordered')[1].style.display = 'revert';
         show_participate_timeblock(dr_mode, info, participation_status, household_id);
     }
 }
@@ -407,4 +410,45 @@ function replace_continuously_timeblock(participate_onOff) {
     word = word.replace(/, ~, /g, ' ~ ');
 
     return word;
+}
+
+
+function cost_table(origin_grid_price, total_origin_grid_price, real_grid_price, public_price, origin_pay_price, final_pay_price, saving_efficiency, household_id) {
+    
+    $('#table_cost_thead > th').remove();
+    $('#table_cost_tbody > td').remove();
+
+    var tableData = {
+        
+        thead_result: [
+            "第"+ (household_id+1) +"戶購買市電",
+            "50戶總購買市電",
+            "第"+ (household_id+1) +"戶總花費",
+            "最佳化後繳交自家電費",
+            "最佳化後繳交公設費",
+            "最佳化後繳交總電費",
+            "節省電費比"
+        ],
+        tbody_result: [
+            origin_grid_price[household_id] + " (NTD)",
+            origin_grid_price[household_id] + " / "+ total_origin_grid_price +" (NTD)",
+            origin_pay_price[household_id] + " (NTD)",
+            real_grid_price[household_id] + " (NTD)",
+            public_price[household_id] + " (NTD)",
+            final_pay_price[household_id] + " (NTD)",
+            (saving_efficiency[household_id] * 100).toFixed(3) + " (%)"
+        ]
+    }
+
+    for (let i = 0; i < tableData.thead_result.length; i++) {
+        
+        var td = document.createElement('td');
+        var th = document.createElement('th');
+        th.setAttribute("style", "text-align: center; color:black; font-size: 25px;")
+        td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
+        th.appendChild(document.createTextNode(tableData.thead_result[i]));
+        td.appendChild(document.createTextNode(tableData.tbody_result[i]));
+        document.getElementById('table_cost_thead').appendChild(th);
+        document.getElementById('table_cost_tbody').appendChild(td);
+    }
 }

@@ -207,6 +207,9 @@ $data_array = [
     "origin_pay_price" => array_map('floatval', $origin_pay_price),
     "final_pay_price" => array_map('floatval', $final_pay_price),
     "saving_efficiency" => array_map('floatval', $saving_efficiency),
+    "electric_price_upper_limit" => $electric_price_upper_limit,
+    "householdsLoadSum_upper_limit" => $householdsLoadSum_upper_limit,
+    "each_household_status_upper_limit" => $each_household_status_upper_limit,
     "database_name" => $database_name
 ];
 

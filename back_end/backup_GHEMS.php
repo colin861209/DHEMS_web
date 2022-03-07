@@ -202,6 +202,7 @@ $data_array = [
     "min_FC_cost" => round($min_FC_cost, 2),
     "consumption" => round($consumption, 2),
     "EM_flag" => intval($EM_flag),
+    "EM_discharge_flag" => intval($EM_discharge_flag),
     "EM_total_power_sum" => round($EM_total_power_sum, 2),
     "EM_total_power_cost" => round($EM_total_power_cost, 2),
     "EM_start_departure_SOC" => $EM_start_departure_SOC,
@@ -231,6 +232,11 @@ $data_array = [
     "GHEMS_flag" => $GHEMS_flag,
     "dr_feedbackPrice" => round($dr_feedbackPrice, 2),
     "Global_ucLoad_flag" => intval($Global_uncontrollable_load_flag),
+    "electric_price_upper_limit" => $electric_price_upper_limit,
+    "load_model_upper_limit" => $load_model_upper_limit,
+    "load_model_lower_limit" => $load_model_lower_limit,
+    "load_model_seperate_upper_limit" => $load_model_seperate_upper_limit,
+    "load_model_seperate_lower_limit" => $load_model_seperate_lower_limit,
     "database_name" => $database_name
 ];
 

@@ -1,7 +1,9 @@
 // =-=-=-=-=-=-=-=-=-=-=-=- function 'show_chart_with_redDashLine' information -=-=-=-=-=-=-=-=-=-=-=-= //
 // parameter 'simulate_timeblock' is null, the chart won't show the red dash line                       //
-// array 'chart_info' [id, title, sub title, x-axis name, left y-axis name, right y-axis name, color]   //
-// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+// array 'chart_info'                                                                                   //
+//  [id, title, sub title, x-axis name, left y-axis name,                                               //
+//      right y-axis name, left y-axis max value, right y-axis max value, color]                        //
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=  //
 function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, simulate_timeblock, dr_startTime = null, dr_endTime = null) {
 
     //set all series data
@@ -16,7 +18,7 @@ function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series
             data: chart_series_data[i],
             stack: chart_series_stack[i],
             yAxis: chart_series_yAxis[i],
-            color: chart_info[6+i]
+            color: chart_info[8]
         });
     }
     //set all chart data
@@ -60,16 +62,18 @@ function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series
             ]
         },
         yAxis: [{
+            max: chart_info[6],
             min: 0,
             title: {
-                text: chart_info[4], style: {
+                text: chart_info[4],
+                style: {
                     fontWeight: 'bold',
                     fontSize: '16px'
                 }
             }
         }, {
-            // min: 0,
-            // max: 4,
+            min: chart_info[7][0],
+            max: chart_info[7][1],
             title: {
                 text: chart_info[5],
                 rotation: 270,
@@ -197,13 +201,22 @@ function show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, ch
         yAxis: [{
             min: 0,
             title: {
-                text: chart_info[4]
+                text: chart_info[4],
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '16px'
+                }
             }
         }, {
             // min: -4,
             // max: 4,   
             title: {
-                text: chart_info[5]
+                text: chart_info[5],
+                rotation: 270,
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: '16px'
+                }
             },
             opposite: true
         }]
