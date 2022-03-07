@@ -39,6 +39,33 @@ else {
     $uncontrollable_load = sqlFetchAssoc($conn, "SELECT `household1`, `household2`, `household3`, `household4`, `household5` FROM LHEMS_uncontrollable_load", array("household1", "household2", "household3", "household4", "household5"));
 }
 
+// Each chart y-axis max value
+$chart_upperLowerLimit_flag = boolval(sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'chart_upperLowerLimit_flag' ", $oneValue));
+if ($chart_upperLowerLimit_flag) {
+
+    $electric_price_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'electric_price_upper_limit' ", $oneValue));
+    $ev_chargingUser_nums_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'ev_chargingUser_nums_upper_limit' ", $oneValue));
+    $em_n_chargingUser_nums_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'em_n_chargingUser_nums_upper_limit' ", $oneValue));
+    $load_model_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_upper_limit' ", $oneValue));
+    $load_model_lower_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_lower_limit' ", $oneValue));
+    $load_model_seperate_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_seperate_upper_limit' ", $oneValue));
+    $load_model_seperate_lower_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_seperate_lower_limit' ", $oneValue));
+    $householdsLoadSum_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'householdsLoadSum_upper_limit' ", $oneValue));
+    $each_household_status_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'each_household_status_upper_limit' ", $oneValue));
+}
+else {
+    
+    $electric_price_upper_limit = null;
+    $ev_chargingUser_nums_upper_limit = null;
+    $em_n_chargingUser_nums_upper_limit = null;
+    $load_model_upper_limit = null;
+    $load_model_lower_limit = null;
+    $load_model_seperate_upper_limit = null;
+    $load_model_seperate_lower_limit = null;
+    $householdsLoadSum_upper_limit = null;
+    $each_household_status_upper_limit = null;
+}
+
 # base parameter
 $app_counts = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'app_counts' ", $oneValue);
 $interrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'interrupt_num' ", $oneValue);
