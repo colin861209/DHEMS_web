@@ -72,7 +72,7 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
             }
             array_push($load_model_seperate, $publicLoad[$i]);
         }
-        $periodic_load = [];
+        $periodic_load = array();
         for ($i=0; $i < count($p_publicLoad_power); $i++) { 
             
             $name = "periodic_publicLoad".($i+1);
@@ -81,17 +81,14 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
                 $publicLoad[$i][$y] *= $p_publicLoad_power[$i];
                 $publicLoad_total[$y] += $publicLoad[$i][$y];
             }
-            if ($p_publicLoad_power[$i] == $p_publicLoad_power[$i+1]) {
-                $periodic_load = array_map(function() {
-                    return array_sum(func_get_args());
-                }, $periodic_load, $publicLoad[$i]);
-            }
-            else {
+            $periodic_load = array_map(function() {
+                return array_sum(func_get_args());
+            }, $periodic_load, $publicLoad[$i]);
+            
+            if ($p_publicLoad_power[$i] != $p_publicLoad_power[$i+1] || ($i+1) == count($p_publicLoad_power)) {
                 array_push($load_model_seperate, $periodic_load);
-                $periodic_load = [];
-                $periodic_load = array_map(function() {
-                    return array_sum(func_get_args());
-                }, $periodic_load, $publicLoad[$i]);
+                unset($periodic_load);
+                $periodic_load = array();
             }
         }
         $load_model = array_map(function() {
