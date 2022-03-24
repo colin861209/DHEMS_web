@@ -179,3 +179,14 @@
 + Commit link [4041322](https://github.com/colin861209/DHEMS_web/commit/404132257e5cdde18a71d26c88e31635f1f95a8f)
 
 - Feature: EM Table & Users' EM status
+
+---
+### 2022/01/21~2022/03/25
++ Commit link [f5edd97](https://github.com/colin861209/DHEMS_web/commit/f5edd97f93467d032b0dcd97eccfa3dcdb69da62)
+
+- New Page: EMEV 
+- Table display modify
+- New loads display
+	- UC load
+	- Public Load 
+- Chart limit 
