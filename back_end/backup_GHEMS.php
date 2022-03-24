@@ -95,7 +95,7 @@ if ($uncontrollable_load_flag) {
 
 if ($database_name == 'DHEMS_fiftyHousehold') {
         
-    if ($GHEMS_flag[1][array_search("publicLoad", $GHEMS_flag[0], true)]) {
+    if ($GHEMS_flag[2][array_search("publicLoad", $GHEMS_flag[0], true)]) {
         
         for ($i=0; $i < count($f_publicLoad_power); $i++) { 
             

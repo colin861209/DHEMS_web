@@ -124,7 +124,27 @@
 <hr>
 <div>
     <caption>
-        <h3 id="flag_table" class="text-center" style="font-weight: bold;">基本參數修改(點擊展開)</h3>
+        <h3 id="chart_limit_table" class="text-center" style="font-weight: bold; cursor: pointer;">圖表上下限修改(點擊展開)</h3>
+    </caption>
+    <table id="chart_limits" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all"
+        cellpadding='5'>
+        <thead>
+            <tr class="well" id="chart_limit_thead">
+            </tr>
+        </thead>
+        <tbody id="chart_limit_tbody">
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <button id="btn_ChartLimitModify" onclick="sendNewChartLimit()" color="black"
+        style="background-color: red; display: none;">修改</button>
+</div>
+
+<hr>
+<div>
+    <caption>
+        <h3 id="flag_table" class="text-center" style="font-weight: bold; cursor: pointer;">基本參數修改(點擊展開)</h3>
     </caption>
     <table id="flags" class="table" style="border: 5px #5E5E5E solid; table-layout: fixed; display: none;" rules="all"
         cellpadding='5'>
@@ -141,8 +161,6 @@
         style="background-color: red; display: none;">修改</button>
 </div>
 <br>
-
-
 
 <footer>
     <div class="footer">

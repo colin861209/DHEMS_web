@@ -5,8 +5,8 @@ $target_price = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `p
 $target_solar = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'simulate_weather' ", $oneValue);
 $electric_price = array_map('floatval', sqlFetchAssoc($conn, "SELECT `" .$target_price. "` FROM `price` ", array($target_price)));
 $simulate_solar = array_map('floatval', sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar_data` ", array($target_solar)));
-$GHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `GHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "flag"));
-$LHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `flag` FROM `LHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "flag"));
+$GHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `variable_define`, `flag` FROM `GHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "variable_define", "flag"));
+$LHEMS_flag = sqlFetchAssoc($conn, "SELECT `variable_name`, `variable_define`, `flag` FROM `LHEMS_flag` WHERE `flag` IS NOT NULL", array("variable_name", "variable_define", "flag"));
 
 $local_simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
 $global_simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Global_next_simulate_timeblock' ", $oneValue);

@@ -19,7 +19,7 @@ function get_backEnd_data() {
     }
     evParm_save_target = {
 
-        modify_target:["Total_Charging_Pole", "Total_Num_of_EM", "EM_Upper_SOC", "EM_Lower_SOC", "EM_threshold_SOC", "Vehicle_can_discharge"],
+        modify_target:["Total_Charging_Pole", "Total_Num_of_EM", "EV_Upper_SOC", "EV_Lower_SOC", "EV_threshold_SOC", "Vehicle_can_discharge"],
         fix_target:[]
     }
     evRand_save_target = {
@@ -100,7 +100,7 @@ function show_vehicleMotorParameter(baseParameter, save_target, thead_id, tbody_
     
     var tableData = {
 
-        name: ["參數名", "數值"]
+        name: ["變數名", "參數名", "數值"]
     }
     switch (thead_id) {
         case "evParm_thead":
@@ -137,7 +137,7 @@ function show_vehicleMotorParameter(baseParameter, save_target, thead_id, tbody_
         for (let dataNum = 0; dataNum < baseParameter.length; dataNum++) {
             
             var td = document.createElement('td');
-            switch (dataNum == 1 && fix == 0) {
+            switch (dataNum == 2 && fix == 0) {
                 case true:
 
                     var input = document.createElement('input');

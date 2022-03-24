@@ -1,7 +1,7 @@
 <?php
 require 'commonSQL_data.php';
 
-$baseParameter = sqlFetchAssoc($conn, "SELECT `parameter_name`, `value` FROM `BaseParameter`", array("parameter_name", "value"));
+$baseParameter = sqlFetchAssoc($conn, "SELECT `parameter_name`, `parameter_define`, `value` FROM `BaseParameter`", array("parameter_name", "parameter_define", "value"));
 $target_solar = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'simulate_history_weather' ", $oneValue);
 $simulate_history_weather = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar_data` ", array($target_solar));
 $EM_charging_amount = sqlFetchRow($conn, "SELECT COUNT(*) FROM `EM_Pole` WHERE `charging_status`=1 ", $oneValue);

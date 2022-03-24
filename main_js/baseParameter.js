@@ -10,8 +10,14 @@ function get_backEnd_data() {
 
     save_target = {
 
-        modify_target: ["real_time", "Global_real_time", "dr_mode", "dr_participate_flag", "ElectricVehicle", "ElectricMotor", "Global_uncontrollable_load_flag", "EV_generate_random_user_result", "EM_generate_random_user_result", "generate_Global_uncontrollable_load_flag", "chart_upperLowerLimit_flag", "Pgridmax", "Cbat", "battery_rate", "simulate_weather", "simulate_price", "SOCmin", "SOCmax", "SOCthres", "ini_SOC", "uncontrollable_load_flag", "hydrogen_price"],
+        modify_target: ["real_time", "Global_real_time", "dr_mode", "ElectricVehicle", "ElectricMotor", "Global_uncontrollable_load_flag", "EV_generate_random_user_result", "EM_generate_random_user_result", "generate_Global_uncontrollable_load_flag", "chart_upperLowerLimit_flag", "Pgridmax", "Cbat", "battery_rate", "simulate_weather", "simulate_price", "SOCmin", "SOCmax", "SOCthres", "ini_SOC", "uncontrollable_load_flag", "hydrogen_price"],
         fix_target: ["now_SOC", "next_simulate_timeblock", "Global_next_simulate_timeblock", "household_id"]
+    }
+    chart_limit = {
+
+        modify_target: ["chart_upperLowerLimit_flag", "electric_price_upper_limit", "ev_chargingUser_nums_upper_limit", "em_n_chargingUser_nums_upper_limit", "load_model_upper_limit", "load_model_lower_limit", "load_model_seperate_upper_limit", "load_model_seperate_lower_limit", "each_household_status_upper_limit", "householdsLoadSum_upper_limit"],
+        fix_target:[],
+        
     }
     $.ajax
         ({
@@ -31,15 +37,19 @@ function get_backEnd_data() {
                 }
                 compare_timeblock = {
                 
-                    local: response.baseParameter[1][response.baseParameter[0].indexOf("next_simulate_timeblock")],
-                    global: response.baseParameter[1][response.baseParameter[0].indexOf("Global_next_simulate_timeblock")]
+                    local: response.baseParameter[2][response.baseParameter[0].indexOf("next_simulate_timeblock")],
+                    global: response.baseParameter[2][response.baseParameter[0].indexOf("Global_next_simulate_timeblock")]
                 };
                 simulate_solar(response);
                 simulate_price(response);
                 tableInfo = removeParameter(response, save_target);
+                chartLimitInfo = removeParameter(response, chart_limit);
                 insertText_after_breadcrumb(now_database_name, tableInfo[1][tableInfo[0].indexOf("simulate_weather")], tableInfo[1][tableInfo[0].indexOf("ini_SOC")])
-                flag_table(tableInfo, save_target);
-                console.log(tableInfo);
+                flag_table(tableInfo, save_target, 'flag_thead', 'flag_tbody');
+                flag_table(chartLimitInfo, chart_limit, 'chart_limit_thead', 'chart_limit_tbody');
+                console.log("baseParameter:", tableInfo);
+                console.log("chartLimitInfo:", chartLimitInfo);
+                console.log("compare_timeblock:", compare_timeblock);
                 baseParameter_gauge(tableInfo, response);
                 
                 setInterval(() => {
@@ -159,7 +169,7 @@ function baseParameter_gauge(data, fullInfo) {
     var fullInfo = {
         
         name: fullInfo.baseParameter[0],
-        value: fullInfo.baseParameter[1],
+        value: fullInfo.baseParameter[2],
         database_name: fullInfo.database_name,
         dr_count: fullInfo.dr_count,
         EM_flag: fullInfo.EM_flag,
@@ -171,7 +181,7 @@ function baseParameter_gauge(data, fullInfo) {
     var baseParameter = {
         
         name: data[0],
-        value: data[1],
+        value: data[2],
     }
     
     var show = {
@@ -351,7 +361,7 @@ function baseParameter_gauge(data, fullInfo) {
 
 function simulate_solar(data) {
     
-    var chart_info = ["simulate_solar_chart", "Solar Power", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_weather")], "time", "power(kW)", null, null, [null, null], 'orange'];
+    var chart_info = ["simulate_solar_chart", "Solar Power", data.baseParameter[2][data.baseParameter[0].indexOf("simulate_weather")], "time", "power(kW)", null, null, [null, null], 'orange'];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
@@ -365,7 +375,7 @@ function simulate_solar(data) {
 
 function simulate_price(data) {
       
-    var chart_info = ["simulate_price_chart", "Electric Price", data.baseParameter[1][data.baseParameter[0].indexOf("simulate_price")], "time", "price(NTD)", null, data.electric_price_upper_limit, [null, null]];
+    var chart_info = ["simulate_price_chart", "Electric Price", data.baseParameter[2][data.baseParameter[0].indexOf("simulate_price")], "time", "price(NTD)", null, data.electric_price_upper_limit, [null, null]];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];

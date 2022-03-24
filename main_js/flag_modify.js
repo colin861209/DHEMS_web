@@ -2,7 +2,7 @@ function flag_table(flag) {
 
     var tableData = {
 
-        name: ["旗標名", "狀態"]
+        name: ["變數名", "旗標名", "狀態"]
     }
 
     for (let nameNum = 0; nameNum < tableData.name.length; nameNum++) {
@@ -22,7 +22,7 @@ function flag_table(flag) {
 
             var td = document.createElement('td');
             switch (dataNum) {
-                case 1:
+                case 2:
 
                     var input = document.createElement('input');
                     input.setAttribute("type", "text");

@@ -4,10 +4,10 @@ require 'commonSQL_data.php';
 $em_motor_type = sqlFetchAssoc($conn, "SELECT `type`, `capacity`, `voltage`, `power`, `percent` FROM `EM_motor_type`", array("type", "capacity", "voltage", "power", "percent"));
 $ev_motor_type = sqlFetchAssoc($conn, "SELECT `type`, `capacity(kWh)`, `power`, `percent` FROM `EV_motor_type`", array("type", "capacity(kWh)", "power", "percent"));
 
-$emParameter = sqlFetchAssoc($conn, "SELECT `parameter_name`, `value` FROM `EM_Parameter`", array("parameter_name", "value"));
-$evParameter = sqlFetchAssoc($conn, "SELECT `parameter_name`, `value` FROM `EV_Parameter`", array("parameter_name", "value"));
-$emParameter_of_randomResult = sqlFetchAssoc($conn, "SELECT `parameter_name`, `value` FROM `EM_Parameter_of_randomResult`", array("parameter_name", "value"));
-$evParameter_of_randomResult = sqlFetchAssoc($conn, "SELECT `parameter_name`, `value` FROM `EV_Parameter_of_randomResult`", array("parameter_name", "value"));
+$emParameter = sqlFetchAssoc($conn, "SELECT `parameter_name`, `parameter_define`, `value` FROM `EM_Parameter`", array("parameter_name", "parameter_define", "value"));
+$evParameter = sqlFetchAssoc($conn, "SELECT `parameter_name`, `parameter_define`, `value` FROM `EV_Parameter`", array("parameter_name", "parameter_define", "value"));
+$emParameter_of_randomResult = sqlFetchAssoc($conn, "SELECT `parameter_name`, `parameter_define`, `value` FROM `EM_Parameter_of_randomResult`", array("parameter_name", "parameter_define", "value"));
+$evParameter_of_randomResult = sqlFetchAssoc($conn, "SELECT `parameter_name`, `parameter_define`, `value` FROM `EV_Parameter_of_randomResult`", array("parameter_name", "parameter_define", "value"));
 
 $em_wholeDay_chargingUser_nums = sqlFetchAssoc($conn, "SELECT `type_0`, `type_1`, `type_2`, `type_3`, `type_4`, `type_5`, `type_6`, `type_7`, `type_8`, `type_9` FROM `EM_wholeDay_userChargingNumber`", array("type_0", "type_1", "type_2", "type_3", "type_4", "type_5", "type_6", "type_7", "type_8", "type_9"));
 $ev_wholeDay_chargingUser_nums = sqlFetchAssoc($conn, "SELECT `type_0`, `type_1`, `type_2`, `type_3` FROM `EV_wholeDay_userChargingNumber`", array("type_0", "type_1", "type_2", "type_3"));
