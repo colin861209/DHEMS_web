@@ -276,7 +276,6 @@ function loadModel(ABC) {
     var multi_name = [energyType.HEMS_chart_name, 
         energyType.force_public1_chart_name, energyType.force_public2_chart_name, energyType.force_public3_chart_name, 
         energyType.interrupt_public1_chart_name, energyType.interrupt_public2_chart_name, 
-        energyType.periodic_public1_chart_name, energyType.periodic_public2_chart_name
     ];
     var chart_series_type = [];
     var chart_series_name = [];

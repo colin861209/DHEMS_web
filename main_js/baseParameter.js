@@ -10,7 +10,7 @@ function get_backEnd_data() {
 
     save_target = {
 
-        modify_target: ["real_time", "Global_real_time", "dr_mode", "ElectricVehicle", "ElectricMotor", "Global_uncontrollable_load_flag", "EV_generate_random_user_result", "EM_generate_random_user_result", "generate_Global_uncontrollable_load_flag", "chart_upperLowerLimit_flag", "Pgridmax", "Cbat", "battery_rate", "simulate_weather", "simulate_price", "SOCmin", "SOCmax", "SOCthres", "ini_SOC", "uncontrollable_load_flag", "hydrogen_price"],
+        modify_target: ["real_time", "Global_real_time", "dr_mode", "ElectricVehicle", "ElectricMotor", "uncontrollable_load_flag", "Global_uncontrollable_load_flag", "EV_generate_random_user_result", "EM_generate_random_user_result", "generate_uncontrollable_load_flag", "generate_Global_uncontrollable_load_flag", "chart_upperLowerLimit_flag", "Pgridmax", "Cbat", "battery_rate", "simulate_weather", "simulate_price", "SOCmin", "SOCmax", "SOCthres", "ini_SOC", "hydrogen_price"],
         fix_target: ["now_SOC", "next_simulate_timeblock", "Global_next_simulate_timeblock", "household_id"]
     }
     chart_limit = {

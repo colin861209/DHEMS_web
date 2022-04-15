@@ -4,7 +4,7 @@
 //  [id, title, sub title, x-axis name, left y-axis name,                                               //
 //      right y-axis name, left y-axis max value, right y-axis max value, color]                        //
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=  //
-function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, simulate_timeblock, dr_startTime = null, dr_endTime = null) {
+function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, simulate_timeblock, dr_startTime = null, dr_endTime = null, dr_participation = null) {
 
     //set all series data
     var series_data = [],
@@ -21,6 +21,31 @@ function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series
             color: chart_info[8]
         });
     }
+
+    var plotLinesArray = [];
+    plotLinesArray.push({
+        color: 'red', 
+        dashStyle: 'ShortDash', 
+        value: simulate_timeblock, 
+        width: 1, 
+        zIndex: 1,
+    })
+    if (dr_participation != null) {
+
+        for (let i = dr_startTime; i <= dr_endTime; i++) {
+            
+            if (dr_participation[i] == 1) {
+                plotLinesArray.push({
+                    color: 'purple',
+                    dashStyle: 'ShortDot', 
+                    value: i, 
+                    width: 3, 
+                    zIndex: 1,
+                })
+            }
+        }
+    }
+    
     //set all chart data
     var charts = Highcharts.chart(chart_info[0], {
         title: {
@@ -53,13 +78,7 @@ function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series
                 }
             },
             categories: [],
-            plotLines: [{
-                color: 'red', // Color value
-                dashStyle: 'ShortDash', // Style of the plot line. Default to solid
-                value: simulate_timeblock, // Value of where the line will appear
-                width: 1, // Width of the line   
-            }
-            ]
+            plotLines: plotLinesArray,
         },
         yAxis: [{
             max: chart_info[6],
@@ -386,6 +405,9 @@ var energyType = {
     interrupt_flag_name: "interrupt",
     uninterrupt_flag_name: "uninterrupt",
     varying_flag_name: "varying",
+    controllableLoad_chart_name: "controllable",
+    uncontrollableLoad_chart_name: "uncontrollable",
+    household_CBL: "pwr_avg",
     Pgrid_flag_name: "Pgrid",
     mu_grid_flag_name: "mu_grid",
     Pess_flag_name: "Pess",
@@ -410,8 +432,6 @@ var energyType = {
     force_public3_chart_name: "pwr-force-public_3",
     interrupt_public1_chart_name: "pwr-interrupt-public_1",
     interrupt_public2_chart_name: "pwr-interrupt-public_2",
-    periodic_public1_chart_name: "pwr-periodic-public_1",
-    periodic_public2_chart_name: "pwr-periodic-public_2",
     uncontrollable_public1_chart_name: "pwr-uncontrollable-public_1",
     uncontrollable_public2_chart_name: "pwr-uncontrollable-public_2",
     uncontrollable_public3_chart_name: "pwr-uncontrollable-public_3",

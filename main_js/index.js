@@ -126,22 +126,23 @@ function each_household_status(data, household_id) {
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
+    var multi_name = [(household_id + 1)+"-"+energyType.controllableLoad_chart_name, (household_id + 1)+"-"+energyType.uncontrollableLoad_chart_name]
 
     var load_power_sum_with_UCLoad = [];
-    for (let index = 0; index < data.load_power_sum[household_id].length; index++) {
-        load_power_sum_with_UCLoad[index] = data.load_power_sum[household_id][index] + data.uncontrollable_load[household_id][index];
-    }
-
+    load_power_sum_with_UCLoad.push(data.load_power_sum[household_id]);
+    load_power_sum_with_UCLoad.push(data.uncontrollable_load[household_id]);
     set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    set_series_function(0, "column", load_power_sum_with_UCLoad, "household_" + (household_id + 1), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    set_series_function(0, "areaspline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    if (data.dr_mode != 0)
+        set_series_function(0, "line", data.household_CBL[household_id], (household_id + 1)+"-"+energyType.household_CBL, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_series_function(1, "column", load_power_sum_with_UCLoad, "", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
+    set_series_function(0, "spline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     if (LHEMS_flag[0].indexOf(energyType.Pess_flag_name) !== -1 && LHEMS_flag[1][LHEMS_flag[0].findIndex(flag => flag === energyType.Pess_flag_name)] == 1)
         set_series_function(0, "spline", data.battery_power[household_id], energyType.Pess_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     /*Show chart*/
     if (data.dr_mode != 0)
-        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1);
+        show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1, data.dr_info[1], data.dr_info[2] - 1, data.dr_participation[household_id]);
     else
         show_chart_with_redDashLine(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, data.simulate_timeblock - 1);
 }

@@ -32,6 +32,17 @@ if ($database_name == "DHEMS_fiftyHousehold") {
         "household31", "household32", "household33", "household34", "household35", "household36", "household37", "household38", "household39", "household40", 
         "household41", "household42", "household43", "household44", "household45", "household46", "household47", "household48", "household49", "household50" 
     ));
+
+    if ($dr_mode != 0) {
+
+        $household_CBL_tmp = array_map('floatval', sqlFetchRow($conn, "SELECT 
+        MAX(household1), MAX(household2), MAX(household3), MAX(household4), MAX(household5), MAX(household6), MAX(household7), MAX(household8), MAX(household9), MAX(household10), 
+        MAX(household11), MAX(household12), MAX(household13), MAX(household14), MAX(household15), MAX(household16), MAX(household17), MAX(household18), MAX(household19), MAX(household20), 
+        MAX(household21), MAX(household22), MAX(household23), MAX(household24), MAX(household25), MAX(household26), MAX(household27), MAX(household28), MAX(household29), MAX(household30), 
+        MAX(household31), MAX(household32), MAX(household33), MAX(household34), MAX(household35), MAX(household36), MAX(household37), MAX(household38), MAX(household39), MAX(household40), 
+        MAX(household41), MAX(household42), MAX(household43), MAX(household44), MAX(household45), MAX(household46), MAX(household47), MAX(household48), MAX(household49), MAX(household50) 
+        FROM `LHEMS_demand_response_CBL` WHERE `time_block` BETWEEN ".$dr_info[1]." AND ".($dr_info[2]-1)." AND `comfort_level_flag` = ".$comfortLevel_flag, $aRow));
+    }
 }
 else {
 
@@ -166,6 +177,22 @@ for ($i = 0; $i < $household_num; $i++) {
     }
 }
 
+if ($dr_mode != 0) {
+    
+    $household_CBL = array();
+    for ($i=0; $i < count($household_CBL_tmp); $i++) { 
+        
+        $tmp = $limit_capability;
+        for ($j=$dr_info[1]; $j < $dr_info[2]; $j++) { 
+            if ($household_participation[$i][$j] == 1) {
+                $tmp[$j] = $household_CBL_tmp[$i];
+            }
+        }
+        array_push($household_CBL, $tmp);
+        empty($tmp);
+    }
+}
+
 $data_array = [
 
     "simulate_timeblock" => floatval($simulate_timeblock),
@@ -210,6 +237,7 @@ $data_array = [
     "electric_price_upper_limit" => $electric_price_upper_limit,
     "householdsLoadSum_upper_limit" => $householdsLoadSum_upper_limit,
     "each_household_status_upper_limit" => $each_household_status_upper_limit,
+    "household_CBL" => $household_CBL,
     "database_name" => $database_name
 ];
 

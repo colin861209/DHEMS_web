@@ -13,7 +13,6 @@ $simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar
 $dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
 $f_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
 $i_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 6", array("power1"));
-$p_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 7", array("power1"));
 $EM_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'ElectricMotor' ", $oneValue);
 $EM_discharge_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_EM_Parameter` where `parameter_name` = 'Motor_can_discharge' ", $oneValue);
 $EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `EM_user_number`", array("discharge_normal_power"));
@@ -116,25 +115,6 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
                 $publicLoad_total[$y] += $publicLoad[$i][$y];
             }
             array_push($load_model_seperate, $publicLoad[$i]);
-        }
-        $periodic_load = array();
-        for ($i=0; $i < count($p_publicLoad_power); $i++) { 
-            
-            $name = "periodic_publicLoad".($i+1);
-            $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
-            for ($y = 0; $y < $time_block; $y++) {
-                $publicLoad[$i][$y] *= $p_publicLoad_power[$i];
-                $publicLoad_total[$y] += $publicLoad[$i][$y];
-            }
-            $periodic_load = array_map(function() {
-                return array_sum(func_get_args());
-            }, $periodic_load, $publicLoad[$i]);
-            
-            if ($p_publicLoad_power[$i] != $p_publicLoad_power[$i+1] || ($i+1) == count($p_publicLoad_power)) {
-                array_push($load_model_seperate, $periodic_load);
-                unset($periodic_load);
-                $periodic_load = array();
-            }
         }
         $load_model = array_map(function() {
             return array_sum(func_get_args());
