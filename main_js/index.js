@@ -36,6 +36,7 @@ function get_backEnd_data() {
                 increase_chartHeight('households_loadsSum', ourData.database_name == "DHEMS_fiftyHousehold");
                 insertText_after_breadcrumb(response.database_name, null, null, ourData.dr_mode, ourData.dr_info)
                 householdsLoadSum(ourData);
+                householdsLoadSelect(ourData);
                 uncontrollable_loadSum(ourData);
                 muti_divs(ourData);
                 each_household_status(ourData, 0)
@@ -99,9 +100,17 @@ function run_household_eachLoad(ourData, household_num) {
 
     document.getElementById("household_id").setAttribute("value", household_num + 1)
     document.getElementById("household_id").innerHTML = "住戶 " + (household_num + 1) + " 負載使用情況"
-    var i = 0;
+    var i = 0, timer = 0;
     for (i = 0; i < ourData.app_counts; i++) {
-        each_load(ourData, i, household_num)
+        
+        if (ourData.load_list_select[household_num].includes(i + 1)) {
+            document.getElementById('con_'+i).setAttribute('style', 'display: block')
+            each_load(ourData, ourData.load_power[household_num][timer], i, household_num);
+            timer++;
+        }
+        else {
+            document.getElementById('con_'+i).setAttribute('style', 'display: none')
+        }
     }
 }
 
@@ -126,14 +135,19 @@ function each_household_status(data, household_id) {
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
-    var multi_name = [(household_id + 1)+"-"+energyType.controllableLoad_chart_name, (household_id + 1)+"-"+energyType.uncontrollableLoad_chart_name]
-
     var load_power_sum_with_UCLoad = [];
+    var multi_name = [(household_id + 1)+"-"+energyType.controllableLoad_chart_name]
     load_power_sum_with_UCLoad.push(data.load_power_sum[household_id]);
-    load_power_sum_with_UCLoad.push(data.uncontrollable_load[household_id]);
+    
+    if (data.uncontrollable_load_flag) {
+        
+        multi_name.push( (household_id + 1)+"-"+energyType.uncontrollableLoad_chart_name )
+        load_power_sum_with_UCLoad.push(data.uncontrollable_load[household_id]);
+    }
     set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     if (data.dr_mode != 0)
-        set_series_function(0, "line", data.household_CBL[household_id], (household_id + 1)+"-"+energyType.household_CBL, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+        set_series_function(0, "spline", data.household_CBL[household_id], (household_id + 1)+"-"+energyType.household_CBL, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+
     set_series_function(1, "column", load_power_sum_with_UCLoad, "", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
     set_series_function(0, "spline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
@@ -202,6 +216,20 @@ function householdsLoadSum(data) {
 
 }
 
+function householdsLoadSelect(data) {
+    
+    var chart_info = ["households_loadSelect", "Household Controllable Load Distribution", "", "Household id", "Amount", "", null, null, null];
+    var chart_series_type = [];
+    var chart_series_name = [];
+    var chart_series_data = [];
+    var chart_series_stack = [];
+    var chart_series_yAxis = [];
+    multi_name = ["Interrupt", "Uninterrupt", "Varying"];
+
+    set_series_function(1, "column", data.load_list_select_count, "", 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
+    show_chart_with_household_load_select(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, null);
+}
+
 function uncontrollable_loadSum(data) {
 
     if (parseInt(data.uncontrollable_load_flag)) {
@@ -229,9 +257,8 @@ function uncontrollable_loadSum(data) {
     }
 }
 
-function each_load(data, num, household_num) {
+function each_load(data, load_power, num, household_num) {
     //parse to get all json data
-    var this_load = data.load_power[household_num];
     var this_ID = data.number
     var this_name = data.equip_name;
     var this_s_time = data.start[household_num];
@@ -275,10 +302,9 @@ function each_load(data, num, household_num) {
 
     /*DATA SET*/
     set_each_load_function(0, "line", data.electric_price, null, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-    set_each_load_function(0, "column", this_load[num], ((household_num + 1) + "-" + this_ID[num]), ((household_num + 1) + "-" + this_ID[num]), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    set_each_load_function(0, "column", load_power, ((household_num + 1) + "-" + this_ID[num]), ((household_num + 1) + "-" + this_ID[num]), 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     /*Show chart*/
     show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, non_comfort_start, non_comfort_end, comfort_start, comfort_end, data.comfortLevel_flag);
-
 }
 
 function muti_divs(data) {

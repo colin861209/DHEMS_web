@@ -44,7 +44,7 @@ function get_backEnd_data() {
                 simulate_price(response);
                 tableInfo = removeParameter(response, save_target);
                 chartLimitInfo = removeParameter(response, chart_limit);
-                insertText_after_breadcrumb(now_database_name, tableInfo[1][tableInfo[0].indexOf("simulate_weather")], tableInfo[1][tableInfo[0].indexOf("ini_SOC")])
+                insertText_after_breadcrumb(now_database_name, tableInfo[2][tableInfo[0].indexOf("simulate_weather")], tableInfo[2][tableInfo[0].indexOf("ini_SOC")])
                 flag_table(tableInfo, save_target, 'flag_thead', 'flag_tbody');
                 flag_table(chartLimitInfo, chart_limit, 'chart_limit_thead', 'chart_limit_tbody');
                 console.log("baseParameter:", tableInfo);

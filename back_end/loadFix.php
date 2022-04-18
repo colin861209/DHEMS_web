@@ -53,7 +53,7 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
         
         for ($i=0; $i < count($f_publicLoad_power); $i++) { 
             
-            $name = "forceToStop_publicLoad".($i+1);
+            $name = "stoppable_publicLoad".($i+1);
             $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
             for ($y = 0; $y < $time_block; $y++) {
                 $publicLoad[$i][$y] *= $f_publicLoad_power[$i];
@@ -63,7 +63,7 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
         }
         for ($i=0; $i < count($i_publicLoad_power); $i++) { 
             
-            $name = "interrupt_publicLoad".($i+1);
+            $name = "deferrable_publicLoad".($i+1);
             $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
             for ($y = 0; $y < $time_block; $y++) {
                 $publicLoad[$i][$y] *= $i_publicLoad_power[$i];
