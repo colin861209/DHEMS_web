@@ -34,7 +34,7 @@ function show_chart_with_redDashLine(chart_info, chart_series_type, chart_series
 
         for (let i = dr_startTime; i <= dr_endTime; i++) {
             
-            if (dr_participation[i] == 1) {
+            if (dr_participation[i] != 0) {
                 plotLinesArray.push({
                     color: 'purple',
                     dashStyle: 'ShortDot', 

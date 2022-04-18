@@ -205,8 +205,8 @@ if ($dr_mode != 0) {
         
         $tmp = $limit_capability;
         for ($j=$dr_info[1]; $j < $dr_info[2]; $j++) { 
-            if ($household_participation[$i][$j] == 1) {
-                $tmp[$j] = $household_CBL_tmp[$i];
+            if ($household_participation[$i][$j] != 0) {
+                $tmp[$j] = round($household_CBL_tmp[$i] * $household_participation[$i][$j], 2);
             }
         }
         array_push($household_CBL, $tmp);
