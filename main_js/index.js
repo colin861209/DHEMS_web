@@ -46,7 +46,7 @@ function get_backEnd_data() {
                 autoRun(ourData, household_num)
                 flag_table(LHEMS_flag)
                 cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
-                participate_table(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num);
+                participate_table(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, ourData.household_CBL, household_num);
             }
         });
 }
@@ -74,7 +74,7 @@ function choose_singleHousehold(household_id) {
     each_household_status_SOC(ourData, household_id - 1)
     run_household_eachLoad(ourData, household_id - 1);
     cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_id - 1);
-    show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_id - 1)
+    show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, ourData.household_CBL, household_id - 1)
 }
 
 function autoRun(ourData, household_num) {
@@ -91,7 +91,7 @@ function autoRun(ourData, household_num) {
         run_household_eachLoad(ourData, household_num)
         progessbar(ourData);
         cost_table(ourData.origin_grid_price, ourData.total_origin_grid_price, ourData.real_grid_price, ourData.public_price, ourData.origin_pay_price, ourData.final_pay_price, ourData.saving_efficiency, household_num);
-        show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, household_num)
+        show_participate_timeblock(ourData.dr_mode, ourData.dr_info, ourData.dr_participation, ourData.household_CBL, household_num)
     }, 7000);
 
 }
@@ -146,7 +146,7 @@ function each_household_status(data, household_id) {
     }
     set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     if (data.dr_mode != 0)
-        set_series_function(0, "spline", data.household_CBL[household_id], (household_id + 1)+"-"+energyType.household_CBL, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+        set_series_function(0, "spline", data.arr_household_CBL[household_id], (household_id + 1)+"-"+energyType.CBL_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     set_series_function(1, "column", load_power_sum_with_UCLoad, "", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
     set_series_function(0, "spline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
@@ -411,16 +411,16 @@ function cost_table(origin_grid_price, total_origin_grid_price, real_grid_price,
     }
 }
 
-function participate_table(dr_mode, info, participation_status, household_id) {
+function participate_table(dr_mode, info, participation_status, household_CBL, household_id) {
     
     if (parseInt(dr_mode) != 0) {
     
         document.getElementsByClassName('table table-bordered')[1].style.display = 'revert';
-        show_participate_timeblock(dr_mode, info, participation_status, household_id);
+        show_participate_timeblock(dr_mode, info, participation_status, household_CBL, household_id);
     }
 }
 
-function show_participate_timeblock(dr_mode, info, participation, household_id) {
+function show_participate_timeblock(dr_mode, info, participation, household_CBL, household_id) {
 
     if (parseInt(dr_mode) != 0) {
     
@@ -431,7 +431,7 @@ function show_participate_timeblock(dr_mode, info, participation, household_id) 
         try {
 
             for (let index = dr_start; index < dr_end; index++) {
-                if (participation[household_id][index] == 1)
+                if (participation[household_id][index] > 0)
                     participate_onOff[0].push(index)
                 else if (participation[household_id][index] == 0)
                     participate_onOff[1].push(index)
@@ -452,6 +452,10 @@ function show_participate_timeblock(dr_mode, info, participation, household_id) 
                 td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
                 document.getElementById('table_participate_tbody').appendChild(td);
             }
+            var td = document.createElement('td');
+            td.appendChild(document.createTextNode(household_CBL[household_id] + "(kW)"));
+            td.setAttribute("style", "text-align: center; color:black; font-size: 20px; font-weight:bolder");
+            document.getElementById('table_participate_tbody').appendChild(td);
         }
         catch(e) {
             

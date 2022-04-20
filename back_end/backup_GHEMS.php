@@ -1,62 +1,21 @@
 <?php
-require 'commonSQL_data.php';
+require 'backup_commonSQL_data.php';
 
 $load_power_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `backup_totalLoad` ", array("totalLoad"));
-// $uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_uncontrollable_load` ", array("totalLoad"));
-$Global_uncontrollable_load_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'Global_uncontrollable_load_flag' ", $oneValue);
-$Global_uncontrollable_load_array = sqlFetchAssoc($conn, "SELECT `uncontrollable_load1`, `uncontrollable_load2`, `uncontrollable_load3` FROM `backup_GHEMS_uncontrollable_load` ", array("uncontrollable_load1", "uncontrollable_load2", "uncontrollable_load3"));
-
-$target_price = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` WHERE `parameter_name` = 'simulate_price' ", $oneValue);
-$target_solar = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` WHERE `parameter_name` = 'simulate_weather' ", $oneValue);
-$electric_price = sqlFetchAssoc($conn, "SELECT `" .$target_price. "` FROM `price` ", array($target_price));
-$simulate_solar = sqlFetchAssoc($conn, "SELECT `" .$target_solar. "` FROM `solar_data` ", array($target_solar));
-$dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
+$uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_uncontrollable_load` ", array("totalLoad"));
 $f_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
 $i_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 6", array("power1"));
-$EM_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'ElectricMotor' ", $oneValue);
-$EM_discharge_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_EM_Parameter` where `parameter_name` = 'Motor_can_discharge' ", $oneValue);
-$EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `EM_user_number`", array("discharge_normal_power"));
-$EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `backup_EM_user_number`", array("total_power"));
-$EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `backup_EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
+$Global_uncontrollable_load_array = sqlFetchAssoc($conn, "SELECT `uncontrollable_load1`, `uncontrollable_load2`, `uncontrollable_load3` FROM `backup_GHEMS_uncontrollable_load` ", array("uncontrollable_load1", "uncontrollable_load2", "uncontrollable_load3"));
+$dr_interval = sqlFetchRow($conn, "SELECT `reduce_ratio_interval_1`, `reduce_ratio_interval_2`, `reduce_ratio_interval_3` FROM `demand_response` WHERE `mode` = ".$dr_mode, $aRow);
 
-$EV_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'ElectricVehicle' ", $oneValue);
-$EV_discharge_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_EV_Parameter` where `parameter_name` = 'Vehicle_can_discharge' ", $oneValue);
+// EV & EM
+$EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `backup_EM_user_number`", array("total_power"));
+$EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `backup_EM_user_number`", array("discharge_normal_power"));
+$EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `backup_EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
 $EV_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `backup_EV_user_number`", array("total_power"));
 $EV_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `backup_EV_user_number`", array("discharge_normal_power"));
 $EV_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `backup_EV_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
 
-// Each chart y-axis max value
-$chart_upperLowerLimit_flag = boolval(sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'chart_upperLowerLimit_flag' ", $oneValue));
-if ($chart_upperLowerLimit_flag) {
-
-    $electric_price_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'electric_price_upper_limit' ", $oneValue));
-    $ev_chargingUser_nums_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'ev_chargingUser_nums_upper_limit' ", $oneValue));
-    $em_n_chargingUser_nums_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'em_n_chargingUser_nums_upper_limit' ", $oneValue));
-    $load_model_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_upper_limit' ", $oneValue));
-    $load_model_lower_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_lower_limit' ", $oneValue));
-    $load_model_seperate_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_seperate_upper_limit' ", $oneValue));
-    $load_model_seperate_lower_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_seperate_lower_limit' ", $oneValue));
-    $householdsLoadSum_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'householdsLoadSum_upper_limit' ", $oneValue));
-    $each_household_status_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'each_household_status_upper_limit' ", $oneValue));
-}
-else {
-    
-    $electric_price_upper_limit = null;
-    $ev_chargingUser_nums_upper_limit = null;
-    $em_n_chargingUser_nums_upper_limit = null;
-    $load_model_upper_limit = null;
-    $load_model_lower_limit = null;
-    $load_model_seperate_upper_limit = null;
-    $load_model_seperate_lower_limit = null;
-    $householdsLoadSum_upper_limit = null;
-    $each_household_status_upper_limit = null;
-}
-
-if ($dr_mode != 0)
-    $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
-else
-    $dr_info = null;
-    
 // table info
 $total_load_power_sum = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'totalLoad' ", $oneValue);
 $total_publicLoad_power = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'publicLoad' ", $oneValue);
@@ -93,12 +52,12 @@ if ($uncontrollable_load_flag) {
 }
 
 if ($database_name == 'DHEMS_fiftyHousehold') {
-        
+
     if ($GHEMS_flag[2][array_search("publicLoad", $GHEMS_flag[0], true)]) {
         
         for ($i=0; $i < count($f_publicLoad_power); $i++) { 
             
-            $name = "forceToStop_publicLoad".($i+1);
+            $name = "stoppable_publicLoad".($i+1);
             $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
             for ($y = 0; $y < $time_block; $y++) {
                 $publicLoad[$i][$y] *= $f_publicLoad_power[$i];
@@ -108,7 +67,7 @@ if ($database_name == 'DHEMS_fiftyHousehold') {
         }
         for ($i=0; $i < count($i_publicLoad_power); $i++) { 
             
-            $name = "interrupt_publicLoad".($i+1);
+            $name = "deferrable_publicLoad".($i+1);
             $publicLoad[$i] = $load_status_array[array_search($name, $variable_name, true)];
             for ($y = 0; $y < $time_block; $y++) {
                 $publicLoad[$i][$y] *= $i_publicLoad_power[$i];
@@ -193,6 +152,26 @@ for ($i=0; $i < count($EV_start_departure_SOC); $i++) {
     }
 }
 
+if ($dr_mode != 0) {
+       
+    $arr_community_CBL = $community_limit_capability;
+    // for ($j=$dr_info[1]; $j < $dr_info[2]; $j++) { 
+
+    //     $arr_community_CBL[$j] = intval($dr_info[5]);
+    // }
+    for ($i=0; $i < count($dr_interval); $i++) { 
+        
+        list($start_tmp, $end_tmp, $ratio_tmp) = explode("~", $dr_interval[$i]);
+        $start = intval($start_tmp);
+        $end = intval($end_tmp);
+        $ratio = floatval($ratio_tmp);
+        for ($j=$start; $j <= $end; $j++) { 
+            
+            $arr_community_CBL[$j] = intval($dr_info[5]) * $ratio;
+        }
+    }
+}
+
 $data_array = [
 
     "local_simulate_timeblock" => intval($local_simulate_timeblock),
@@ -220,9 +199,9 @@ $data_array = [
     "EV_AVG_departureSOC" => round(floatval($EV_AVG_departureSOC)*100, 2),
     "EV_total_power_cost" => round($EV_total_power_cost, 2),
     "EV_start_departure_SOC" => $EV_start_departure_SOC,
-    "electric_price" => array_map('floatval', $electric_price),
-    "limit_capability" => $limit_capability,
-    "simulate_solar" => array_map('floatval', $simulate_solar),
+    "electric_price" => $electric_price,
+    "arr_community_CBL" => $arr_community_CBL,
+    "simulate_solar" => $simulate_solar,
     "FC_power" => $load_status_array[array_search("Pfc", $variable_name, true)],
     "sell_power" => $oppsite_sell_array,
     "battery_power" => $load_status_array[array_search("Pess", $variable_name, true)],
@@ -232,10 +211,11 @@ $data_array = [
     "load_model" => $load_model,
     "load_status_array" => $load_status_array,
     "load_model_seperate" => $load_model_seperate,
-    "dr_mode" => $dr_mode,
-    "dr_info" => $dr_info,
     "GHEMS_flag" => $GHEMS_flag,
     "dr_feedbackPrice" => round($dr_feedbackPrice, 2),
+    "dr_mode" => $dr_mode,
+    "dr_info" => $dr_info,
+    "ucLoad_flag" => intval($uncontrollable_load_flag),
     "Global_ucLoad_flag" => intval($Global_uncontrollable_load_flag),
     "electric_price_upper_limit" => $electric_price_upper_limit,
     "load_model_upper_limit" => $load_model_upper_limit,

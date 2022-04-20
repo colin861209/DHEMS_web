@@ -1,5 +1,22 @@
 <?php
-require 'commonSQL_data.php';
+require 'backup_commonSQL_data.php';
+
+# base parameter
+$app_counts = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'app_counts' ", $oneValue);
+$interrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'interrupt_num' ", $oneValue);
+$uninterrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'uninterrupt_num' ", $oneValue);
+$household_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'householdAmount' ", $oneValue);
+$variable_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'local_variable_num' ", $oneValue);
+$simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
+
+$origin_grid_price = sqlFetchAssoc($conn, "SELECT `origin_grid_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("origin_grid_price"));
+$real_grid_price = sqlFetchAssoc($conn, "SELECT `real_grid_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("real_grid_price"));
+$public_price = sqlFetchAssoc($conn, "SELECT `public_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("public_price"));
+$origin_pay_price = sqlFetchAssoc($conn, "SELECT `origin_pay_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("origin_pay_price"));
+$final_pay_price = sqlFetchAssoc($conn, "SELECT `final_pay_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("final_pay_price"));
+$saving_efficiency = sqlFetchAssoc($conn, "SELECT `saving_efficiency` FROM `backup_LHEMS_cost` ORDER BY household_id", array("saving_efficiency"));
+$total_origin_grid_price = sqlFetchRow($conn, "SELECT SUM(origin_grid_price) FROM `backup_LHEMS_cost`", $oneValue);
+$household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `backup_LHEMS` ORDER BY `household_id`, `control_id` ASC ", array("household_id"));
 
 if ($database_name == "DHEMS_fiftyHousehold") {
 
@@ -18,7 +35,19 @@ if ($database_name == "DHEMS_fiftyHousehold") {
         "household41_startEndOperationTime", "household42_startEndOperationTime", "household43_startEndOperationTime", "household44_startEndOperationTime", "household45_startEndOperationTime", "household46_startEndOperationTime", "household47_startEndOperationTime", "household48_startEndOperationTime", "household49_startEndOperationTime", "household50_startEndOperationTime", 
         "power1", "power2", "power3", "number", "equip_name"
     ));
+
+    $load_list_select_with_interrupt = array();
+    $load_list_select_with_uninterrupt = array();
+    $load_list_select_with_varying = array();
+    $load_list_select = array();
+    for ($i=0; $i < $household_num; $i++) { 
         
+        array_push($load_list_select_with_interrupt, array_map('intval', sqlFetchAssoc($conn, "SELECT `number` FROM `load_list_select` WHERE group_id = 1 AND household".($i+1)." = 1", array("number"))));
+        array_push($load_list_select_with_uninterrupt, array_map('intval', sqlFetchAssoc($conn, "SELECT `number` FROM `load_list_select` WHERE group_id = 2 AND household".($i+1)." = 1", array("number"))));
+        array_push($load_list_select_with_varying, array_map('intval', sqlFetchAssoc($conn, "SELECT `number` FROM `load_list_select` WHERE group_id = 3 AND household".($i+1)." = 1", array("number"))));
+        array_push($load_list_select, array_map('intval', sqlFetchAssoc($conn, "SELECT `number` FROM `load_list_select` WHERE household".($i+1)." = 1", array("number"))));
+    }
+
     $uncontrollable_load = sqlFetchAssoc($conn, "SELECT 
     `household1`, `household2`, `household3`, `household4`, `household5`, `household6`, `household7`, `household8`, `household9`, `household10`,
     `household11`, `household12`, `household13`, `household14`, `household15`, `household16`, `household17`, `household18`, `household19`, `household20`,
@@ -39,65 +68,15 @@ else {
     $uncontrollable_load = sqlFetchAssoc($conn, "SELECT `household1`, `household2`, `household3`, `household4`, `household5` FROM LHEMS_uncontrollable_load", array("household1", "household2", "household3", "household4", "household5"));
 }
 
-// Each chart y-axis max value
-$chart_upperLowerLimit_flag = boolval(sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'chart_upperLowerLimit_flag' ", $oneValue));
-if ($chart_upperLowerLimit_flag) {
-
-    $electric_price_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'electric_price_upper_limit' ", $oneValue));
-    $ev_chargingUser_nums_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'ev_chargingUser_nums_upper_limit' ", $oneValue));
-    $em_n_chargingUser_nums_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'em_n_chargingUser_nums_upper_limit' ", $oneValue));
-    $load_model_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_upper_limit' ", $oneValue));
-    $load_model_lower_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_lower_limit' ", $oneValue));
-    $load_model_seperate_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_seperate_upper_limit' ", $oneValue));
-    $load_model_seperate_lower_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'load_model_seperate_lower_limit' ", $oneValue));
-    $householdsLoadSum_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'householdsLoadSum_upper_limit' ", $oneValue));
-    $each_household_status_upper_limit = floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` WHERE `parameter_name` = 'each_household_status_upper_limit' ", $oneValue));
-}
-else {
-    
-    $electric_price_upper_limit = null;
-    $ev_chargingUser_nums_upper_limit = null;
-    $em_n_chargingUser_nums_upper_limit = null;
-    $load_model_upper_limit = null;
-    $load_model_lower_limit = null;
-    $load_model_seperate_upper_limit = null;
-    $load_model_seperate_lower_limit = null;
-    $householdsLoadSum_upper_limit = null;
-    $each_household_status_upper_limit = null;
-}
-
-# base parameter
-$app_counts = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'app_counts' ", $oneValue);
-$interrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'interrupt_num' ", $oneValue);
-$uninterrupt_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'uninterrupt_num' ", $oneValue);
-$household_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'householdAmount' ", $oneValue);
-$variable_num = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'local_variable_num' ", $oneValue);
-$simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'next_simulate_timeblock' ", $oneValue);
-$dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
-if (($dr_mode) != 0)
-    $dr_info = sqlFetchRow($conn, "SELECT * FROM `demand_response` WHERE mode =" .$dr_mode , $aRow);
-else
-    $dr_info = null;
-
-$origin_grid_price = sqlFetchAssoc($conn, "SELECT `origin_grid_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("origin_grid_price"));
-$real_grid_price = sqlFetchAssoc($conn, "SELECT `real_grid_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("real_grid_price"));
-$public_price = sqlFetchAssoc($conn, "SELECT `public_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("public_price"));
-$origin_pay_price = sqlFetchAssoc($conn, "SELECT `origin_pay_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("origin_pay_price"));
-$final_pay_price = sqlFetchAssoc($conn, "SELECT `final_pay_price` FROM `backup_LHEMS_cost` ORDER BY household_id", array("final_pay_price"));
-$saving_efficiency = sqlFetchAssoc($conn, "SELECT `saving_efficiency` FROM `backup_LHEMS_cost` ORDER BY household_id", array("saving_efficiency"));
-$total_origin_grid_price = sqlFetchRow($conn, "SELECT SUM(origin_grid_price) FROM `backup_LHEMS_cost`", $oneValue);
-$household_id = sqlFetchAssoc($conn, "SELECT `household_id` FROM `backup_LHEMS` ORDER BY `household_id`, `control_id` ASC ", array("household_id"));
-$comfortLevel_flag = sqlFetchRow($conn, "SELECT `value` FROM `backup_BaseParameter` where `parameter_name` = 'comfortLevel_flag' ", $oneValue);
-
 $grid_power = [];
-$load_power = [];
+$load_power_tmp = [];
 $battery_power = [];
 $SOC = [];
 for ($i=0; $i < $household_num; $i++) { 
     
     $interrupt_status = sqlFetchRow($conn, "SELECT * FROM `backup_LHEMS` WHERE (equip_name LIKE '%interrupt%' OR equip_name LIKE 'varyingPsi%') AND household_id =" .($i+1). " ORDER BY `household_id`, `control_id` ASC ", $controlStatusResult);
-    array_push($load_power, $interrupt_status);
-
+    array_push($load_power_tmp, $interrupt_status);
+    
     $grid_power_tmp = sqlFetchRow($conn, "SELECT * FROM `backup_LHEMS` WHERE equip_name = 'Pgrid' AND household_id =" .($i+1). " ORDER BY `household_id`, `control_id` ASC ", $aRow);
     array_splice($grid_power_tmp, 0, 1);
     array_splice($grid_power_tmp, 96, count($grid_power_tmp)-1);
@@ -114,8 +93,11 @@ for ($i=0; $i < $household_num; $i++) {
     array_push($SOC, array_map('floatval', $SOC_tmp));
 }
 
-if ($dr_mode != 0) 
+if ($dr_mode != 0) {
+
     $household_participation = sqlFetchRow($conn, "SELECT * FROM `LHEMS_demand_response_participation` ", $controlStatusResult);
+    $household_CBL = array_map('floatval', sqlFetchAssoc($conn, "SELECT `household_CBL` FROM `LHEMS_demand_response_participation`", array("household_CBL")));
+}
 
 if ($comfortLevel_flag) {
 
@@ -135,10 +117,7 @@ mysqli_close($conn);
 
 for ($j = 0; $j < count($uncontrollable_load); $j++) {
 
-    for ($i = 0; $i < $time_block; $i++) {
-
-        $uncontrollable_load[$j][$i] = floatval($uncontrollable_load[$j][$i]);
-    }
+    $uncontrollable_load[$j] = array_map('floatval', $uncontrollable_load[$j]);
 }
 
 // load_list_array
@@ -191,20 +170,64 @@ for ($i = 0; $i < $household_num; $i++) {
 
     for ($y = 0; $y < $time_block; $y++) {
         
-        for ($u = 0; $u < $interrupt_num + $uninterrupt_num; $u++) {
+        for ($u = 0; $u < count($load_list_select_with_interrupt[$i]); $u++) {
 
-            $load_power[$i][$u][$y] = $power1[$u] * $load_power[$i][$u][$y];
+            $load_power[$i][$u][$y] = $load_power_tmp[$i][$u][$y] * $power1[$load_list_select_with_interrupt[$i][$u]-1];
         }
-        for ($u=0; $u < $app_counts; $u++) { 
+        for ($u = 0; $u < count($load_list_select_with_uninterrupt[$i]); $u++) {
+
+            $load_power[$i][$u + count($load_list_select_with_interrupt[$i])][$y] = $load_power_tmp[$i][$u + count($load_list_select_with_interrupt[$i])][$y] * $power1[$load_list_select_with_uninterrupt[$i][$u]-1];
+        }
+        for ($u = 0; $u < count($load_list_select_with_varying[$i]); $u++) {
+
+            $load_power[$i][$u + count($load_list_select_with_interrupt[$i]) + count($load_list_select_with_uninterrupt[$i])][$y] = $load_power_tmp[$i][$u + count($load_list_select_with_interrupt[$i]) + count($load_list_select_with_uninterrupt[$i])][$y];
+        }
+
+        for ($u=0; $u < count($load_list_select); $u++) { 
             
             $load_power_sum[$i][$y] += $load_power[$i][$u][$y];
         }
     }
 }
 
+if ($dr_mode != 0) {
+    
+    $arr_household_CBL = array();
+    for ($i=0; $i < count($household_CBL); $i++) { 
+        
+        $tmp = $limit_capability;
+        for ($j=$dr_info[1]; $j < $dr_info[2]; $j++) { 
+            if ($household_participation[$i][$j] != 0) {
+                $tmp[$j] = round($household_CBL[$i] * $household_participation[$i][$j], 2);
+            }
+        }
+        array_push($arr_household_CBL, $tmp);
+        empty($tmp);
+    }
+}
+
+$load_list_select_count = array();
+foreach ($load_list_select_with_interrupt as $inner_array) {
+    if (count($inner_array) == null) { $count_load_list_select_tmp[] = 0; }
+    else { $count_interrrupt_tmp[] = count($inner_array); }
+}
+
+foreach ($load_list_select_with_uninterrupt as $inner_array) {
+    if (count($inner_array) == null) { $count_uninterrupt_tmp[] = 0; }
+    else { $count_uninterrupt_tmp[] = count($inner_array); }
+}
+
+foreach ($load_list_select_with_varying as $inner_array) {
+    if (count($inner_array) == null) { $count_varying_tmp[] = 0; }
+    else { $count_varying_tmp[] = count($inner_array); }
+}
+array_push($load_list_select_count, $count_interrrupt_tmp);
+array_push($load_list_select_count, $count_uninterrupt_tmp);
+array_push($load_list_select_count, $count_varying_tmp);
 
 $data_array = [
 
+    "time_block" => $time_block,
     "local_simulate_timeblock" => intval($local_simulate_timeblock),
     "global_simulate_timeblock" => intval($global_simulate_timeblock),
     "simulate_timeblock" => floatval($simulate_timeblock),
@@ -219,6 +242,8 @@ $data_array = [
     "power2" => $power2,
     "power3" => $power3,
     "load_list_array" => $load_list_array,
+    "load_list_select" => $load_list_select,
+    "load_list_select_count" => $load_list_select_count,
     "number" => $number,
     "equip_name" => $equip_name,
     "optimize_result" => $optimize_result,
@@ -229,9 +254,10 @@ $data_array = [
     "battery_power" => $battery_power,
     "SOC" => $SOC,
     "LHEMS_flag" => $LHEMS_flag,
-    "uncontrollable_load_flag" => $uncontrollable_load_flag,
+    "uncontrollable_load_flag" => intval($uncontrollable_load_flag),
     "dr_mode" => $dr_mode,
     "dr_info" => $dr_info,
+    "dr_participate_flag" => boolval($dr_participate_flag),
     "dr_participation" => $household_participation,
     "comfortLevel_flag" => intval($comfortLevel_flag),
     "each_household_startComfortLevel" => $each_household_startComfortLevel,
@@ -246,6 +272,8 @@ $data_array = [
     "electric_price_upper_limit" => $electric_price_upper_limit,
     "householdsLoadSum_upper_limit" => $householdsLoadSum_upper_limit,
     "each_household_status_upper_limit" => $each_household_status_upper_limit,
+    "arr_household_CBL" => $arr_household_CBL,
+    "household_CBL" => $household_CBL,
     "database_name" => $database_name
 ];
 

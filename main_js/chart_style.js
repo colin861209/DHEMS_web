@@ -502,7 +502,7 @@ var energyType = {
     varying_flag_name: "varying",
     controllableLoad_chart_name: "controllable",
     uncontrollableLoad_chart_name: "uncontrollable",
-    household_CBL: "pwr_avg",
+    CBL_chart_name: "pwr-avg",
     Pgrid_flag_name: "Pgrid",
     mu_grid_flag_name: "mu_grid",
     Pess_flag_name: "Pess",
@@ -522,6 +522,7 @@ var energyType = {
     
     // load model chart name
     HEMS_chart_name: "pwr-HEMS",
+    HEMS_ucload_chart_name: "pwr-HEMS-uncontrollable",
     force_public1_chart_name: "pwr-force-public_1",
     force_public2_chart_name: "pwr-force-public_2",
     force_public3_chart_name: "pwr-force-public_3",

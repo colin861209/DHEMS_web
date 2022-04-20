@@ -6,6 +6,8 @@ $uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_
 $f_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
 $i_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 6", array("power1"));
 $Global_uncontrollable_load_array = sqlFetchAssoc($conn, "SELECT `uncontrollable_load1`, `uncontrollable_load2`, `uncontrollable_load3` FROM `GHEMS_uncontrollable_load` ", array("uncontrollable_load1", "uncontrollable_load2", "uncontrollable_load3"));
+$dr_interval = sqlFetchRow($conn, "SELECT `reduce_ratio_interval_1`, `reduce_ratio_interval_2`, `reduce_ratio_interval_3` FROM `demand_response` WHERE `mode` = ".$dr_mode, $aRow);
+// EV & EM
 $EM_total_power = sqlFetchAssoc($conn, "SELECT `total_power` FROM `EM_user_number`", array("total_power"));
 $EM_discharge_power = sqlFetchAssoc($conn, "SELECT `discharge_normal_power` FROM `EM_user_number`", array("discharge_normal_power"));
 $EM_start_departure_SOC_tmp = sqlFetchAssoc($conn, "SELECT `Start_SOC`,`Departure_SOC` FROM `EM_user_result` WHERE Real_departure_timeblock IS NOT NULL", array("Start_SOC", "Departure_SOC"));
@@ -148,6 +150,26 @@ for ($i=0; $i < count($EV_start_departure_SOC); $i++) {
     }
 }
 
+if ($dr_mode != 0) {
+       
+    $arr_community_CBL = $community_limit_capability;
+    // for ($j=$dr_info[1]; $j < $dr_info[2]; $j++) { 
+
+    //     $arr_community_CBL[$j] = intval($dr_info[5]);
+    // }
+    for ($i=0; $i < count($dr_interval); $i++) { 
+        
+        list($start_tmp, $end_tmp, $ratio_tmp) = explode("~", $dr_interval[$i]);
+        $start = intval($start_tmp);
+        $end = intval($end_tmp);
+        $ratio = floatval($ratio_tmp);
+        for ($j=$start; $j <= $end; $j++) { 
+            
+            $arr_community_CBL[$j] = intval($dr_info[5]) * $ratio;
+        }
+    }
+}
+
 $data_array = [
 
     "total_load_power_sum" => round($total_load_power_sum, 2),
@@ -174,7 +196,7 @@ $data_array = [
     "EV_total_power_cost" => round($EV_total_power_cost, 2),
     "EV_start_departure_SOC" => $EV_start_departure_SOC,
     "electric_price" => $electric_price,
-    "limit_capability" => $limit_capability,
+    "arr_community_CBL" => $arr_community_CBL,
     "simulate_solar" => $simulate_solar,
     "FC_power" => $load_status_array[array_search("Pfc", $variable_name, true)],
     "sell_power" => $oppsite_sell_array,
@@ -191,6 +213,7 @@ $data_array = [
     "dr_feedbackPrice" => round($dr_feedbackPrice, 2),
     "dr_mode" => $dr_mode,
     "dr_info" => $dr_info,
+    "ucLoad_flag" => intval($uncontrollable_load_flag),
     "Global_ucLoad_flag" => intval($Global_uncontrollable_load_flag),
     "electric_price_upper_limit" => $electric_price_upper_limit,
     "load_model_upper_limit" => $load_model_upper_limit,

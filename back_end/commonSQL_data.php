@@ -12,6 +12,7 @@ $local_simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParamet
 $global_simulate_timeblock = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Global_next_simulate_timeblock' ", $oneValue);
 $time_block = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'time_block' ", $oneValue);
 $limit_capability = array_fill(0, $time_block, floatval(sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'Pgridmax' ", $oneValue)));
+$community_limit_capability = array_fill(0, $time_block, floatval(sqlFetchRow($conn, "SELECT `value`*(SELECT `value` FROM `BaseParameter` where `parameter_name` = 'householdAmount') FROM `BaseParameter` where `parameter_name` = 'Pgridmax' ", $oneValue)));
 $dr_mode = sqlFetchRow($conn, "SELECT `value` FROM `BaseParameter` where `parameter_name` = 'dr_mode' ", $oneValue);
 $dr_count = sqlFetchRow($conn, "SELECT COUNT(*) FROM `demand_response` ", $oneValue);
 if ($dr_mode != 0) {

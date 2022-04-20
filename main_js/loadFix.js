@@ -217,7 +217,10 @@ function priceVsLoad(ABC) {
 
     set_series_function(0, "spline", data.simulate_solar, energyType.Psolar_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.grid_power, energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
-
+    
+    if (data.dr_mode != 0)
+        set_series_function(0, "line", data.arr_community_CBL, energyType.CBL_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+    
     if (GHEMS_flag[0].indexOf(energyType.Pfc_flag_name) !== -1 && GHEMS_flag[2][GHEMS_flag[0].findIndex(flag => flag === energyType.Pfc_flag_name)] == 1)
         set_series_function(0, "spline", data.FC_power, energyType.Pfc_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
@@ -255,6 +258,8 @@ function SOCVsLoad(ABC) {
     set_series_function(0, "spline", data.simulate_solar, energyType.Psolar_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     set_series_function(0, "areaspline", data.grid_power, energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
+    if (data.dr_mode != 0)
+        set_series_function(0, "line", data.arr_community_CBL, energyType.CBL_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     if (GHEMS_flag[0].indexOf(energyType.Pfc_flag_name) !== -1 && GHEMS_flag[2][GHEMS_flag[0].findIndex(flag => flag === energyType.Pfc_flag_name)] == 1)
         set_series_function(0, "spline", data.FC_power, energyType.Pfc_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     if (GHEMS_flag[0].indexOf(energyType.Psell_flag_name) !== -1 && GHEMS_flag[2][GHEMS_flag[0].findIndex(flag => flag === energyType.Psell_flag_name)] == 1)
@@ -275,15 +280,22 @@ function loadModel(ABC) {
     var data = ABC;
     //define all needed data array
     var chart_info = ["loadModel", "Load Model", " ", "time", "price(TWD)", "power(kW)", data.electric_price_upper_limit, [data.load_model_seperate_lower_limit, data.load_model_seperate_upper_limit], null];
-    var multi_name = [energyType.HEMS_chart_name, 
-        energyType.force_public1_chart_name, energyType.force_public2_chart_name, energyType.force_public3_chart_name, 
-        energyType.interrupt_public1_chart_name, energyType.interrupt_public2_chart_name, 
-    ];
+    var multi_name = [energyType.HEMS_chart_name];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
     var chart_series_stack = [];
     var chart_series_yAxis = [];
+    
+    if (data.ucLoad_flag) {
+        multi_name.push(energyType.HEMS_ucload_chart_name)
+    }
+    multi_name.push(energyType.force_public1_chart_name)
+    multi_name.push(energyType.force_public2_chart_name) 
+    multi_name.push(energyType.force_public3_chart_name) 
+    multi_name.push(energyType.interrupt_public1_chart_name)
+    multi_name.push(energyType.interrupt_public2_chart_name)
+
     if (data.Global_ucLoad_flag) {
         multi_name.push(energyType.uncontrollable_public1_chart_name)
         multi_name.push(energyType.uncontrollable_public2_chart_name)
