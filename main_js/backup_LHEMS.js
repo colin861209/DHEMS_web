@@ -146,7 +146,7 @@ function each_household_status(data, household_id) {
     }
     set_series_function(0, "line", data.electric_price, energyType.electrice_chart_name, 0, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
     if (data.dr_mode != 0)
-        set_series_function(0, "spline", data.arr_household_CBL[household_id], (household_id + 1)+"-"+energyType.CBL_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
+        set_series_function(0, "line", data.arr_household_CBL[household_id], (household_id + 1)+"-"+energyType.CBL_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);
 
     set_series_function(1, "column", load_power_sum_with_UCLoad, "", 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis, multi_name);
     set_series_function(0, "spline", data.grid_power[household_id], energyType.Pgrid_chart_name, 1, chart_series_type, chart_series_name, chart_series_data, chart_series_stack, chart_series_yAxis);

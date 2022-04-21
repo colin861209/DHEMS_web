@@ -2,7 +2,7 @@
 require 'backup_commonSQL_data.php';
 
 $load_power_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `backup_totalLoad` ", array("totalLoad"));
-$uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `LHEMS_uncontrollable_load` ", array("totalLoad"));
+$uncontrollable_load_sum = sqlFetchAssoc($conn, "SELECT `totalLoad` FROM `backup_LHEMS_uncontrollable_load` ", array("totalLoad"));
 $f_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 5", array("power1"));
 $i_publicLoad_power = sqlFetchAssoc($conn, "SELECT `power1` FROM `load_list` WHERE group_id = 6", array("power1"));
 $Global_uncontrollable_load_array = sqlFetchAssoc($conn, "SELECT `uncontrollable_load1`, `uncontrollable_load2`, `uncontrollable_load3` FROM `backup_GHEMS_uncontrollable_load` ", array("uncontrollable_load1", "uncontrollable_load2", "uncontrollable_load3"));
@@ -155,20 +155,9 @@ for ($i=0; $i < count($EV_start_departure_SOC); $i++) {
 if ($dr_mode != 0) {
        
     $arr_community_CBL = $community_limit_capability;
-    // for ($j=$dr_info[1]; $j < $dr_info[2]; $j++) { 
+    for ($j=$dr_info[1]; $j < $dr_info[2]; $j++) { 
 
-    //     $arr_community_CBL[$j] = intval($dr_info[5]);
-    // }
-    for ($i=0; $i < count($dr_interval); $i++) { 
-        
-        list($start_tmp, $end_tmp, $ratio_tmp) = explode("~", $dr_interval[$i]);
-        $start = intval($start_tmp);
-        $end = intval($end_tmp);
-        $ratio = floatval($ratio_tmp);
-        for ($j=$start; $j <= $end; $j++) { 
-            
-            $arr_community_CBL[$j] = intval($dr_info[5]) * $ratio;
-        }
+        $arr_community_CBL[$j] = intval($dr_info[5]);
     }
 }
 

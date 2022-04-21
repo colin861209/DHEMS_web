@@ -96,7 +96,13 @@ for ($i=0; $i < $household_num; $i++) {
 if ($dr_mode != 0) {
 
     $household_participation = sqlFetchRow($conn, "SELECT * FROM `LHEMS_demand_response_participation` ", $controlStatusResult);
-    $household_CBL = array_map('floatval', sqlFetchAssoc($conn, "SELECT `household_CBL` FROM `LHEMS_demand_response_participation`", array("household_CBL")));
+    $household_CBL = array_map('floatval', sqlFetchRow($conn, "SELECT 
+        MAX(household1), MAX(household2), MAX(household3), MAX(household4), MAX(household5), MAX(household6), MAX(household7), MAX(household8), MAX(household9), MAX(household10), 
+        MAX(household11), MAX(household12), MAX(household13), MAX(household14), MAX(household15), MAX(household16), MAX(household17), MAX(household18), MAX(household19), MAX(household20), 
+        MAX(household21), MAX(household22), MAX(household23), MAX(household24), MAX(household25), MAX(household26), MAX(household27), MAX(household28), MAX(household29), MAX(household30), 
+        MAX(household31), MAX(household32), MAX(household33), MAX(household34), MAX(household35), MAX(household36), MAX(household37), MAX(household38), MAX(household39), MAX(household40), 
+        MAX(household41), MAX(household42), MAX(household43), MAX(household44), MAX(household45), MAX(household46), MAX(household47), MAX(household48), MAX(household49), MAX(household50) 
+        FROM `LHEMS_demand_response_CBL` WHERE `time_block` BETWEEN ".$dr_info[1]." AND ".($dr_info[2]-1)." AND `comfort_level_flag` = ".$comfortLevel_flag, $aRow));
 }
 
 if ($comfortLevel_flag) {
@@ -198,7 +204,7 @@ if ($dr_mode != 0) {
         $tmp = $limit_capability;
         for ($j=$dr_info[1]; $j < $dr_info[2]; $j++) { 
             if ($household_participation[$i][$j] != 0) {
-                $tmp[$j] = round($household_CBL[$i] * $household_participation[$i][$j], 2);
+                $tmp[$j] = round($household_CBL[$i] * ceil($household_participation[$i][$j]), 2);
             }
         }
         array_push($arr_household_CBL, $tmp);
