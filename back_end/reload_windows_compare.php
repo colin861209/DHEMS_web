@@ -3,7 +3,7 @@ require 'commonSQL_data.php';
 
 $compare_timeblock = $_POST['compare_timeblock'];
 
-if (strpos($compare_timeblock['page_name'], 'backup')) { $target_DB = 'backup_BaseParameter'; }
+if (strpos($compare_timeblock['page_name'], 'backup') !== false) { $target_DB = 'backup_BaseParameter'; }
 else { $target_DB = 'BaseParameter';}
 
 $new_timeblock = sqlFetchAssoc($conn, "SELECT `parameter_name`, `value` FROM `". $target_DB ."` WHERE `parameter_name` LIKE '%next_simulate_timeblock' ", array("parameter_name", "value"));
