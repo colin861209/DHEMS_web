@@ -537,6 +537,7 @@ var energyType = {
     EV_discharging_chart_name: "pwr-discharging-EV",
 }
 
+var path = window.location.pathname.split("/").pop();
 var compare_timeblock = {};
 setInterval(() => {
     

@@ -37,6 +37,7 @@ function get_backEnd_data() {
                 }
                 compare_timeblock = {
                 
+                    page_name: path,
                     local: response.baseParameter[2][response.baseParameter[0].indexOf("next_simulate_timeblock")],
                     global: response.baseParameter[2][response.baseParameter[0].indexOf("Global_next_simulate_timeblock")]
                 };

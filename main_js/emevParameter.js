@@ -41,6 +41,7 @@ function get_backEnd_data() {
                 
                 compare_timeblock = {
                 
+                    page_name: path,
                     local: response.local_simulate_timeblock,
                     global: response.global_simulate_timeblock,
                 };

@@ -28,6 +28,7 @@ function get_backEnd_data() {
                 LHEMS_flag = ourData.LHEMS_flag;
                 compare_timeblock = {
                     
+                    page_name: path,
                     local: ourData.local_simulate_timeblock,
                     global: ourData.global_simulate_timeblock
                 };
