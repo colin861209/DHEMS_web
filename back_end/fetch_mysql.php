@@ -135,5 +135,14 @@ class SQLQuery {
         mysqli_free_result($result);
         return $array;
     }
+
+    // return array multiple a value 
+    public function multiply(array $array, float $factor) {
+    
+        foreach ($array as $key => $value) {
+            $array[$key] = round($value * $factor);
+        }
+        return $array;
+    }
 }
 
