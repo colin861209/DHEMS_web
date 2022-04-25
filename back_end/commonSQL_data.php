@@ -408,7 +408,7 @@ class CommonData extends BP {
                 MAX(household21), MAX(household22), MAX(household23), MAX(household24), MAX(household25), MAX(household26), MAX(household27), MAX(household28), MAX(household29), MAX(household30), 
                 MAX(household31), MAX(household32), MAX(household33), MAX(household34), MAX(household35), MAX(household36), MAX(household37), MAX(household38), MAX(household39), MAX(household40), 
                 MAX(household41), MAX(household42), MAX(household43), MAX(household44), MAX(household45), MAX(household46), MAX(household47), MAX(household48), MAX(household49), MAX(household50) 
-                FROM `". $this->table_DRCBL ."` WHERE `time_block` BETWEEN ".$this->dr_info[1]." AND ".($this->dr_info[2]-1)." AND `comfort_level_flag` = ".$this->comfortLevel_flag, $this->aRow));
+                FROM `". $this->table_DRCBL ."` WHERE `time_block` BETWEEN ".$this->dr_info[1]." AND ".($this->dr_info[2]-1)." AND `comfort_level_flag` = ".intval($this->comfortLevel_flag), $this->aRow));
 
             for ($i=0; $i < count($this->arr_HouseholdCBLMAX); $i++) { 
                 $tmp = $this->limit_capability;
