@@ -144,5 +144,11 @@ class SQLQuery {
         }
         return $array;
     }
+        
+    public function updateSQL($table, $target_col, $target_value, $condition_col, $condition_value) {
+
+        $sql = "UPDATE `$table` SET `$target_col` = '$target_value' WHERE `$condition_col` = '$condition_value'";    
+        mysqli_query($this->conn, $sql);
+    }
 }
 

@@ -604,7 +604,6 @@ class CommonData extends BP {
             }
         }
     }
-
     // EM & EV
     private $table_user_number = '';
     private $table_user_result = '';
@@ -677,6 +676,10 @@ class CommonData extends BP {
     }
 }
 
+/**
+ * Receive HEMS & BP info which use in (backup)HEMS pages
+ */
+
 class HEMS extends CommonData {
 
     function __construct($table_BP, $table_CS, $table_LHEMS_UCLoad, $table_LHEMSCost) {
@@ -693,6 +696,10 @@ class HEMS extends CommonData {
     }
 }
 
+/**
+ * Receive CEMS & BP info which use in (backup)CEMS pages
+ */
+
 class CEMS extends CommonData {
 
     function __construct($table_BP, $table_CS, $table_LHEMS_UCLoad, $table_GHEMS_UCLoad, $table_TotalLoad, $table_EM_BP, $table_EM_number, $table_EM_result, $table_EV_BP, $table_EV_number, $table_EV_result) {
@@ -703,6 +710,30 @@ class CEMS extends CommonData {
         $this->getCEMS_EVInfo($table_EV_number, $table_EV_result);
         $this->getCEMS_DRCBL();
         $this->getCEMS_LoadModel();
+    }
+}
+
+class BPSetting extends CommonData {
+
+    public $baseParameter;
+    public $EM_flag;
+    public $EM_charging_amount;
+    public $EM_sure_charging_amount;
+
+    /**
+     * ------ BPSetting Construct ------
+     * baseParameter fetch all info from table BP
+     * EM_charging_amount & EM_sure_charging_amount is for guage
+     * ---------------------------------
+     */
+
+    function __construct($table_BP) {
+
+        parent::__construct($table_BP, null);
+        $this->baseParameter = $this->sqlFetchAssoc("SELECT `parameter_name`, `parameter_define`, `value` FROM `". $table_BP ."`", array("parameter_name", "parameter_define", "value"));
+        $this->EM_flag = boolval($this->sqlFetchRow("SELECT `". $this->col_value ."` FROM `". $this->table_BP ."` WHERE `". $this->col_parmName ."` = 'ElectricMotor' ", $this->oneValue));
+        $this->EM_charging_amount = $this->sqlFetchRow("SELECT COUNT(*) FROM `EM_Pole` WHERE `charging_status`=1 ", $this->oneValue);
+        $this->EM_sure_charging_amount = $this->sqlFetchRow("SELECT COUNT(*) FROM `EM_Pole` WHERE `sure`=1 ", $this->oneValue);
     }
 }
 
