@@ -201,7 +201,7 @@ class CommonData extends BP {
     public $dr_info;
     public $GHEMS_flag;
     public $LHEMS_flag;
-    function __construct($table_BP, $table_CS, $table_LHEMS_UCLoad = null, $table_LHEMSCost = null, $table_GHEMS_UCLoad = null, $table_TotalLoad = null) {
+    function __construct($table_BP, $table_CS = null, $table_LHEMS_UCLoad = null, $table_LHEMSCost = null, $table_GHEMS_UCLoad = null, $table_TotalLoad = null) {
         
         parent::__construct($table_BP);
         $this->table_CS = $table_CS;
@@ -713,6 +713,10 @@ class CEMS extends CommonData {
     }
 }
 
+/**
+ * Receive BP page info
+ */
+
 class BPSetting extends CommonData {
 
     public $baseParameter;
@@ -729,11 +733,72 @@ class BPSetting extends CommonData {
 
     function __construct($table_BP) {
 
-        parent::__construct($table_BP, null);
+        parent::__construct($table_BP);
         $this->baseParameter = $this->sqlFetchAssoc("SELECT `parameter_name`, `parameter_define`, `value` FROM `". $table_BP ."`", array("parameter_name", "parameter_define", "value"));
         $this->EM_flag = boolval($this->sqlFetchRow("SELECT `". $this->col_value ."` FROM `". $this->table_BP ."` WHERE `". $this->col_parmName ."` = 'ElectricMotor' ", $this->oneValue));
         $this->EM_charging_amount = $this->sqlFetchRow("SELECT COUNT(*) FROM `EM_Pole` WHERE `charging_status`=1 ", $this->oneValue);
         $this->EM_sure_charging_amount = $this->sqlFetchRow("SELECT COUNT(*) FROM `EM_Pole` WHERE `sure`=1 ", $this->oneValue);
+    }
+}
+
+/**
+ * Receive EMEV page info
+ */
+
+class EMEVSetting extends CommonData {
+
+    // table type
+    private $str_EM = 'EM_';
+    private $str_EV = 'EV_';
+    // table 
+    private $WholeDayUserNum = 'wholeDay_userChargingNumber';
+    private $Type = 'motor_type';
+    private $Parm = 'Parameter';
+    private $RandResult = 'Parameter_of_randomResult';
+    private $ChargeStatus = 'chargingOrDischarging_status';
+    // 
+    private $em_wholeDay_chargingUser_nums;
+    private $ev_wholeDay_chargingUser_nums;
+    public $em_motor_type = array();
+    public $emParameter = array();
+    public $emParameter_of_randomResult = array();
+    public $em_chargingOrDischargingStatus_array = array();
+    public $ev_motor_type = array();
+    public $evParameter = array();
+    public $evParameter_of_randomResult = array();
+    public $ev_chargingOrDischargingStatus_array = array();
+    public $sf_chargingUser_nums = array();
+    public $f_chargingUser_nums = array();
+    public $n_chargingUser_nums = array();
+    public $ev_chargingUser_nums = array();
+
+    function __construct($table_BP) {
+        
+        parent::__construct($table_BP);
+        $this->em_wholeDay_chargingUser_nums = $this->sqlFetchAssoc("SELECT `type_0`, `type_1`, `type_2`, `type_3`, `type_4`, `type_5`, `type_6`, `type_7`, `type_8`, `type_9` FROM `". $this->str_EM.$this->WholeDayUserNum ."`", array("type_0", "type_1", "type_2", "type_3", "type_4", "type_5", "type_6", "type_7", "type_8", "type_9"));
+        $this->ev_wholeDay_chargingUser_nums = $this->sqlFetchAssoc("SELECT `type_0`, `type_1`, `type_2`, `type_3` FROM `". $this->str_EV.$this->WholeDayUserNum ."`", array("type_0", "type_1", "type_2", "type_3"));
+        
+        $this->em_motor_type = $this->sqlFetchAssoc("SELECT `type`, `capacity`, `voltage`, `power`, `percent` FROM `". $this->str_EM.$this->Type ."`", array("type", "capacity", "voltage", "power", "percent"));
+        $this->emParameter = $this->sqlFetchAssoc("SELECT `parameter_name`, `parameter_define`, `value` FROM `". $this->str_EM.$this->Parm ."`", array("parameter_name", "parameter_define", "value"));
+        $this->emParameter_of_randomResult = $this->sqlFetchAssoc("SELECT `parameter_name`, `parameter_define`, `value` FROM `". $this->str_EM.$this->RandResult ."`", array("parameter_name", "parameter_define", "value"));
+        $this->em_chargingOrDischargingStatus_array = $this->sqlFetchRow("SELECT * FROM `". $this->str_EM.$this->ChargeStatus ."`", $this->emChargeDischarge);
+        $this->ev_motor_type = $this->sqlFetchAssoc("SELECT `type`, `capacity(kWh)`, `power`, `percent` FROM `". $this->str_EV.$this->Type ."`", array("type", "capacity(kWh)", "power", "percent"));
+        $this->evParameter = $this->sqlFetchAssoc("SELECT `parameter_name`, `parameter_define`, `value` FROM `". $this->str_EV.$this->Parm ."`", array("parameter_name", "parameter_define", "value"));
+        $this->evParameter_of_randomResult = $this->sqlFetchAssoc("SELECT `parameter_name`, `parameter_define`, `value` FROM `". $this->str_EV.$this->RandResult ."`", array("parameter_name", "parameter_define", "value"));
+        $this->ev_chargingOrDischargingStatus_array = $this->sqlFetchRow("SELECT * FROM `". $this->str_EV.$this->ChargeStatus ."`", $this->emChargeDischarge);
+        array_push($this->n_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[2]));
+        array_push($this->n_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[5]));
+        array_push($this->n_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[6]));
+        array_push($this->n_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[7]));
+        array_push($this->n_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[8]));
+        array_push($this->n_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[9]));
+        array_push($this->f_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[1]));
+        array_push($this->f_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[4]));
+        array_push($this->sf_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[0]));
+        array_push($this->sf_chargingUser_nums, array_map('intval', $this->em_wholeDay_chargingUser_nums[3]));
+        for ($i=0; $i < count($this->ev_wholeDay_chargingUser_nums); $i++) { 
+            array_push($this->ev_chargingUser_nums, array_map('intval', $this->ev_wholeDay_chargingUser_nums[$i]));
+        }
     }
 }
 
