@@ -1,30 +1,15 @@
 <?php
-require 'commonSQL_data.php';
+require 'fetch_mysql.php';
 
-function updateSQL($conn, $table, $target_col, $target_value, $condition_col, $condition_value) {
 
-    $sql = "UPDATE `$table` SET `$target_col` = '$target_value' WHERE `$condition_col` = '$condition_value'";    
-    mysqli_query($conn, $sql);
-}
-
+$obj = new SQLQuery();
 $newParameter = $_POST['phpReceive'];
 
-for ($i=0; $i < count($newParameter['name']); $i++) { 
-    
-    $sql = updateSQL($conn, $newParameter['table'], "value", $newParameter['baseParameter'][$i], "parameter_name", $newParameter['name'][$i]);
-    
-    $value = sqlFetchRow($conn, "SELECT `value` FROM `" .$newParameter['table']. "` WHERE `parameter_name` = '" .$newParameter['name'][$i]. "'", $oneValue);
-
-    if ($value == $newParameter['baseParameter'][$i])
-        $status = "success";
-    else
-        $status = "something went wrong";
-}
+$status = $obj->UpdateBaseParameter($newParameter);
 
 echo json_encode(array(
     "status" => $status,
-    "database_name" => $database_name
+    "database_name" => $obj->database_name
 ));
 
-mysqli_close($conn);
 ?>
