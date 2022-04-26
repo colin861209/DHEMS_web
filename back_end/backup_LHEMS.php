@@ -59,9 +59,9 @@ $data_array = [
     "battery_power" => $backup->arr_EssPower,
     "SOC" => $backup->arr_EssSOC,
     // getHEMS_DRParticipateAndCBL
-    "dr_participation" => $arr_HouseholdParticipation,
-    "arr_household_CBL" => $arr_HouseholdCBL,
-    "household_CBL" => $arr_HouseholdCBLMAX,
+    "dr_participation" => $backup->arr_HouseholdParticipation,
+    "arr_household_CBL" => $backup->arr_HouseholdCBL,
+    "household_CBL" => $backup->arr_HouseholdCBLMAX,
     // getHEMS_ComLvTime
     "each_household_startComfortLevel" => $backup->arr_HouseholdComLvStart,
     "each_household_endComfortLevel" => $backup->arr_HouseholdComLvEnd,
