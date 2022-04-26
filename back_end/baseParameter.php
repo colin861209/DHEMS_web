@@ -16,6 +16,7 @@ $data_array = [
     "EM_flag" => $obj->EM_flag,
     // CommonData & BP construct
     "electric_price_upper_limit" => $obj->electric_price_upper_limit,
+    "weather_upper_limit" => $obj->weather_upper_limit,
     "simulate_solar" => $obj->simulate_solar,
     "electric_price" => $obj->electric_price,
     "dr_count" => $obj->dr_count,

@@ -41,6 +41,7 @@ class BP extends SQLQuery {
     // Chart Flag & Related Info
     public $chart_upperLowerLimit_flag;
     public $electric_price_upper_limit = null;
+    public $weather_upper_limit = null;
     public $ev_chargingUser_nums_upper_limit = null;
     public $em_n_chargingUser_nums_upper_limit = null;
     public $load_model_upper_limit = null;
@@ -71,6 +72,7 @@ class BP extends SQLQuery {
 
         if ($this->chart_upperLowerLimit_flag) {
             $this->electric_price_upper_limit = floatval($this->sqlFetchRow("SELECT `". $this->col_value ."` FROM `". $this->table_BP ."` WHERE `". $this->col_parmName ."` = 'electric_price_upper_limit' ", $this->oneValue));
+            $this->weather_upper_limit = floatval($this->sqlFetchRow("SELECT `". $this->col_value ."` FROM `". $this->table_BP ."` WHERE `". $this->col_parmName ."` = 'weather_upper_limit' ", $this->oneValue));
             $this->ev_chargingUser_nums_upper_limit = floatval($this->sqlFetchRow("SELECT `". $this->col_value ."` FROM `". $this->table_BP ."` WHERE `". $this->col_parmName ."` = 'ev_chargingUser_nums_upper_limit' ", $this->oneValue));
             $this->em_n_chargingUser_nums_upper_limit = floatval($this->sqlFetchRow("SELECT `". $this->col_value ."` FROM `". $this->table_BP ."` WHERE `". $this->col_parmName ."` = 'em_n_chargingUser_nums_upper_limit' ", $this->oneValue));
             $this->load_model_upper_limit = floatval($this->sqlFetchRow("SELECT `". $this->col_value ."` FROM `". $this->table_BP ."` WHERE `". $this->col_parmName ."` = 'load_model_upper_limit' ", $this->oneValue));

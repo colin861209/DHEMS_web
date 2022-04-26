@@ -15,7 +15,7 @@ function get_backEnd_data() {
     }
     chart_limit = {
 
-        modify_target: ["chart_upperLowerLimit_flag", "electric_price_upper_limit", "ev_chargingUser_nums_upper_limit", "em_n_chargingUser_nums_upper_limit", "load_model_upper_limit", "load_model_lower_limit", "load_model_seperate_upper_limit", "load_model_seperate_lower_limit", "each_household_status_upper_limit", "householdsLoadSum_upper_limit"],
+        modify_target: ["chart_upperLowerLimit_flag", "electric_price_upper_limit", "weather_upper_limit", "ev_chargingUser_nums_upper_limit", "em_n_chargingUser_nums_upper_limit", "load_model_upper_limit", "load_model_lower_limit", "load_model_seperate_upper_limit", "load_model_seperate_lower_limit", "each_household_status_upper_limit", "householdsLoadSum_upper_limit"],
         fix_target:[],
         
     }
@@ -33,7 +33,7 @@ function get_backEnd_data() {
                 if (now_database_name == "DHEMS_fiftyHousehold") {
                     
                     save_target.fix_target.pop();
-                    save_target.modify_target.splice(save_target.modify_target.indexOf("generate_Global_uncontrollable_load_flag")+1, 0, "comfortLevel_flag");
+                    save_target.modify_target.splice(save_target.modify_target.indexOf("ElectricMotor")+1, 0, "comfortLevel_flag");
                 }
                 compare_timeblock = {
                 
@@ -362,7 +362,7 @@ function baseParameter_gauge(data, fullInfo) {
 
 function simulate_solar(data) {
     
-    var chart_info = ["simulate_solar_chart", "Solar Power", data.baseParameter[2][data.baseParameter[0].indexOf("simulate_weather")], "time", "power(kW)", null, null, [null, null], 'orange'];
+    var chart_info = ["simulate_solar_chart", "Solar Power", data.baseParameter[2][data.baseParameter[0].indexOf("simulate_weather")], "time", "power(kW)", null, data.weather_upper_limit, [null, null], 'orange'];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
