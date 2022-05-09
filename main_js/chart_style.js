@@ -164,8 +164,8 @@ function show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, ch
         });
 
         // 綠 黃 粉 橘 
-        var color_name = ['#B7FF68', '#FFFF93', 'pink', '#ff0000a1'];
-        // var color_name = ['green', 'yellow', 'pink', 'red'];
+        var color_name = ['#B7FF68', '#FFFF93', '#FCAE1E', '#ff0000a1'];
+        // var color_name = ['green', 'yellow', 'orange(merigold)', 'red'];
         for (let i = 0; i < comfort_lowband.length; i++) {
                 
             for (let j = 0; j < comfort_lowband[i].length; j++) {
@@ -515,7 +515,7 @@ var energyType = {
     Pess_chart_name: "pwr-battery",
     Psolar_chart_name: "pwr-solar",
     Psell_chart_name: "pwr-sell",
-    Pload_chart_name: "pwr-load",
+    Pload_chart_name: "pwr-total",
     Pfc_chart_name: "pwr-FC",
     SOC_chart_name: "SOC",
     electrice_chart_name: "price",

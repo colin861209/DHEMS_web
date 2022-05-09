@@ -198,7 +198,7 @@ function each_household_status_SOC(data, household_id) {
 function householdsLoadSum(data) {
     //parse to get all json data
 
-    var chart_info = ["households_loadsSum", "Households' Loads Comsuption", " ", "time", "price(TWD)", "power(kW)", null, [0, data.householdsLoadSum_upper_limit], null];
+    var chart_info = ["households_loadsSum", "Households' Loads Consumption", " ", "time", "price(TWD)", "power(kW)", null, [0, data.householdsLoadSum_upper_limit], null];
     var chart_series_type = [];
     var chart_series_name = [];
     var chart_series_data = [];
