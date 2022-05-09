@@ -233,7 +233,7 @@ function householdsLoadSelect(data) {
 
 function uncontrollable_loadSum(data) {
 
-    if (parseInt(data.uncontrollable_load_flag)) {
+    if (data.uncontrollable_load_flag) {
 
         var chart_info = ["uncontrollable_loadSum", "Households' Uncontrllable Loads", " ", "time", "price(TWD)", "power(kW)", null, [null, null], null];
         var chart_series_type = [];
