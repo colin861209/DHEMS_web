@@ -291,11 +291,11 @@ function loadModel(ABC) {
     if (data.ucLoad_flag) {
         multi_name.push(energyType.HEMS_ucload_chart_name)
     }
-    multi_name.push(energyType.force_public1_chart_name)
-    multi_name.push(energyType.force_public2_chart_name) 
-    multi_name.push(energyType.force_public3_chart_name) 
-    multi_name.push(energyType.interrupt_public1_chart_name)
-    multi_name.push(energyType.interrupt_public2_chart_name)
+    multi_name.push(energyType.stoppable_public1_chart_name)
+    multi_name.push(energyType.stoppable_public2_chart_name) 
+    multi_name.push(energyType.stoppable_public3_chart_name) 
+    multi_name.push(energyType.deferrable_public1_chart_name)
+    multi_name.push(energyType.deferrable_public2_chart_name)
 
     if (data.Global_ucLoad_flag) {
         multi_name.push(energyType.uncontrollable_public1_chart_name)
