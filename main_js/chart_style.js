@@ -163,7 +163,7 @@ function show_chart_with_pinkAreaOrComforLevel(chart_info, chart_series_type, ch
             to: chart_upband
         });
 
-        // 綠 黃 粉 橘 
+        // 綠 黃 橘 紅
         var color_name = ['#B7FF68', '#FFFF93', '#FCAE1E', '#ff0000a1'];
         // var color_name = ['green', 'yellow', 'orange(merigold)', 'red'];
         for (let i = 0; i < comfort_lowband.length; i++) {
